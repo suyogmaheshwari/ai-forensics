@@ -1,0 +1,22 @@
+{
+  "product": "forge",
+  "display_name": "Forge (Antinomy, forgecode)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_forge", "group": "header", "op": "header_equals", "name": "user-agent", "value": "Forge", "weight": 30},
+    {"id": "x_title_forge", "group": "header", "op": "header_equals", "name": "x-title", "value": "forge", "weight": 10},
+    {"id": "referer_forgecode", "group": "header", "op": "header_contains", "name": "http-referer", "value": "forgecode.dev", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Forge", "You are Title Generator"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["fs_search", "read", "write", "undo", "remove", "patch", "multi_patch", "shell", "fetch", "skill", "todo_write", "todo_read", "task", "Read", "Write", "Task"], "weight": 30},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5},
+    {"id": "parallel_tool_calls", "group": "habits", "op": "habit_equals", "name": "parallel_tool_calls", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "opencode/", "codex"]},
+    {"op": "header_present", "name": "originator"}
+  ],
+  "notes": "2.13.21 (Rust binary): user-agent 'Forge', 'x-title: forge', 'x-app-version: vv<version>' and 'http-referer: https://forgecode.dev' on every request of both protocols — chat completions (OPENAI_URL) and the Anthropic messages API (ANTHROPIC_URL), hence family 'any'. Each run first lists GET /v1/models, then sends a title side request (identity 'You are Title Generator', json_schema response format, no tools) before the main request; two consecutive system messages (the agent prompt, then <system_information>). The Anthropic variant capitalises Read, Write and Task. Identical on the first turn, after the tool call and on the --conversation-id follow-up."
+}

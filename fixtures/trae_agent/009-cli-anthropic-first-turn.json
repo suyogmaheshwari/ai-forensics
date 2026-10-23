@@ -1,0 +1,70 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "x-stainless-timeout": "600",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "Anthropic/Python 0.54.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "0.54.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "anthropic-version": "2023-06-01",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "600"
+ },
+ "body": {
+  "model": "claude-sonnet-4-20250514",
+  "max_tokens": 4096,
+  "temperature": 0.5,
+  "top_p": 1,
+  "top_k": 0,
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are an expert AI software engineering agent.\n\nFile Path Rule: All tools that take a `file_path` as an argument require an **absolute path**. You MUST construct the full, absolute path by combining",
+    "text_len": 3736
+   }
+  ],
+  "tools": [
+   {
+    "name": "bash",
+    "type": "bash_20250124",
+    "description_prefix": ""
+   },
+   {
+    "name": "str_replace_based_edit_tool",
+    "type": "text_editor_20250429",
+    "description_prefix": ""
+   },
+   {
+    "name": "sequentialthinking",
+    "type": null,
+    "description_prefix": "A detailed tool for dynamic and reflective problem-solving through thoughts.\nThis tool helps analyze problems through a flexible thinking process that can adapt and evolve.\nEach thought can build on, "
+   },
+   {
+    "name": "task_done",
+    "type": null,
+    "description_prefix": "Report the completion of the task. Note that you cannot call this tool before any verification is done. You can write reproduce / test script to verify your solution."
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "trae_agent",
+ "agent_version": "e839e55",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

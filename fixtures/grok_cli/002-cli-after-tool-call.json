@@ -1,0 +1,105 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "user-agent": "OpenAI/JS 5.23.2",
+  "x-stainless-retry-count": "0",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "5.23.2",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "content-type": "application/json",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "grok-code-fast-1",
+  "max_tokens": 1536,
+  "temperature": 0.7,
+  "tool_choice": "auto",
+  "search_parameters": {
+   "mode": "off"
+  },
+  "tools": [
+   {
+    "name": "view_file",
+    "type": "function",
+    "description_prefix": "View contents of a file or list directory contents"
+   },
+   {
+    "name": "create_file",
+    "type": "function",
+    "description_prefix": "Create a new file with specified content"
+   },
+   {
+    "name": "str_replace_editor",
+    "type": "function",
+    "description_prefix": "Replace specific text in a file. Use this for single line edits only"
+   },
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Execute a bash command"
+   },
+   {
+    "name": "search",
+    "type": "function",
+    "description_prefix": "Unified search tool for finding text content or files (similar to Cursor's search)"
+   },
+   {
+    "name": "create_todo_list",
+    "type": "function",
+    "description_prefix": "Create a new todo list for planning and tracking tasks"
+   },
+   {
+    "name": "update_todo_list",
+    "type": "function",
+    "description_prefix": "Update existing todos in the todo list"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Grok CLI, an AI assistant that helps with file editing, coding tasks, and system operations.\n\nYou have access to these tools:\n- view_file: View file contents or directory listings\n- create_fil",
+      "text_len": 3643
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "grok_cli",
+ "agent_version": "0.0.34",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

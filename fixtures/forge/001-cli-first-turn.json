@@ -1,0 +1,65 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "user-agent": "Forge",
+  "x-title": "forge",
+  "x-app-version": "vv2.13.21",
+  "http-referer": "https://forgecode.dev",
+  "content-type": "application/json",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "temperature": 1.0,
+  "response_format": {
+   "type": "json_schema",
+   "json_schema": {
+    "name": "title",
+    "schema": {
+     "$schema": "https://json-schema.org/draft/2020-12/schema",
+     "title": "title",
+     "description": "Structured response for title generation using JSON format",
+     "type": "object",
+     "properties": {
+      "title": {
+       "description": "The generated title for the conversation",
+       "type": "string"
+      }
+     },
+     "required": [
+      "title"
+     ]
+    }
+   }
+  },
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Title Generator, an expert assistant that analyzes user tasks and generates precise, impactful titles for user prompts.\n\n## Core Requirements:\n\n- **Length**: 3–7 words preferred\n- **Format**: ",
+      "text_len": 396
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "forge",
+ "agent_version": "2.13.21",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

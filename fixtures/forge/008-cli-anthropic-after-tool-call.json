@@ -1,0 +1,142 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "anthropic-version": "2023-06-01",
+  "anthropic-beta": "interleaved-thinking-2025-05-14,structured-outputs-2025-11-13",
+  "user-agent": "Forge",
+  "x-title": "forge",
+  "x-app-version": "vv2.13.21",
+  "http-referer": "https://forgecode.dev",
+  "content-type": "application/json",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": true,
+  "max_tokens": 20480,
+  "thinking": {
+   "type": "adaptive",
+   "display": "summarized"
+  },
+  "output_config": {
+   "effort": "medium"
+  },
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are Forge, an expert software engineering assistant designed to help users with programming tasks, file operations, and software development processes. Your knowledge spans multiple programming la",
+    "text_len": 8798,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   },
+   {
+    "type": "text",
+    "text_prefix": "<system_information>\n<operating_system>linux</operating_system>\n<current_working_directory><path></current_working_directory>\n<default_shell>/bin/sh</default_s",
+    "text_len": 2592,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "tools": [
+   {
+    "name": "fs_search",
+    "type": null,
+    "description_prefix": "A powerful search tool built on ripgrep\n\nUsage:\n- ALWAYS use `fs_search` for search tasks. NEVER invoke `grep` or `rg` as a Bash command. The `fs_search` tool has been optimized for correct permission"
+   },
+   {
+    "name": "Read",
+    "type": null,
+    "description_prefix": "Reads a file from the local filesystem. You can access any file directly by using this tool. Assume this tool is able to read all files on the machine. If the User provides a path to a file assume tha"
+   },
+   {
+    "name": "Write",
+    "type": null,
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the read tool first to rea"
+   },
+   {
+    "name": "undo",
+    "type": null,
+    "description_prefix": "Reverts the most recent file operation (create/modify/delete) on a specific file. Use this tool when you need to recover from incorrect file changes or if a revert is requested by the user."
+   },
+   {
+    "name": "remove",
+    "type": null,
+    "description_prefix": "Request to remove a file at the specified path. Use when you need to delete an existing file. The path must be absolute. This operation can be undone using the `undo` tool."
+   },
+   {
+    "name": "patch",
+    "type": null,
+    "description_prefix": "Performs exact string replacements in files.\nUsage:\n- You must use your `read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the fi"
+   },
+   {
+    "name": "multi_patch",
+    "type": null,
+    "description_prefix": "This is a tool for making multiple edits to a single file in one operation. It is built on top of the patch tool and allows you to perform multiple find-and-replace operations efficiently. Prefer this"
+   },
+   {
+    "name": "shell",
+    "type": null,
+    "description_prefix": "Executes shell commands. The `cwd` parameter sets the working directory for command execution. If not specified, defaults to `<path>\n\nCRITICAL: Do NOT use `c"
+   },
+   {
+    "name": "fetch",
+    "type": null,
+    "description_prefix": "Retrieves content from URLs as markdown or raw text. Enables access to current online information including websites, APIs and documentation. Use for obtaining up-to-date information beyond training d"
+   },
+   {
+    "name": "skill",
+    "type": null,
+    "description_prefix": "Fetches detailed information about a specific skill. Use this tool to load skill content and instructions when you need to understand how to perform a specialized task. Skills provide domain-specific "
+   },
+   {
+    "name": "todo_write",
+    "type": null,
+    "description_prefix": "Use this tool to create and manage a structured task list for your current coding session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.\nIt also help"
+   },
+   {
+    "name": "todo_read",
+    "type": null,
+    "description_prefix": "Retrieves the current todo list for this coding session. Use this tool to check existing todos before making updates, or to review the current state of tasks at any point during the session.\n\n## When "
+   },
+   {
+    "name": "Task",
+    "type": null,
+    "description_prefix": "Launch a new agent to handle complex, multi-step tasks autonomously. \n\nThe task tool launches specialized agents (subprocesses) that autonomously handle complex tasks. Each agent type has specific cap"
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "shell"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "forge",
+ "agent_version": "2.13.21",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

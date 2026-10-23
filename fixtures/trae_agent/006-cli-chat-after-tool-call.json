@@ -1,0 +1,88 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 1.86.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "1.86.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "600"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "max_tokens": 4096,
+  "temperature": 0.5,
+  "top_p": 1,
+  "n": 1,
+  "tools": [
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Run commands in a bash shell\n* When invoking this tool, the contents of the \"command\" parameter does NOT need to be XML-escaped.\n* You have access to a mirror of common linux and python packages via a"
+   },
+   {
+    "name": "str_replace_based_edit_tool",
+    "type": "function",
+    "description_prefix": "Custom editing tool for viewing, creating and editing files\n* State is persistent across command calls and discussions with the user\n* If `path` is a file, `view` displays the result of applying `cat "
+   },
+   {
+    "name": "sequentialthinking",
+    "type": "function",
+    "description_prefix": "A detailed tool for dynamic and reflective problem-solving through thoughts.\nThis tool helps analyze problems through a flexible thinking process that can adapt and evolve.\nEach thought can build on, "
+   },
+   {
+    "name": "task_done",
+    "type": "function",
+    "description_prefix": "Report the completion of the task. Note that you cannot call this tool before any verification is done. You can write reproduce / test script to verify your solution."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are an expert AI software engineering agent.\n\nFile Path Rule: All tools that take a `file_path` as an argument require an **absolute path**. You MUST construct the full, absolute path by combining",
+      "text_len": 3736
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "trae_agent",
+ "agent_version": "e839e55",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

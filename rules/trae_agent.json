@@ -1,0 +1,23 @@
+{
+  "product": "trae_agent",
+  "display_name": "Trae Agent (ByteDance, open-source trae-cli)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_python_sdk", "group": "header", "op": "header_prefix", "name": "user-agent", "value": ["OpenAI/Python", "Anthropic/Python"], "weight": 20},
+    {"id": "stainless_python", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "python", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are an expert AI software engineering agent"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "str_replace_based_edit_tool", "sequentialthinking", "task_done"], "weight": 30},
+    {"id": "temperature_half", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0.5, "weight": 5},
+    {"id": "no_stream", "group": "habits", "op": "habit_equals", "name": "stream", "value": null, "weight": 0}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "Anthropic/JS", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "header_present", "name": "x-stainless-raw-response"},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "trae-cli 0.1.0 (commit e839e55, 2026-02): no product header, only the openai-python or anthropic-python SDK defaults, so identity ('You are an expert AI software engineering agent.\\n\\nFile Path Rule…') and the 4-tool set carry the verdict; the LiteLLM-only x-stainless-raw-response header is a deny feature against Aider and OpenHands. The same CLI speaks the Responses API (provider openai), chat completions (provider openrouter) and the Anthropic messages API (provider anthropic), hence family 'any'; never streams, temperature 0.5 and top_p 1 from the config. After a text answer it sends 'It seems that you have not completed the task.' as the user until a done phrase or max_steps; the interactive mode appends a second system+user pair for a real follow-up."
+}

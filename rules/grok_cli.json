@@ -1,0 +1,22 @@
+{
+  "product": "grok_cli",
+  "display_name": "Grok CLI (superagent-ai, @vibe-kit/grok-cli)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_openai_js", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/JS", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Grok CLI"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["view_file", "create_file", "str_replace_editor", "bash", "search", "create_todo_list", "update_todo_list"], "weight": 30},
+    {"id": "search_parameters", "group": "habits", "op": "habit_present", "value": "search_parameters", "weight": 5},
+    {"id": "temperature", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0.7, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/Python", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "traceparent"},
+    {"op": "header_present", "name": "x-initiator"}
+  ],
+  "notes": "0.0.34: stock openai-node user-agent and no product header; identity ('You are Grok CLI, an AI assistant that helps with file editing…'), the 7-tool set and the xAI-only search_parameters body key ({mode: off} on every turn) identify it; non-streaming, temperature 0.7, max_tokens 1536. Identical on the first turn and after the tool call; headless -p is one-shot, so there is no in-session follow-up to capture (the interactive TUI only). traceparent (OpenClaw) and x-initiator (Copilot CLI) are the deny features against the other OpenAI/JS clients."
+}

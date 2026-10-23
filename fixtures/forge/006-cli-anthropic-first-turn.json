@@ -1,0 +1,51 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "anthropic-version": "2023-06-01",
+  "anthropic-beta": "interleaved-thinking-2025-05-14,structured-outputs-2025-11-13",
+  "user-agent": "Forge",
+  "x-title": "forge",
+  "x-app-version": "vv2.13.21",
+  "http-referer": "https://forgecode.dev",
+  "content-type": "application/json",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": true,
+  "max_tokens": 4000,
+  "temperature": 1.0,
+  "thinking": {
+   "type": "adaptive",
+   "display": "summarized"
+  },
+  "output_config": {
+   "effort": "medium"
+  },
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are Title Generator, an expert assistant that analyzes user tasks and generates precise, impactful titles for user prompts.\n\n## Core Requirements:\n\n- **Length**: 3–7 words preferred\n- **Format**: ",
+    "text_len": 396,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "forge",
+ "agent_version": "2.13.21",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

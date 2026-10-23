@@ -79,6 +79,7 @@ sanitize_all() {  # sanitize_all <agent> <version> [entrypoint] [raw-dir]; numbe
   printf '%s\n' "$version" > "$raw/VERSION"
   n=$(ls "$ROOT/fixtures/$agent" | grep -c '\.json$')
   for f in "$raw"/req_*.json; do
+    [ -e "$f" ] || continue
     line=$("$PY" -m aiforensics.cli shape "$f")
     local family turn; family=$(cut -f2 <<<"$line"); turn=$(cut -f3 <<<"$line")
     [ "$family" = other ] && continue   # GET /v1/models and other non-model requests
@@ -517,16 +518,17 @@ cap_junie() {  # JetBrains Junie with --provider=litellm: no JetBrains login; th
   start_recorder junie "$h/project"
   local flags=(--skip-update-check --share-anonymous-statistics=false --provider=litellm --litellm-url=$BASE --litellm-api-key=dummy
                --model=gpt-5.4 --output-format=json)
-  # HOME stays on the install (the shim resolves the runtime through it); JUNIE_DATA isolates the session data
-  run "$jh" "$h/project" JUNIE_DATA=$h/.junie -- "$jh/.local/bin/junie" "${flags[@]}" --task "$PROMPT1"
-  local sid; sid=$(ls "$h/.junie/sessions" 2>/dev/null | head -1)
-  [ -z "$sid" ] && sid=$(grep -oE '"session_?[iI]d": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
-  run "$jh" "$h/project" JUNIE_DATA=$h/.junie -- "$jh/.local/bin/junie" "${flags[@]}" --resume --session-id="$sid" --task "$PROMPT2"
+  # HOME stays on the install: the shim resolves the runtime through $HOME/.local/share/junie (JUNIE_DATA is that
+  # directory, not the session store). The Java app keeps sessions under the real user home (~/.junie), not $HOME.
+  run "$jh" "$h/project" -- "$jh/.local/bin/junie" "${flags[@]}" --task "$PROMPT1"
+  local sid; sid=$(grep -oE '"session_?[iI][dD]": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
+  [ -z "$sid" ] && sid=$(ls -t ~/.junie/sessions 2>/dev/null | head -1)
+  run "$jh" "$h/project" -- "$jh/.local/bin/junie" "${flags[@]}" --resume --session-id="$sid" --task "$PROMPT2"
   stop_recorder; sanitize_all junie "$v"
 }
 
 cap_open_interpreter() {  # the legacy PyPI package; the current Codex-based CLI ships only through GitHub releases
-  py_venv "$WORK/oi-venv" open-interpreter || return
+  py_venv "$WORK/oi-venv" open-interpreter setuptools || return   # pkg_resources is gone from 3.12 venvs
   local v; v=$("$WORK/oi-venv/bin/pip" show open-interpreter | awk '/^Version/{print $2}')
   local h; h=$(fresh_home open_interpreter); start_recorder open_interpreter "$h/project"
   local env=(LITELLM_LOCAL_MODEL_COST_MAP=True)
