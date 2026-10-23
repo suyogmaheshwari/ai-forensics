@@ -1,0 +1,166 @@
+{
+ "method": "POST",
+ "path": "/v1/responses",
+ "headers": {
+  "content-type": "application/json",
+  "user-agent": "opencode/7.8.17 (linux 6.18.44-fc-v153; x64) ai-sdk/provider-utils/4.0.40 runtime/bun/1.4.4",
+  "http-referer": "https://kilocode.ai",
+  "originator": "opencode",
+  "session-id": "<redacted-id>",
+  "x-session-affinity": "<redacted-id>",
+  "x-session-id": "<redacted-id>",
+  "x-title": "Kilo Code",
+  "accept": "*/*"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "store": false,
+  "tool_choice": "auto",
+  "prompt_cache_key": "<redacted-id>",
+  "tools": [
+   {
+    "name": "agent_manager_models",
+    "type": "function",
+    "description_prefix": "Search the models available to Agent Manager sessions and inspect their reasoning variants.\n\nUse this tool before `agent_manager` when you need to pick a model or reasoning effort. Results are grouped"
+   },
+   {
+    "name": "background_process",
+    "type": "function",
+    "description_prefix": "Run and manage long-running background processes.\n\nUse `start` only for processes that must keep running independently after this tool call returns, such as development servers, file watchers, local s"
+   },
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Executes a given command in a persistent shell session with optional timeout, ensuring proper handling and security measures.\n\nBe aware: OS: linux, Shell: bash\n\nAll commands run in the current working"
+   },
+   {
+    "name": "board_post",
+    "type": "function",
+    "description_prefix": "Post a concise, material update for other Task participants, not personal bookkeeping. Use only INFO, ASK, RESULT, HOLD, or VETO. Recipients can receive a fixed activity notice with a normal tool resu"
+   },
+   {
+    "name": "board_read",
+    "type": "function",
+    "description_prefix": "Read the shared board for this main session and its task children when peer context is relevant, not for solo bookkeeping. Reading history does not show whether other participants have read messages. "
+   },
+   {
+    "name": "cancel_wakeup",
+    "type": "function",
+    "description_prefix": "Review and cancel the wakeups scheduled for this session.\n\nUse this tool to:\n- List the wakeups you scheduled, with their id, due time, and reason (or the scheduled prompt when you gave no reason)\n- C"
+   },
+   {
+    "name": "cron_create",
+    "type": "function",
+    "description_prefix": "Schedule a recurring task for yourself: the harness resumes this session with the prompt you give it each time the schedule comes due.\n\nUse this tool when work should repeat on a wall-clock schedule r"
+   },
+   {
+    "name": "cron_delete",
+    "type": "function",
+    "description_prefix": "Delete a scheduled cron task by its id.\n\nUse this tool to:\n- Stop a recurring task you no longer need\n- Cancel a one-shot task you scheduled with `cron_create`\n\nCall `cron_list` first to find the id.\n"
+   },
+   {
+    "name": "cron_list",
+    "type": "function",
+    "description_prefix": "List the recurring tasks scheduled for this session.\n\nUse this tool to:\n- See every scheduled task with its id, schedule, next fire time, and prompt\n- Find the id to pass to `cron_delete`\n\nIn a sessio"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Performs exact string replacements in files. \n\nUsage:\n- You must use your `Read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the "
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "- Fast file pattern matching tool that works with any codebase size\n- Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"\n- Returns matching file paths\n- Use this tool when you need to find files b"
+   },
+   {
+    "name": "goal",
+    "type": "function",
+    "description_prefix": "Start or resume a session Goal so you keep working toward one objective across turns. Use action start with an objective, or action resume to continue a saved goal that is paused, blocked, or complete"
+   },
+   {
+    "name": "goal_report",
+    "type": "function",
+    "description_prefix": "Report this active Goal as complete or blocked, with a concrete reason based on your work. This is your report, not independent verification. Only the Goal's root worker may report. A scheduled wait i"
+   },
+   {
+    "name": "grep",
+    "type": "function",
+    "description_prefix": "- Fast content search tool that works with any codebase size\n- Searches file contents using regular expressions\n- Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)\n- Filter files b"
+   },
+   {
+    "name": "kilo_local_recall",
+    "type": "function",
+    "description_prefix": "Search and read past conversations from the current project on this machine, including its git worktrees. Use this to recall previous work, find how something was implemented before, or retrieve conte"
+   },
+   {
+    "name": "link_pr",
+    "type": "function",
+    "description_prefix": "Link this session to a pull request.\n\nCall it immediately after you open a pull request or merge request for this\nworktree, or when the user gives you the URL of one. It does not create a pull\nrequest"
+   },
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read a file or directory from the local filesystem. If the path does not exist, an error is returned.\n\nUsage:\n- The filePath parameter should be an absolute path.\n- By default, this tool returns up to"
+   },
+   {
+    "name": "schedule_wakeup",
+    "type": "function",
+    "description_prefix": "Schedule a wakeup for yourself: a point in the future when the harness resumes this session with the prompt you give it.\n\nUse this tool to defer your own continuation to a future time, when you cannot"
+   },
+   {
+    "name": "skill",
+    "type": "function",
+    "description_prefix": "Load a specialized skill when the task at hand matches one of the skills listed in the system prompt.\n\nUse this tool to inject the skill's instructions and resources into current conversation. The out"
+   },
+   {
+    "name": "task",
+    "type": "function",
+    "description_prefix": "Launch a new agent to handle complex, multistep tasks autonomously.\n\nWhen using the Task tool, you must specify a subagent_type parameter to select which agent type to use.\n\nWhen NOT to use the Task t"
+   },
+   {
+    "name": "todowrite",
+    "type": "function",
+    "description_prefix": "Create and maintain a structured task list for the current coding session. Tracks progress, organizes multi-step work, and surfaces status to the user.\n\n## When to use\nUse proactively when:\n- The task"
+   },
+   {
+    "name": "webfetch",
+    "type": "function",
+    "description_prefix": "- Fetches content from a specified URL\n- Takes a URL and optional format as input\n- Fetches the URL content, converts to requested format (markdown by default)\n- Returns the content in the specified f"
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool first to rea"
+   }
+  ],
+  "input": [
+   {
+    "type": null,
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Kilo, a highly skilled software engineer with extensive knowledge in many programming languages, frameworks, design patterns, and best practices.\n\n# Personality\n\n- Your goal is to accomplish t",
+      "text_len": 16242
+     }
+    ]
+   },
+   {
+    "type": null,
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text",
+     "input_text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "kilocode",
+ "agent_version": "7.8.17",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

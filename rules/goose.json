@@ -1,0 +1,21 @@
+{
+  "product": "goose",
+  "display_name": "Goose (Block / AAIF, goose CLI)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "agent_session_id", "group": "header", "op": "header_present", "name": "agent-session-id", "weight": 40},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a general-purpose AI agent called goose", "You are goose"], "weight": 30},
+    {"id": "title_request", "group": "identity", "op": "identity_contains", "value": ["Generate a short title (four words or less) for this conversation"], "weight": 20},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["analyze", "delegate", "edit", "load", "load_skill", "read_image", "shell", "tree", "write"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "OpenAI/", "opencode/", "ai-sdk/"]},
+    {"op": "header_present", "name": "originator"}
+  ],
+  "notes": "1.56.0: no user-agent at all; the product header is agent-session-id (an id, redacted in fixtures but present). The same CLI speaks chat completions (GOOSE_PROVIDER=openai, OPENAI_HOST) and the Anthropic messages API (GOOSE_PROVIDER=anthropic, ANTHROPIC_HOST), hence family 'any'; identity, tools and the session header are the same on both. A title side request without tools (identity 'Generate a short title…') and a GET /v1/models precede the main request on the openai provider in some runs."
+}

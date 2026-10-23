@@ -1,0 +1,20 @@
+{
+  "product": "qwen_code",
+  "display_name": "Qwen Code (Alibaba, @qwen-code/qwen-code)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_qwencode", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "QwenCode/", "weight": 40},
+    {"id": "stainless_js", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "js", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Qwen Code"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["edit", "glob", "grep_search", "notebook_edit", "read_file", "run_shell_command", "skill", "tool_search", "write_file"], "weight": 30},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["GeminiCLI", "OpenAI/", "opencode/", "ai-sdk/"]}
+  ],
+  "notes": "0.26.0: identical headers, identity prefix and tool set on the first turn, after the tool call and on the follow-up; the trailing user message is a <system-reminder> memory catalog, not the prompt. Tool names are the Gemini CLI lineage renamed (read_file, grep_search, glob, run_shell_command) plus tool_search/tool_call; the family gate (chat completions vs Gemini) and the user-agent keep the two apart."
+}

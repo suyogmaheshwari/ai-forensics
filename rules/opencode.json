@@ -1,0 +1,23 @@
+{
+  "product": "opencode",
+  "display_name": "OpenCode (opencode-ai)",
+  "family": "responses",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_opencode", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "opencode/", "weight": 30},
+    {"id": "originator_opencode", "group": "header", "op": "header_equals", "name": "originator", "value": "opencode", "weight": 20},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are opencode", "You are a title generator"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "edit", "glob", "grep", "read", "skill", "task", "todowrite", "webfetch", "write"], "weight": 30},
+    {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5},
+    {"id": "prompt_cache_key", "group": "habits", "op": "habit_present", "value": "prompt_cache_key", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_present", "name": "x-title"},
+    {"op": "header_contains", "name": "http-referer", "value": "kilocode"},
+    {"op": "header_prefix", "name": "originator", "value": "codex"},
+    {"op": "header_prefix", "name": "user-agent", "value": "claude-cli/"}
+  ],
+  "notes": "1.19.4: headers, identity and tools identical on the first turn, after the tool call and on the follow-up. Each session also fires a title-generator side request (developer role 'You are a title generator', small model, temperature 0.5, service_tier flex, reasoning block, no tools) before the main request; headers plus the second identity prefix cover it. Kilo Code CLI is a fork that keeps the opencode user-agent and originator; its x-title and http-referer headers are the deny features."
+}

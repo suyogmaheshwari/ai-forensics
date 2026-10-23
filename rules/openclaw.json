@@ -1,0 +1,22 @@
+{
+  "product": "openclaw",
+  "display_name": "OpenClaw (openclaw, local agent mode)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "traceparent", "group": "header", "op": "header_present", "name": "traceparent", "weight": 15},
+    {"id": "ua_openai_js", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/JS", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a personal assistant running inside OpenClaw"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["exec", "read", "write", "edit", "apply_patch", "web_fetch", "web_search", "memory_search", "memory_get", "sessions_list", "sessions_spawn", "session_status", "cron", "gateway", "message", "process", "nodes", "canvas", "browser", "tts"], "weight": 30},
+    {"id": "max_completion_tokens", "group": "habits", "op": "habit_present", "value": "max_completion_tokens", "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "ai-sdk/", "opencode/", "OpenAI/Python", "claude-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "2026.6.35 with a custom (non-native) provider: the stock openai-node user-agent plus a W3C traceparent header; OpenClaw's own attribution headers (originator, version) and store/service_tier are only sent to its native openai/anthropic endpoints, not to a custom baseUrl. Identity ('You are a personal assistant running inside OpenClaw'), the 33-tool set and max_completion_tokens are identical on the first turn, after the tool call and on the follow-up in the same --session-id."
+}

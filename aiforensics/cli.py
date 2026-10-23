@@ -6,6 +6,8 @@ import os
 import sys
 
 from . import recorder, sanitize
+from .features import family_of
+from .reply import turn_shape
 from .rules import load_rules
 from .scorer import identify
 
@@ -37,6 +39,8 @@ def cmd_sanitize(args):
     out = sanitize.sanitize(record)
     out["agent"] = args.agent
     out["agent_version"] = args.version
+    mode = (record.get("reply") or {}).get("mode", "dead-end") if isinstance(record.get("reply"), dict) else "dead-end"
+    out["captured_with"] = f"aiforensics recorder, {mode}, dummy key"
     text = json.dumps(out, ensure_ascii=False, indent=1)
     if args.output:
         with open(args.output, "w", encoding="utf-8") as fh:
@@ -77,7 +81,16 @@ def cmd_eval(args):
 
 
 def cmd_record(args):
-    recorder.serve(args.out, args.host, args.port)
+    recorder.serve(args.out, args.host, args.port, reply=args.reply, work_dir=args.work_dir, max_requests=args.max_requests)
+    return 0
+
+
+def cmd_shape(args):
+    for path in args.request:
+        with open(path, encoding="utf-8") as fh:
+            record = json.load(fh)
+        kind = (record.get("reply") or {}).get("kind", "") if isinstance(record.get("reply"), dict) else ""
+        print(f"{path}\t{family_of(record.get('path', ''))}\t{turn_shape(record)}\t{kind}")
     return 0
 
 
@@ -90,8 +103,14 @@ def main(argv=None):
     s.add_argument("request"); s.add_argument("--agent", required=True); s.add_argument("--version", default=""); s.add_argument("-o", "--output"); s.set_defaults(fn=cmd_sanitize)
     s = sub.add_parser("eval", help="precision/recall of the rules over fixtures/<label>/*.json")
     s.add_argument("--rules", default=DEFAULT_RULES); s.add_argument("--fixtures", default=DEFAULT_FIXTURES); s.set_defaults(fn=cmd_eval)
-    s = sub.add_parser("record", help="run the dead-end recorder")
-    s.add_argument("--out", default="capture/raw"); s.add_argument("--host", default="127.0.0.1"); s.add_argument("--port", type=int, default=18599); s.set_defaults(fn=cmd_record)
+    s = sub.add_parser("record", help="run the recorder (dead end by default, or reply with a tool call then a text)")
+    s.add_argument("--out", default="capture/raw"); s.add_argument("--host", default="127.0.0.1"); s.add_argument("--port", type=int, default=18599)
+    s.add_argument("--reply", choices=["dead-end", "tool-call", "text"], default="dead-end", help="dead-end: answer 400; tool-call: one harmless tool call, then a text answer; text: always a text answer")
+    s.add_argument("--work-dir", default="", help="agent working directory, used for file paths in synthesised tool calls")
+    s.add_argument("--max-requests", type=int, default=0, help="after this many requests answer 400 again (0 = unlimited)")
+    s.set_defaults(fn=cmd_record)
+    s = sub.add_parser("shape", help="print the turn shape (first-turn / after-tool-call / followup) of captured requests")
+    s.add_argument("request", nargs="+"); s.set_defaults(fn=cmd_shape)
     args = p.parse_args(argv)
     return args.fn(args)
 

@@ -1,0 +1,22 @@
+{
+  "product": "kilocode",
+  "display_name": "Kilo Code CLI (@kilocode/cli, OpenCode fork)",
+  "family": "responses",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "x_title_kilo", "group": "header", "op": "header_equals", "name": "x-title", "value": "Kilo Code", "weight": 30},
+    {"id": "referer_kilocode", "group": "header", "op": "header_contains", "name": "http-referer", "value": "kilocode.ai", "weight": 20},
+    {"id": "ua_opencode", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "opencode/", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Kilo"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "edit", "glob", "grep", "read", "skill", "task", "todowrite", "webfetch", "write", "goal", "goal_report", "link_pr", "kilo_local_recall", "board_post", "board_read", "schedule_wakeup"], "weight": 30},
+    {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5},
+    {"id": "prompt_cache_key", "group": "habits", "op": "habit_present", "value": "prompt_cache_key", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "originator", "value": "codex"},
+    {"op": "header_prefix", "name": "user-agent", "value": "claude-cli/"}
+  ],
+  "notes": "7.8.17: keeps OpenCode's user-agent and 'originator: opencode' but adds 'x-title: Kilo Code' and 'http-referer: https://kilocode.ai', a 'You are Kilo, …' prompt and Kilo-only tools (goal*, board_*, cron_*, kilo_local_recall, link_pr, schedule_wakeup). Identical on the first turn, after the tool call and on the follow-up; no title side request was observed. The OpenCode rule denies on x-title and http-referer so the two do not conflict."
+}
