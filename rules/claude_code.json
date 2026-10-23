@@ -1,0 +1,20 @@
+{
+  "product": "claude_code",
+  "display_name": "Claude Code (Anthropic CLI / VS Code extension / Agent SDK)",
+  "family": "messages",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_claude_cli", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "claude-cli/", "weight": 30},
+    {"id": "beta_claude_code", "group": "header", "op": "header_contains", "name": "anthropic-beta", "value": "claude-code-", "weight": 20},
+    {"id": "x_app_cli", "group": "header", "op": "header_equals", "name": "x-app", "value": "cli", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Claude Code", "You are a Claude agent, built on Anthropic's Claude Agent SDK"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Agent", "Bash", "Edit", "Glob", "Grep", "LSP", "NotebookEdit", "Read", "Skill", "TodoWrite", "WebFetch", "WebSearch", "Write"], "weight": 30},
+    {"id": "thinking_adaptive", "group": "habits", "op": "habit_present", "value": "thinking", "weight": 5},
+    {"id": "context_management", "group": "habits", "op": "habit_present", "value": "context_management", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_present", "name": "originator"}
+  ]
+}

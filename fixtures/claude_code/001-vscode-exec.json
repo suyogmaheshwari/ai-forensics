@@ -1,0 +1,152 @@
+{
+ "method": "POST",
+ "path": "/v1/messages?beta=true",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "claude-cli/2.1.306 (external, claude-vscode, agent-sdk/0.3.305)",
+  "x-claude-code-session-id": "<redacted-id>",
+  "x-stainless-arch": "arm64",
+  "x-stainless-lang": "js",
+  "x-stainless-os": "MacOS",
+  "x-stainless-package-version": "0.128.0",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v26.3.0",
+  "x-stainless-timeout": "600",
+  "anthropic-beta": "claude-code-20250219,oauth-2025-04-20,interleaved-thinking-2025-05-14,thinking-token-count-2026-05-13,context-management-2025-06-27,prompt-caching-scope-2026-01-05,advisor-tool-2026-03-01,advanced-tool-use-2025-11-20,effort-2025-11-24,dangerous-tool-use-2026-09-03,afk-mode-2026-01-31,extended-cache-ttl-2025-04-11",
+  "anthropic-dangerous-direct-browser-access": "true",
+  "anthropic-version": "2023-06-01",
+  "x-app": "cli"
+ },
+ "body": {
+  "model": "claude-sonnet-5",
+  "stream": true,
+  "max_tokens": 64000,
+  "thinking": {
+   "type": "adaptive",
+   "display": "omitted"
+  },
+  "output_config": {
+   "effort": "high"
+  },
+  "metadata_keys": [
+   "user_id"
+  ],
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "x-anthropic-billing-header: cc_version=2.1.306.688; cc_entrypoint=claude-vscode;",
+    "text_len": 80
+   },
+   {
+    "type": "text",
+    "text_prefix": "You are a Claude agent, built on Anthropic's Claude Agent SDK.",
+    "text_len": 62,
+    "cache_control": {
+     "type": "ephemeral",
+     "ttl": "1h"
+    }
+   },
+   {
+    "type": "text",
+    "text_prefix": "\nYou are an agent working with the user toward their goals, using your own judgment along the way. Use the instructions below and the tools available to you to assist the user.\n\nIMPORTANT: Assist with",
+    "text_len": 28331,
+    "cache_control": {
+     "type": "ephemeral",
+     "ttl": "1h"
+    }
+   }
+  ],
+  "tools": [
+   {
+    "name": "Agent",
+    "type": null,
+    "description_prefix": "Launch a new agent to handle complex, multi-step tasks. Each agent type has specific capabilities and tools available to it.\n\nAvailable agent types are listed in <system-reminder> messages in the conv"
+   },
+   {
+    "name": "Artifact",
+    "type": null,
+    "description_prefix": "The Artifact tool renders an HTML file as an Artifact: a web page hosted on claude.ai that is private by default. Claude uses it when a page would be clearer than terminal text, or when the person or "
+   },
+   {
+    "name": "Bash",
+    "type": null,
+    "description_prefix": "Executes a given bash command and returns its output.\n\nThe working directory persists between commands, but shell state does not. The shell environment is initialized from the user's profile (bash or "
+   },
+   {
+    "name": "Edit",
+    "type": null,
+    "description_prefix": "Performs exact string replacements in files.\n\nUsage:\n- You must use your `Read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the f"
+   },
+   {
+    "name": "ListAgents",
+    "type": null,
+    "description_prefix": "Lists agents you can SendMessage to — in-process subagents you spawned, the teammates on your team, other local Claude sessions on this machine, your Claude sessions running in the cloud (when this se"
+   },
+   {
+    "name": "Read",
+    "type": null,
+    "description_prefix": "Reads a file from the local filesystem. You can access any file directly by using this tool.\nAssume this tool is able to read all files on the machine. If the User provides a path to a file assume tha"
+   },
+   {
+    "name": "ReportFindings",
+    "type": null,
+    "description_prefix": "Report code-review findings as a typed list so the host UI can render them. Use this only when the active code-review instructions tell you to report findings with this tool; otherwise follow whatever"
+   },
+   {
+    "name": "ScheduleWakeup",
+    "type": null,
+    "description_prefix": "Schedule when to resume work in /loop dynamic mode — the user invoked /loop without an interval, asking you to self-pace iterations of a specific task.\n\nDo NOT schedule a short-interval wakeup to poll"
+   },
+   {
+    "name": "Skill",
+    "type": null,
+    "description_prefix": "Invoke a skill.\n\nA skill is a packaged set of instructions the user or project has set up for a particular kind of task (deploy steps, a review checklist, a repo-specific workflow). Available skills a"
+   },
+   {
+    "name": "ToolSearch",
+    "type": null,
+    "description_prefix": "Fetches full schema definitions for deferred tools so they can be called.\n\nDeferred tools appear by name in <system-reminder> messages. Until fetched, only the name is known — there is no parameter sc"
+   },
+   {
+    "name": "Workflow",
+    "type": null,
+    "description_prefix": "Execute a workflow script that orchestrates multiple subagents deterministically. Workflows run in the background — this tool returns immediately with a task ID, and a <task-notification> arrives when"
+   },
+   {
+    "name": "DeferredToolPlaceholder",
+    "type": null,
+    "description_prefix": "Reserved placeholder that keeps deferred tool loading active; never call this tool."
+   },
+   {
+    "name": "Write",
+    "type": null,
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool first to rea"
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>"
+   },
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "<system-reminder>\n# Environment\nYou have been invoked in the following environment: \n - Primary working directory: <path>\n - Is a git repository: false\n - Additiona",
+      "text_len": 23463,
+      "cache_control": {
+       "type": "ephemeral",
+       "ttl": "1h"
+      }
+     }
+    ]
+   }
+  ]
+ },
+ "agent": "claude_code",
+ "agent_version": "2.1.299",
+ "captured_with": "aiforensics recorder, dead-end, dummy key"
+}

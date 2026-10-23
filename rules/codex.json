@@ -1,0 +1,20 @@
+{
+  "product": "codex",
+  "display_name": "OpenAI Codex CLI (codex / codex exec)",
+  "family": "responses",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "originator", "group": "header", "op": "header_prefix", "name": "originator", "value": ["codex_cli_rs", "codex_exec", "codex"], "weight": 30},
+    {"id": "ua_codex", "group": "header", "op": "header_prefix", "name": "user-agent", "value": ["codex_cli_rs/", "codex_exec/"], "weight": 20},
+    {"id": "codex_headers", "group": "header", "op": "header_present", "name": "x-codex-turn-metadata", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Codex", "You are a coding agent running in the Codex CLI"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["shell", "exec_command", "write_stdin", "apply_patch", "update_plan", "view_image"], "weight": 30},
+    {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5},
+    {"id": "reasoning_block", "group": "habits", "op": "habit_present", "value": "reasoning", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": "claude-cli/"}
+  ]
+}

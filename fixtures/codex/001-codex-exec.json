@@ -1,0 +1,131 @@
+{
+ "method": "POST",
+ "path": "/v1/responses",
+ "headers": {
+  "x-codex-beta-features": "remote_compaction_v2",
+  "x-codex-window-id": "<redacted-id>",
+  "x-codex-turn-metadata": "<redacted-id>",
+  "x-openai-internal-codex-responses-lite": "true",
+  "x-client-request-id": "<redacted-id>",
+  "session-id": "<redacted-id>",
+  "thread-id": "<redacted-id>",
+  "accept": "text/event-stream",
+  "content-type": "application/json",
+  "originator": "codex_exec",
+  "user-agent": "codex_exec/0.163.0 (Mac OS 15.7.3; arm64) unknown (codex_exec; 0.163.0)"
+ },
+ "body": {
+  "model": "gpt-6.1-sol",
+  "stream": true,
+  "store": false,
+  "include": [
+   "reasoning.encrypted_content"
+  ],
+  "reasoning": {
+   "effort": "low",
+   "context": "all_turns"
+  },
+  "text": {
+   "verbosity": "low"
+  },
+  "tool_choice": "auto",
+  "parallel_tool_calls": false,
+  "prompt_cache_key": "<redacted-id>",
+  "client_metadata_keys": [
+   "root_turn_id",
+   "session_id",
+   "thread_id",
+   "turn_id",
+   "x-codex-installation-id",
+   "x-codex-turn-metadata",
+   "x-codex-window-id"
+  ],
+  "input": [
+   {
+    "type": "additional_tools",
+    "role": "developer",
+    "tools": [
+     {
+      "name": "functions",
+      "type": "namespace"
+     },
+     {
+      "name": "clock",
+      "type": "namespace"
+     },
+     {
+      "name": "collaboration",
+      "type": "namespace"
+     }
+    ]
+   },
+   {
+    "type": "message",
+    "role": "developer",
+    "content": [
+     {
+      "type": "input_text",
+      "text_prefix": "You are Codex, an agent based on GPT-6. You and the user share one workspace, and your job is to collaborate with them until their intended goal is completely handled.\n\n# When to ask the user for perm",
+      "text_len": 21769
+     }
+    ]
+   },
+   {
+    "type": "message",
+    "role": "developer",
+    "content": [
+     {
+      "type": "input_text",
+      "text_prefix": "<skills_instructions>\n## Skills\nA skill is a set of local instructions to follow that is stored in a `SKILL.md` file. Below is the list of skills that can be used. Each entry includes a name, descript",
+      "text_len": 4779
+     },
+     {
+      "type": "input_text",
+      "text_prefix": "<permissions instructions>\nFilesystem sandboxing defines which files can be read or written. `sandbox_mode` is `read-only`: The sandbox only permits reading files. Network access is restricted.\nApprov",
+      "text_len": 341
+     },
+     {
+      "type": "input_text",
+      "text_prefix": "<collaboration_mode># Collaboration Mode: Default\n\nYou are now in Default mode. Any previous instructions for other modes (e.g. Plan mode) are no longer active.\n\nYour active mode changes only when new",
+      "text_len": 920
+     }
+    ]
+   },
+   {
+    "type": "message",
+    "role": "developer",
+    "content": [
+     {
+      "type": "input_text",
+      "text_prefix": "<multi_agent_role>You are `/root`, the primary agent in a team of agents collaborating to fulfill the user's goals.\n\nAt the start of your turn, you are the active agent.\nYou can spawn sub-agents to ha",
+      "text_len": 2400
+     }
+    ]
+   },
+   {
+    "type": "message",
+    "role": "developer",
+    "content": [
+     {
+      "type": "input_text",
+      "text_prefix": "<multi_agent_mode>Any earlier instruction enabling proactive multi-agent delegation no longer applies. Do not spawn sub-agents unless the user or applicable AGENTS.md/skill instructions explicitly ask",
+      "text_len": 271
+     }
+    ]
+   },
+   {
+    "type": "message",
+    "role": "user",
+    "content": "<redacted>"
+   },
+   {
+    "type": "message",
+    "role": "user",
+    "content": "<redacted>"
+   }
+  ]
+ },
+ "agent": "codex",
+ "agent_version": "0.163.0",
+ "captured_with": "aiforensics recorder, dead-end, dummy key"
+}
