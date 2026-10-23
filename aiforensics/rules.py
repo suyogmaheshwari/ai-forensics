@@ -14,7 +14,8 @@
     {"id": "tools", "group": "tools", "op": "tool_set", "value": ["Bash", "Read", ...], "weight": 30},
     {"id": "thinking", "group": "habits", "op": "habit_present", "value": "thinking", "weight": 10}
   ],
-  "deny": [ {"op": "header_prefix", "name": "originator", "value": "codex"} ]
+  "deny": [ {"op": "header_prefix", "name": "originator", "value": "codex"} ],
+  "notes": "which features varied between turns or versions"
 }
 
 Operators: header_equals, header_prefix, header_contains, header_present,
@@ -22,6 +23,11 @@ identity_prefix (any of the listed prefixes, case-sensitive, leading whitespace 
 identity_contains, tool_set (share of the known tool names present in the request: >=0.7 full
 weight, >=0.4 half, else 0), tool_present (any of the listed names), habit_present, habit_equals,
 model_prefix.
+
+Families: messages, chat_completions, responses, gemini, completions; "any" for an agent that
+speaks several (Goose). Habit keys are the body parameters listed in features.py plus
+"generationConfig.<key>" for Gemini bodies. Headers are matched lower-cased; identifier headers
+are redacted in fixtures but still present, so header_present works on them (agent-session-id).
 """
 from __future__ import annotations
 

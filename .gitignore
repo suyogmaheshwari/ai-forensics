@@ -6,3 +6,4 @@ capture/raw/
 dist/
 build/
 recorder.log
+capture/.work/
