@@ -6,6 +6,8 @@
   "min_groups": 2,
   "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
   "features": [
+    {"id": "originator_openclaw", "group": "header", "op": "header_equals", "name": "originator", "value": "openclaw", "weight": 30},
+    {"id": "ua_openclaw", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "openclaw/", "weight": 20},
     {"id": "traceparent", "group": "header", "op": "header_present", "name": "traceparent", "weight": 15},
     {"id": "ua_openai_js", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/JS", "weight": 10},
     {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a personal assistant running inside OpenClaw"], "weight": 30},
@@ -15,8 +17,8 @@
   ],
   "deny": [
     {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "ai-sdk/", "opencode/", "OpenAI/Python", "claude-cli/"]},
-    {"op": "header_present", "name": "originator"},
+    {"op": "header_prefix", "name": "originator", "value": ["codex", "opencode"]},
     {"op": "header_present", "name": "agent-session-id"}
   ],
-  "notes": "2026.6.35 with a custom (non-native) provider: the stock openai-node user-agent plus a W3C traceparent header; OpenClaw's own attribution headers (originator, version) and store/service_tier are only sent to its native openai/anthropic endpoints, not to a custom baseUrl. Identity ('You are a personal assistant running inside OpenClaw'), the 33-tool set and max_completion_tokens are identical on the first turn, after the tool call and on the follow-up in the same --session-id."
+  "notes": "2026.6.35, two header variants from the same CLI. Native route (the openai provider's base URL names api.openai.com, as a gateway on the real endpoint sees it): 'originator: openclaw', 'user-agent: openclaw/<version>', a 'version' header, and 'store: false' in the body. Any other base URL (a custom provider id or the openai provider with a proxy URL): the stock openai-node user-agent 'OpenAI/JS <sdk>' and no attribution headers or store; a W3C traceparent header is sent on both. Identity ('You are a personal assistant running inside OpenClaw'), the 33-tool set, max_completion_tokens and stream_options are identical across both variants and across the first turn, after the tool call and the follow-up in the same --session-id."
 }

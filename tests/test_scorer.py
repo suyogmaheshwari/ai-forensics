@@ -94,6 +94,22 @@ def test_deny_feature_vetoes_product():
     assert identify(rec, RULES)["product"] is None
 
 
+def test_openclaw_identified_with_and_without_attribution_headers():
+    body = {"model": "gpt-4o", "stream": True, "stream_options": {"include_usage": True}, "max_completion_tokens": 8192,
+            "messages": [{"role": "system", "content": "You are a personal assistant running inside OpenClaw.\n## Tooling"}, {"role": "user", "content": "hi"}],
+            "tools": [{"type": "function", "function": {"name": n, "parameters": {}}} for n in
+                      ("exec", "read", "write", "edit", "apply_patch", "web_fetch", "web_search", "memory_search", "memory_get", "sessions_list",
+                       "sessions_spawn", "session_status", "cron", "gateway", "message", "process", "nodes", "canvas", "browser", "tts")]}
+    proxy = {"method": "POST", "path": "/v1/chat/completions", "headers": {"user-agent": "OpenAI/JS 6.39.1", "traceparent": "00-x-y-01"}, "body": body}
+    native = {"method": "POST", "path": "/v1/chat/completions", "body": dict(body, store=False),
+              "headers": {"user-agent": "openclaw/2026.6.35", "originator": "openclaw", "version": "2026.6.35", "traceparent": "00-x-y-01"}}
+    for rec in (proxy, native):
+        res = identify(rec, RULES)
+        assert res["decision"] == "identified" and res["product"] == "openclaw", res["scores"][:3]
+    headers_only = dict(native, body={"model": "gpt-4o", "messages": [{"role": "user", "content": "hi"}]})
+    assert identify(headers_only, RULES)["product"] is None   # a header alone never carries a verdict
+
+
 def test_fork_does_not_conflict_with_its_parent():
     """Kilo Code keeps OpenCode's user-agent and originator; its own headers must veto OpenCode."""
     kilo = {"method": "POST", "path": "/v1/responses",
