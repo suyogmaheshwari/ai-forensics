@@ -1,0 +1,75 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 2.54.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "2.54.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-raw-response": "true",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "600.0"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "tools": [
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Execute a bash command"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are a helpful assistant that can interact with a computer.",
+      "text_len": 62
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "mini_swe_agent",
+ "agent_version": "2.4.6",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

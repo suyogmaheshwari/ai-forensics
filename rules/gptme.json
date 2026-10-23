@@ -1,0 +1,103 @@
+{
+  "product": "gptme",
+  "display_name": "gptme (Erik Bjäreholt)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {
+    "header": 50,
+    "identity": 30,
+    "tools": 30,
+    "habits": 10
+  },
+  "features": [
+    {
+      "id": "ua_openai_python",
+      "group": "header",
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": "OpenAI/Python",
+      "weight": 20
+    },
+    {
+      "id": "stainless_python",
+      "group": "header",
+      "op": "header_equals",
+      "name": "x-stainless-lang",
+      "value": "python",
+      "weight": 10
+    },
+    {
+      "id": "identity",
+      "group": "identity",
+      "op": "identity_prefix",
+      "value": [
+        "You are gptme",
+        "Generate concise conversation titles"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "tool_set",
+      "group": "tools",
+      "op": "tool_set",
+      "value": [
+        "append",
+        "complete",
+        "convert",
+        "mcp",
+        "memory",
+        "patch",
+        "patch_many",
+        "recall",
+        "save",
+        "shell",
+        "tmux",
+        "todo",
+        "vent",
+        "ipython"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "temperature_zero",
+      "group": "habits",
+      "op": "habit_equals",
+      "name": "temperature",
+      "value": 0.0,
+      "weight": 5
+    },
+    {
+      "id": "stream_usage",
+      "group": "habits",
+      "op": "habit_present",
+      "value": "stream_options",
+      "weight": 5
+    }
+  ],
+  "deny": [
+    {
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": [
+        "QwenCode/",
+        "OpenAI/JS",
+        "opencode/",
+        "ai-sdk/",
+        "claude-cli/",
+        "Charm-Crush/",
+        "kimi-code-cli/",
+        "AsyncOpenAI/"
+      ]
+    },
+    {
+      "op": "header_present",
+      "name": "originator"
+    },
+    {
+      "op": "header_present",
+      "name": "agent-session-id"
+    }
+  ],
+  "notes": "0.35.1 with OPENAI_BASE_URL and a local/<model> name: openai-python headers; the main requests carry no x-stainless-raw-response but the title side request does, so that header is not a feature either way. Three leading system messages: the 'You are gptme v<version>…' prompt, a cache-boundary marker and a system-information block; the small title request ('Generate concise conversation titles.', no stream, no tools, temperature 0) follows the first turn and is covered by the second identity prefix. temperature 0.0 and top_p 0.1 on every request; the markdown tool format (--tool-format markdown) sends no tools key. Identical on the first turn, after the tool call and on the --name/-r follow-up; a text answer triggers '<system>No tool call detected…</system>' auto-replies until the complete tool is called."
+}

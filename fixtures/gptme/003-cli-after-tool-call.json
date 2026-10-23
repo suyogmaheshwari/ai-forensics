@@ -1,0 +1,163 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 2.54.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "2.54.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "600"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "temperature": 0.0,
+  "top_p": 0.1,
+  "tools": [
+   {
+    "name": "append",
+    "type": "function",
+    "description_prefix": "Append the given content to a file."
+   },
+   {
+    "name": "complete",
+    "type": "function",
+    "description_prefix": "\nUse this tool to signal that you have completed your work and the autonomous session should end.\n\nMake sure you have actually completely finished before calling this tool.\n\n### When to use complete\n\n"
+   },
+   {
+    "name": "convert",
+    "type": "function",
+    "description_prefix": "Use this tool when a workflow needs a file in a different format: render a PDF to images for visual inspection, extract text from a document for summarization, make a video thumbnail, or reformat an i"
+   },
+   {
+    "name": "gh",
+    "type": "function",
+    "description_prefix": "### When to use\n\nUse `gh` instead of shell for GitHub issues, PRs, CI runs, and merges.\nNative paths collapse API calls, keep CI state structured, and add merge\nsafety guards easy to miss with raw she"
+   },
+   {
+    "name": "mcp",
+    "type": "function",
+    "description_prefix": "### When to use the mcp tool\n\nUse mcp to discover, load, inspect, and manage MCP servers:\n- `/mcp search <capability>` finds new servers\n- `/mcp load <server-name>` loads one\n- `/mcp list` shows what "
+   },
+   {
+    "name": "memory",
+    "type": "function",
+    "description_prefix": "Save a persistent memory to recall important context across future sessions.\n\nUse this tool when you learn something worth remembering for future work:\n- A user preference that should shape all future"
+   },
+   {
+    "name": "patch",
+    "type": "function",
+    "description_prefix": "To patch/modify files, we use an adapted version of git conflict markers.\n\nMultiple ORIGINAL/UPDATED blocks can make several changes in one patch.\nKeep patches small. Scope each change to a function/c"
+   },
+   {
+    "name": "patch_many",
+    "type": "function",
+    "description_prefix": "Apply patches to multiple files atomically.\nPatches are validated in-memory: if ANY fails, NO files are written.\n\nSimple (one hunk per file), paths in the fence header:\n  ```patch_many path1.py\n  <<<<"
+   },
+   {
+    "name": "recall",
+    "type": "function",
+    "description_prefix": "Recall compacted tool outputs by stable result ID with recall_result(result_id, start_char=0, max_chars=20000)."
+   },
+   {
+    "name": "save",
+    "type": "function",
+    "description_prefix": "Create or overwrite a file with the given content.\n\nThe path can be relative to the current directory, or absolute.\nIf the current directory changes, the path will be relative to the new directory.\n\n#"
+   },
+   {
+    "name": "shell",
+    "type": "function",
+    "description_prefix": "The given command will be executed in a stateful bash shell.\nThe shell tool will respond with the output of the execution.\n\nThese programs are available, among others:\n- apt-get\n- docker\n- ffmpeg\n- gi"
+   },
+   {
+    "name": "tmux",
+    "type": "function",
+    "description_prefix": "\nYou can use the tmux tool to run long-lived and/or interactive applications in a tmux session.\n\n### When to use tmux\n\nUse tmux for interactive applications requiring ongoing keyboard input or output\n"
+   },
+   {
+    "name": "todo",
+    "type": "function",
+    "description_prefix": "### When to use the todo tool\n\nUse todo as working memory for 3+ step tasks in the current conversation.\nFor persistent cross-session tracking, use `gptodo` or task files instead.\n\nManage todos for th"
+   },
+   {
+    "name": "vent",
+    "type": "function",
+    "description_prefix": "Use when you are stuck, frustrated, or hitting a repeated failure. Write a\nbrief description of what you're trying to do and what's blocking you, then\noptionally tag who/what would unblock it on a fin"
+   },
+   {
+    "name": "ipython",
+    "type": "function",
+    "description_prefix": "Available functions: list_chats, search_chats, read_chat, recall_result, view_image"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are gptme v0.35.1, a general-purpose AI assistant powered by LLMs. Currently using model: local/gpt-4o\nYou are designed to help users with programming tasks, such as writing code, debugging, and l",
+      "text_len": 25647
+     }
+    ]
+   },
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "# System Prompt Cache Boundary\n\nStatic bootstrap content ends above. Session-volatile context starts below.\n\n---",
+      "text_len": 112
+     }
+    ]
+   },
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "## System Information\n\n**OS:** Ubuntu 24.04\n**Working Directory:** <path>\n\n## Current Date\n\n**Local date:** 2026-10-23 UTC+00:00\n\nDate at session start; per-step time not",
+      "text_len": 561
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "shell"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "gptme",
+ "agent_version": "0.35.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
