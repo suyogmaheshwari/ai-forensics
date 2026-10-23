@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -394,14 +394,15 @@ cap_forge() {
   local v; v=$("$BIN/forge" --version | semver)
   local h; h=$(fresh_home forge); start_recorder forge "$h/project"
   mkdir -p "$h/.forge"
-  # OPENAI_URL/OPENAI_API_KEY are migrated into ~/.forge/.credentials.json on the first run; the model must be
-  # listed by GET /v1/models (the recorder lists "aiforensics")
-  run "$h" "$h/project" OPENAI_URL=$BASE/v1 OPENAI_API_KEY=dummy -- "$BIN/forge" config set model openai_compatible aiforensics
+  # provider login and the OPENAI_URL migration both need a tty, so the credentials file is written directly; the
+  # model must be listed by GET /v1/models (the recorder lists "aiforensics")
+  printf '[{"id": "openai_compatible", "auth_details": {"api_key": "dummy"}, "url_params": {"OPENAI_URL": "%s/v1"}}]\n' "$BASE" > "$h/.forge/.credentials.json"
+  run "$h" "$h/project" -- "$BIN/forge" config set model openai_compatible aiforensics
   run "$h" "$h/project" -- "$BIN/forge" -p "$PROMPT1"
   local cid; cid=$(grep -oE 'Initialize [0-9a-f-]{36}' "$WORK/last_run.log" | head -1 | awk '{print $2}')
   run "$h" "$h/project" -- "$BIN/forge" --conversation-id "$cid" -p "$PROMPT2"
   stop_recorder; sanitize_all forge "$v"
-  # second entry point: the Anthropic protocol (provider login needs a tty, so the credentials file is written directly)
+  # second entry point: the Anthropic protocol
   h=$(fresh_home forge__anthropic); start_recorder forge__anthropic "$h/project"
   mkdir -p "$h/.forge"
   printf '[{"id": "anthropic_compatible", "auth_details": {"api_key": "dummy"}, "url_params": {"ANTHROPIC_URL": "%s/v1"}}]\n' "$BASE" > "$h/.forge/.credentials.json"
@@ -462,7 +463,7 @@ EOF
     run "$h" "$h/project" -- "${cmd[@]}" run "$PROMPT1" "${common[@]}" --console-type simple --max-steps 4
     if [ "$entry" = cli ]; then  # the only headless follow-up is the interactive mode fed from stdin
       printf '%s\n%s\n%s\n%s\nexit\n' "$PROMPT1" "$h/project" "$PROMPT2" "$h/project" > "$WORK/trae-stdin.txt"
-      RUN_STDIN=$WORK/trae-stdin.txt run "$h" "$h/project" -- "${cmd[@]}" interactive "${common[@]}" --max-steps 4
+      RUN_STDIN=$WORK/trae-stdin.txt run "$h" "$h/project" -- "${cmd[@]}" interactive --provider "$provider" --model "$model" --config-file "$h/trae_config.yaml" --max-steps 4
     fi
     stop_recorder; sanitize_all trae_agent "$v" "$entry" "$RAW/$raw"
   done
@@ -470,7 +471,7 @@ EOF
 
 cap_grok_cli() {
   npm_install @vibe-kit/grok-cli grok || return
-  local v; v=$("$BIN/grok" --version | semver)
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@vibe-kit/grok-cli/package.json" | semver)
   local h; h=$(fresh_home grok_cli); start_recorder grok_cli "$h/project"
   local env=(GROK_API_KEY=dummy GROK_BASE_URL=$BASE/v1 GROK_MODEL=grok-code-fast-1)
   # 0.0.34 has no headless resume; the first turn and the tool turn are all a one-shot run gives
@@ -504,6 +505,48 @@ EOF
   run "$h" "$h/project" "${env[@]}" -- "$WORK/vibe-venv/bin/vibe" "${flags[@]}" -p "$PROMPT1"
   run "$h" "$h/project" "${env[@]}" -- "$WORK/vibe-venv/bin/vibe" "${flags[@]}" -c -p "$PROMPT2"
   stop_recorder; sanitize_all mistral_vibe "$v"
+}
+
+cap_junie() {  # JetBrains Junie with --provider=litellm: no JetBrains login; the model must be a built-in name listed by GET /v1/model/info
+  local jh=$WORK/junie-home   # the npm postinstall unpacks the jpackage app (bundled JRE) under $HOME/.local
+  if [ ! -x "$jh/.local/bin/junie" ]; then
+    mkdir -p "$jh"; HOME=$jh timeout 900 npm install -g --prefix "$NPM_PREFIX" @jetbrains/junie >/dev/null 2>&1 || { log "junie install failed"; return; }
+  fi
+  local v; v=$(HOME=$jh "$jh/.local/bin/junie" --version 2>/dev/null | semver)
+  local h; h=$(fresh_home junie); (cd "$h/project" && git init -q)
+  start_recorder junie "$h/project"
+  local flags=(--skip-update-check --share-anonymous-statistics=false --provider=litellm --litellm-url=$BASE --litellm-api-key=dummy
+               --model=gpt-5.4 --output-format=json)
+  # HOME stays on the install (the shim resolves the runtime through it); JUNIE_DATA isolates the session data
+  run "$jh" "$h/project" JUNIE_DATA=$h/.junie -- "$jh/.local/bin/junie" "${flags[@]}" --task "$PROMPT1"
+  local sid; sid=$(ls "$h/.junie/sessions" 2>/dev/null | head -1)
+  [ -z "$sid" ] && sid=$(grep -oE '"session_?[iI]d": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
+  run "$jh" "$h/project" JUNIE_DATA=$h/.junie -- "$jh/.local/bin/junie" "${flags[@]}" --resume --session-id="$sid" --task "$PROMPT2"
+  stop_recorder; sanitize_all junie "$v"
+}
+
+cap_open_interpreter() {  # the legacy PyPI package; the current Codex-based CLI ships only through GitHub releases
+  py_venv "$WORK/oi-venv" open-interpreter || return
+  local v; v=$("$WORK/oi-venv/bin/pip" show open-interpreter | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home open_interpreter); start_recorder open_interpreter "$h/project"
+  local env=(LITELLM_LOCAL_MODEL_COST_MAP=True)
+  printf '%s\n' "$PROMPT1" > "$WORK/oi-stdin.txt"
+  RUN_STDIN=$WORK/oi-stdin.txt run "$h" "$h/project" "${env[@]}" -- "$WORK/oi-venv/bin/interpreter" --stdin -y -dt --api_base "$BASE/v1" --api_key dummy --model gpt-4o
+  stop_recorder; sanitize_all open_interpreter "$v"
+  # second entry point: the Python SDK, whose chat() keeps the conversation across calls
+  h=$(fresh_home open_interpreter__sdk); start_recorder open_interpreter__sdk "$h/project"
+  cat > "$WORK/oi-sdk-driver.py" <<EOF
+from interpreter import interpreter
+interpreter.llm.api_base = "$BASE/v1"
+interpreter.llm.api_key = "dummy"
+interpreter.llm.model = "gpt-4o"
+interpreter.auto_run = True
+interpreter.disable_telemetry = True
+interpreter.chat("$PROMPT1", display=False)
+interpreter.chat("$PROMPT2", display=False)
+EOF
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/oi-venv/bin/python" "$WORK/oi-sdk-driver.py"
+  stop_recorder; sanitize_all open_interpreter "$v" cli-sdk "$RAW/open_interpreter__sdk"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture

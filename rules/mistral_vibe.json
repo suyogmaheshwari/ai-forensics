@@ -1,0 +1,22 @@
+{
+  "product": "mistral_vibe",
+  "display_name": "Mistral Vibe (mistral-vibe CLI)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_httpx", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "python-httpx/", "weight": 10},
+    {"id": "x_affinity", "group": "header", "op": "header_present", "name": "x-affinity", "weight": 20},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You help users get complex tasks done. Act directly and proactively"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["search_tool_functions", "run_typescript", "wait", "read_file", "write_file", "edit", "bash", "skill", "todo", "unified_harness_scratchpad"], "weight": 30},
+    {"id": "temperature", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0.2, "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["OpenAI/", "QwenCode/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "3.0.2 with a generic openai-style provider: a bare python-httpx user-agent and an x-affinity header carrying the session id (redacted in fixtures, present). The prompt starts with the harness text ('You help users get complex tasks done…'); 'You are Mistral Vibe, a CLI coding agent built by Mistral AI' sits mid-prompt beyond the fixture prefix. The 10-tool set (search_tool_functions, run_typescript, unified_harness_scratchpad…), temperature 0.2 and stream_options are identical on the first turn, after the tool call and on the -c follow-up. api_style openai-responses and anthropic exist but were not captured."
+}

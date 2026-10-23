@@ -70,8 +70,10 @@ tool call and a follow-up message, plus side requests such as title generators a
 Each rule's `notes` field records which features were seen to vary between turns or versions.
 
 Current catalog: Claude Code, Codex CLI, Qwen Code, Gemini CLI, Aider, OpenCode, Goose, Cline
-CLI, Kilo Code CLI, OpenClaw. The target list, capture method per agent and the definition of
-done are in [AGENTS.md](AGENTS.md). Contributions of captures are welcome: run steps 1, 2 and 4
+CLI, Kilo Code CLI, OpenClaw, Crush, Kimi Code CLI, CodeBuddy Code, GitHub Copilot CLI (BYOK),
+OpenHands CLI, Forge, nanobot, Trae Agent, Grok CLI, Mistral Vibe, Junie CLI and the legacy Open
+Interpreter. The target list, capture method per agent and the definition of done are in
+[AGENTS.md](AGENTS.md). Contributions of captures are welcome: run steps 1, 2 and 4
 above (or the capture script) and open a pull request with the fixtures.
 
 ## Layout

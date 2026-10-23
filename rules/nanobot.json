@@ -1,0 +1,23 @@
+{
+  "product": "nanobot",
+  "display_name": "nanobot (HKUDS, nanobot-ai)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_async_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "AsyncOpenAI/Python", "weight": 20},
+    {"id": "x_session_affinity", "group": "header", "op": "header_present", "name": "x-session-affinity", "weight": 20},
+    {"id": "identity_runtime", "group": "identity", "op": "identity_prefix", "value": ["## Runtime"], "weight": 15},
+    {"id": "identity_workspace", "group": "identity", "op": "identity_contains", "value": ["Agent profile: SOUL.md"], "weight": 15},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["apply_patch", "create_goal", "cron", "edit_file", "exec", "exec_session", "find_files", "grep", "list_dir", "message", "read_file", "spawn", "web_fetch", "web_search", "write_file"], "weight": 30},
+    {"id": "temperature_low", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0.1, "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["OpenAI/", "QwenCode/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.3.5 with the custom provider: the async openai-python user-agent plus an x-session-affinity header nanobot sets by default (a new id per process). The system prompt opens with a machine-specific '## Runtime' line, so the identity is the heading plus the stable '## Workspace' lines that follow ('Agent profile: SOUL.md and USER.md'); 'I am nanobot' sits beyond the first 200 characters. The 23-tool set, temperature 0.1 and stream_options are identical on the first turn, after the tool call and on the same-session follow-up."
+}
