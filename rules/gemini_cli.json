@@ -14,7 +14,7 @@
     {"id": "top_k_64", "group": "habits", "op": "habit_equals", "name": "generationConfig.topK", "value": 64, "weight": 5}
   ],
   "deny": [
-    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/"]}
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "iFlow-Cli"]}
   ],
   "notes": "0.65.0: every session starts with a model-router side request (identity 'You are a specialized Task Routing AI', JSON response schema, no tools) on a flash-lite model before the main request; it carries the same user-agent, SDK header and generationConfig, so headers plus habits identify it without identity or tools. The main request's tool list grew between the first turn (8 declarations) and the follow-up (15); the core file/shell names are stable. The model sits in the URL path, not the body."
 }

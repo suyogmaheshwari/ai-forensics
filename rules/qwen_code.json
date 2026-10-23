@@ -14,7 +14,8 @@
     {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
   ],
   "deny": [
-    {"op": "header_prefix", "name": "user-agent", "value": ["GeminiCLI", "OpenAI/", "opencode/", "ai-sdk/"]}
+    {"op": "header_prefix", "name": "user-agent", "value": ["GeminiCLI", "iFlow-Cli", "OpenAI/", "opencode/", "ai-sdk/"]},
+    {"op": "identity_prefix", "value": ["You are an agent for iFlow CLI", "You are an AI agent that brings the power of iFlow"]}
   ],
-  "notes": "0.26.0: identical headers, identity prefix and tool set on the first turn, after the tool call and on the follow-up; the trailing user message is a <system-reminder> memory catalog, not the prompt. Tool names are the Gemini CLI lineage renamed (read_file, grep_search, glob, run_shell_command) plus tool_search/tool_call; the family gate (chat completions vs Gemini) and the user-agent keep the two apart."
+  "notes": "0.26.0: identical headers, identity prefix and tool set on the first turn, after the tool call and on the follow-up; the trailing user message is a <system-reminder> memory catalog, not the prompt. Tool names are the Gemini CLI lineage renamed (read_file, grep_search, glob, run_shell_command) plus tool_search/tool_call; the family gate (chat completions vs Gemini) and the user-agent keep the two apart. iFlow CLI is the third fork of the same lineage and also speaks chat completions: its 0.5.19 package sends the static user-agent 'iFlow-Cli' and prompts starting 'You are an agent for iFlow CLI' (read from the published bundle, not captured), hence the deny features."
 }
