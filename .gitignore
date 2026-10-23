@@ -5,3 +5,4 @@ capture/raw/
 *.egg-info/
 dist/
 build/
+recorder.log
