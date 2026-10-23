@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -68,7 +68,7 @@ run() {
   local home=$1 project=$2; shift 2
   local envs=()
   while [ "$1" != "--" ]; do envs+=("$1"); shift; done; shift
-  (cd "$project" && timeout 180 env -i PATH="$CLEAN_PATH" HOME="$home" TERM=dumb NO_COLOR=1 "${envs[@]}" "$@" </dev/null) \
+  (cd "$project" && timeout 180 env -i PATH="$CLEAN_PATH" HOME="$home" TERM=dumb NO_COLOR=1 "${envs[@]}" "$@" <"${RUN_STDIN:-/dev/null}") \
     >"$WORK/last_run.log" 2>&1
   log "exit $? : $(tail -c 300 "$WORK/last_run.log" | tr '\n' ' ')"
 }
@@ -287,6 +287,223 @@ EOF
   run "$h" "$h/project" "${env[@]}" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT1" --json
   run "$h" "$h/project" "${env[@]}" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT2" --json
   stop_recorder; sanitize_all openclaw "$v" cli-native "$RAW/openclaw__native"
+}
+
+cap_crush() {
+  npm_install @charmland/crush crush || return
+  local v; v=$("$BIN/crush" --version | awk '{print $NF}'); v=${v#v}
+  local h; h=$(fresh_home crush); start_recorder crush "$h/project"
+  mkdir -p "$h/.config/crush"
+  cat > "$h/.config/crush/crushrc" <<EOF
+provider add recorder --type openai-compat --base-url "$BASE/v1" --api-key "dummy"
+model add recorder/gpt-4o --name "gpt-4o" --context-window 128000 --default-max-tokens 4096
+model large recorder/gpt-4o
+model small recorder/gpt-4o
+option provider-auto-update false
+permissions allow bash view ls grep glob
+EOF
+  local env=(XDG_CONFIG_HOME=$h/.config XDG_DATA_HOME=$h/.local/share XDG_CACHE_HOME=$h/.cache
+             CRUSH_DISABLE_METRICS=1 CRUSH_DISABLE_PROVIDER_AUTO_UPDATE=1)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/crush" run -q "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/crush" run -q --continue "$PROMPT2"
+  stop_recorder; sanitize_all crush "$v"
+}
+
+semver() { grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1; }
+
+cap_kimi_code() {
+  npm_install @moonshot-ai/kimi-code kimi || return
+  local v; v=$("$BIN/kimi" --version | semver)
+  local h; h=$(fresh_home kimi_code); start_recorder kimi_code "$h/project"
+  mkdir -p "$h/.kimi-code"
+  cat > "$h/.kimi-code/config.toml" <<EOF
+default_model = "probe"
+
+[providers.probe]
+type = "openai"
+base_url = "$BASE/v1"
+api_key = "dummy"
+
+[models.probe]
+provider = "probe"
+model = "probe-model"
+max_context_size = 131072
+EOF
+  local env=(KIMI_CODE_NO_AUTO_UPDATE=1)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/kimi" -p "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/kimi" -c -p "$PROMPT2"
+  stop_recorder; sanitize_all kimi_code "$v"
+}
+
+cap_codebuddy() {
+  npm_install @tencent-ai/codebuddy-code codebuddy || return
+  local v; v=$("$BIN/codebuddy" --version | semver)
+  local h; h=$(fresh_home codebuddy); start_recorder codebuddy "$h/project"
+  mkdir -p "$h/.codebuddy"
+  cat > "$h/.codebuddy/models.json" <<EOF
+{"models": [{"id": "gpt-4o", "name": "gpt-4o", "url": "$BASE/v1/chat/completions", "apiKey": "dummy", "vendor": "openai"}],
+ "availableModels": ["gpt-4o"]}
+EOF
+  run "$h" "$h/project" -- "$BIN/codebuddy" -p "$PROMPT1" -y --model gpt-4o --output-format json
+  run "$h" "$h/project" -- "$BIN/codebuddy" -p "$PROMPT2" -y --model gpt-4o --output-format json --continue
+  stop_recorder; sanitize_all codebuddy "$v"
+}
+
+cap_copilot() {  # BYOK: COPILOT_PROVIDER_BASE_URL needs no GitHub login; three wire protocols
+  npm_install @github/copilot copilot || return
+  local v; v=$("$BIN/copilot" --version | semver)
+  copilot_pass cli openai "$BASE/v1" gpt-4o "" "$v"
+  copilot_pass cli-anthropic anthropic "$BASE" claude-sonnet-4 "" "$v"
+  copilot_pass cli-responses openai "$BASE/v1" gpt-5 responses "$v"
+}
+copilot_pass() {  # copilot_pass <entry> <provider-type> <base-url> <model> <wire-api|""> <version>
+  local entry=$1 ptype=$2 url=$3 model=$4 wire=$5 v=$6
+  local raw=copilot; [ "$entry" != cli ] && raw="copilot__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  local env=(COPILOT_HOME=$h/.copilot XDG_CONFIG_HOME=$h/.config XDG_CACHE_HOME=$h/.cache XDG_DATA_HOME=$h/.local/share
+             COPILOT_PROVIDER_BASE_URL=$url COPILOT_PROVIDER_TYPE=$ptype COPILOT_MODEL=$model COPILOT_PROVIDER_API_KEY=dummy
+             COPILOT_OFFLINE=true COPILOT_AUTO_UPDATE=false)
+  [ -n "$wire" ] && env+=(COPILOT_PROVIDER_WIRE_API=$wire)
+  local flags=(--allow-all --disable-client-telemetry --no-auto-update)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/copilot" -p "$PROMPT1" "${flags[@]}"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/copilot" -p "$PROMPT2" "${flags[@]}" --continue
+  stop_recorder; sanitize_all copilot "$v" "$entry" "$RAW/$raw"
+}
+
+py_venv() {  # py_venv <dir> <pip args...>: a Python 3.12 (or 3.11/3.10) venv with the packages installed
+  local venv=$1; shift
+  [ -x "$venv/bin/python" ] && return 0
+  local py; py=$(command -v python3.12 || command -v python3.11 || command -v python3.10 || echo "$PY")
+  "$py" -m venv "$venv" && timeout 900 "$venv/bin/pip" install -q "$@" || { log "pip install $* failed"; return 1; }
+}
+
+cap_openhands() {
+  py_venv "$WORK/openhands-venv" openhands || return
+  local v; v=$("$WORK/openhands-venv/bin/openhands" --version | semver)
+  local h; h=$(fresh_home openhands); start_recorder openhands "$h/project"
+  local env=(LLM_BASE_URL=$BASE/v1 LLM_MODEL=openai/gpt-4o LLM_API_KEY=dummy OPENHANDS_SUPPRESS_BANNER=1)
+  local flags=(--headless --json --always-approve --override-with-envs)
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/openhands-venv/bin/openhands" "${flags[@]}" -t "$PROMPT1"
+  local cid; cid=$(ls "$h/.openhands/conversations" 2>/dev/null | head -1)
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/openhands-venv/bin/openhands" "${flags[@]}" --resume "$cid" -t "$PROMPT2"
+  stop_recorder; sanitize_all openhands "$v"
+}
+
+cap_forge() {
+  npm_install forgecode forge || return
+  local v; v=$("$BIN/forge" --version | semver)
+  local h; h=$(fresh_home forge); start_recorder forge "$h/project"
+  mkdir -p "$h/.forge"
+  # OPENAI_URL/OPENAI_API_KEY are migrated into ~/.forge/.credentials.json on the first run; the model must be
+  # listed by GET /v1/models (the recorder lists "aiforensics")
+  run "$h" "$h/project" OPENAI_URL=$BASE/v1 OPENAI_API_KEY=dummy -- "$BIN/forge" config set model openai_compatible aiforensics
+  run "$h" "$h/project" -- "$BIN/forge" -p "$PROMPT1"
+  local cid; cid=$(grep -oE 'Initialize [0-9a-f-]{36}' "$WORK/last_run.log" | head -1 | awk '{print $2}')
+  run "$h" "$h/project" -- "$BIN/forge" --conversation-id "$cid" -p "$PROMPT2"
+  stop_recorder; sanitize_all forge "$v"
+  # second entry point: the Anthropic protocol (provider login needs a tty, so the credentials file is written directly)
+  h=$(fresh_home forge__anthropic); start_recorder forge__anthropic "$h/project"
+  mkdir -p "$h/.forge"
+  printf '[{"id": "anthropic_compatible", "auth_details": {"api_key": "dummy"}, "url_params": {"ANTHROPIC_URL": "%s/v1"}}]\n' "$BASE" > "$h/.forge/.credentials.json"
+  run "$h" "$h/project" -- "$BIN/forge" config set model anthropic_compatible aiforensics
+  run "$h" "$h/project" -- "$BIN/forge" -p "$PROMPT1"
+  cid=$(grep -oE 'Initialize [0-9a-f-]{36}' "$WORK/last_run.log" | head -1 | awk '{print $2}')
+  run "$h" "$h/project" -- "$BIN/forge" --conversation-id "$cid" -p "$PROMPT2"
+  stop_recorder; sanitize_all forge "$v" cli-anthropic "$RAW/forge__anthropic"
+}
+
+cap_nanobot() {
+  py_venv "$WORK/nanobot-venv" nanobot-ai || return
+  local v; v=$("$WORK/nanobot-venv/bin/pip" show nanobot-ai | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home nanobot); start_recorder nanobot "$h/project"
+  run "$h" "$h/project" -- "$WORK/nanobot-venv/bin/nanobot" onboard
+  "$PY" - "$h/.nanobot/config.json" "$BASE" <<'EOF'
+import json, sys
+path, base = sys.argv[1], sys.argv[2]
+cfg = json.load(open(path, encoding="utf-8"))
+cfg.setdefault("providers", {}).setdefault("custom", {}).update({"apiBase": base + "/v1", "apiKey": "dummy"})
+d = cfg.setdefault("agents", {}).setdefault("defaults", {})
+d.update({"provider": "custom", "model": "aiforensics"}); d.setdefault("dream", {})["enabled"] = False
+json.dump(cfg, open(path, "w", encoding="utf-8"), indent=1)
+EOF
+  run "$h" "$h/project" -- "$WORK/nanobot-venv/bin/nanobot" agent -m "$PROMPT1" -s probe --no-markdown
+  run "$h" "$h/project" -- "$WORK/nanobot-venv/bin/nanobot" agent -m "$PROMPT2" -s probe --no-markdown
+  stop_recorder; sanitize_all nanobot "$v"
+}
+
+cap_trae_agent() {  # open-source Trae Agent (bytedance/trae-agent); three providers plus an interactive follow-up
+  local src=$WORK/trae-agent
+  if [ ! -x "$src/.venv/bin/trae-cli" ]; then
+    [ -d "$src" ] || git clone -q --depth 1 https://github.com/bytedance/trae-agent "$src" || { log "trae-agent clone failed"; return; }
+    local py; py=$(command -v python3.12 || echo "$PY")
+    if command -v uv >/dev/null; then (cd "$src" && uv sync -q --python "$py" --extra evaluation)
+    else "$py" -m venv "$src/.venv" && timeout 900 "$src/.venv/bin/pip" install -q -e "$src[evaluation]"; fi
+    [ -x "$src/.venv/bin/trae-cli" ] || { log "trae-agent install failed"; return; }
+  fi
+  local v; v=$(cd "$src" && git rev-parse --short HEAD)
+  local tools='[bash, str_replace_based_edit_tool, sequentialthinking, task_done]'
+  local params='max_tokens: 4096, temperature: 0.5, top_p: 1, top_k: 0, max_retries: 1, parallel_tool_calls: true'
+  local pass
+  for pass in cli:openai:gpt-4o cli-chat:openrouter:gpt-4o cli-anthropic:anthropic:claude-sonnet-4-20250514; do
+    local entry=${pass%%:*} rest=${pass#*:} provider model; provider=${rest%%:*}; model=${rest#*:}
+    local raw=trae_agent; [ "$entry" != cli ] && raw="trae_agent__${entry#cli-}"
+    local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+    local url=$BASE/v1; [ "$provider" = anthropic ] && url=$BASE
+    cat > "$h/trae_config.yaml" <<EOF
+agents:
+  trae_agent: {enable_lakeview: false, model: probe, max_steps: 4, tools: $tools}
+model_providers:
+  $provider: {api_key: dummy, provider: $provider, base_url: $url}
+models:
+  probe: {model_provider: $provider, model: $model, $params}
+EOF
+    local cmd=("$src/.venv/bin/trae-cli")
+    local common=(--provider "$provider" --model "$model" --working-dir "$h/project" --config-file "$h/trae_config.yaml")
+    run "$h" "$h/project" -- "${cmd[@]}" run "$PROMPT1" "${common[@]}" --console-type simple --max-steps 4
+    if [ "$entry" = cli ]; then  # the only headless follow-up is the interactive mode fed from stdin
+      printf '%s\n%s\n%s\n%s\nexit\n' "$PROMPT1" "$h/project" "$PROMPT2" "$h/project" > "$WORK/trae-stdin.txt"
+      RUN_STDIN=$WORK/trae-stdin.txt run "$h" "$h/project" -- "${cmd[@]}" interactive "${common[@]}" --max-steps 4
+    fi
+    stop_recorder; sanitize_all trae_agent "$v" "$entry" "$RAW/$raw"
+  done
+}
+
+cap_grok_cli() {
+  npm_install @vibe-kit/grok-cli grok || return
+  local v; v=$("$BIN/grok" --version | semver)
+  local h; h=$(fresh_home grok_cli); start_recorder grok_cli "$h/project"
+  local env=(GROK_API_KEY=dummy GROK_BASE_URL=$BASE/v1 GROK_MODEL=grok-code-fast-1)
+  # 0.0.34 has no headless resume; the first turn and the tool turn are all a one-shot run gives
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/grok" -d "$h/project" -p "$PROMPT1"
+  stop_recorder; sanitize_all grok_cli "$v"
+}
+
+cap_mistral_vibe() {
+  py_venv "$WORK/vibe-venv" mistral-vibe || return
+  local v; v=$("$WORK/vibe-venv/bin/pip" show mistral-vibe | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home mistral_vibe); start_recorder mistral_vibe "$h/project"
+  mkdir -p "$h/.vibe"
+  cat > "$h/.vibe/config.toml" <<EOF
+active_model = "recorder-model"
+enable_telemetry = false
+enable_update_checks = false
+enable_notifications = false
+[[providers]]
+name = "recorder"
+api_base = "$BASE/v1"
+api_key_env_var = "RECORDER_API_KEY"
+api_style = "openai"
+backend = "generic"
+[[models]]
+name = "gpt-4o"
+provider = "recorder"
+alias = "recorder-model"
+EOF
+  local env=(RECORDER_API_KEY=dummy MISTRAL_API_KEY=dummy)
+  local flags=(--workdir "$h/project" --trust --yolo --output json)
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/vibe-venv/bin/vibe" "${flags[@]}" -p "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/vibe-venv/bin/vibe" "${flags[@]}" -c -p "$PROMPT2"
+  stop_recorder; sanitize_all mistral_vibe "$v"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture

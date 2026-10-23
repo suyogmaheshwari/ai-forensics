@@ -1,0 +1,50 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "user-agent": "Charm-Crush/v0.98.2 (https://charm.land/crush)",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-session-affinity": "<redacted-id>",
+  "x-session-id": "<redacted-id>",
+  "x-stainless-arch": "x64",
+  "x-stainless-lang": "go",
+  "x-stainless-os": "Linux",
+  "x-stainless-package-version": "3.64.0",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "go",
+  "x-stainless-runtime-version": "go1.27.1"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 40,
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You will generate a short title based on the first message a user begins a conversation with.\n\n<rules>\n- Keep the title in the same language that the user wrote their message in.\n- Ensure it is not mo",
+      "text_len": 492
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "crush",
+ "agent_version": "0.98.2",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

@@ -1,0 +1,24 @@
+{
+  "product": "copilot",
+  "display_name": "GitHub Copilot CLI (@github/copilot, BYOK provider)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "x_initiator", "group": "header", "op": "header_equals", "name": "x-initiator", "value": ["user", "agent"], "weight": 30},
+    {"id": "x_interaction_type", "group": "header", "op": "header_present", "name": "x-interaction-type", "weight": 10},
+    {"id": "ua_stock_sdk", "group": "header", "op": "header_prefix", "name": "user-agent", "value": ["OpenAI/JS", "Anthropic/JS"], "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are the GitHub Copilot CLI"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "read_bash", "stop_bash", "list_bash", "view", "fetch_copilot_cli_documentation", "skill", "run_dynamic_workflow", "dynamic_workflows_manage", "sql", "session_store_sql", "read_agent", "list_agents", "write_agent", "glob", "task"], "weight": 30},
+    {"id": "temperature_one", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 1, "weight": 5},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/Python"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"},
+    {"op": "header_present", "name": "traceparent"}
+  ],
+  "notes": "1.0.103 with COPILOT_PROVIDER_BASE_URL (no GitHub login): the same CLI speaks chat completions (provider type openai), the Anthropic messages API (type anthropic) and the Responses API (COPILOT_PROVIDER_WIRE_API=responses), hence family 'any'. The user-agent is the stock SDK's (OpenAI/JS or Anthropic/JS); the product headers are x-initiator (user on user turns, agent on after-tool-call turns) and x-interaction-type (user turns only). Identity 'You are the GitHub Copilot CLI, a terminal assistant built by GitHub' and the core tool set are the same on all three protocols and all turns; the chat variant adds rg and a grammar-typed apply_patch, the others grep/create/edit. temperature 1 on every request."
+}

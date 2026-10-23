@@ -16,7 +16,7 @@ from .reply import turn_shape
 DROP_HEADERS = {"authorization", "x-api-key", "cookie", "x-goog-api-key", "api-key", "host",
                 "content-length", "connection", "accept-encoding", "openai-organization", "openai-project"}
 ID_HEADER_HINTS = ("session", "thread", "request-id", "window", "conversation", "trace", "turn-metadata", "idempotency",
-                   "x-client-request", "agent-session")
+                   "x-client-request", "agent-session", "affinity")
 PREFIX_CHARS = 200
 _PATH_RX = re.compile(r"(/(?:Users|home|private|tmp|var|opt|root)/[^\s\"'<>]*|[A-Za-z]:\\\\[^\s\"'<>]*)")
 _EMAIL_RX = re.compile(r"[\w.+-]+@[\w-]+\.[\w.-]+")
@@ -24,7 +24,7 @@ _UUID_RX = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]
 _TIMESTAMP_RX = re.compile(r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2})?(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?")
 KEPT_PARAMS = ("model", "stream", "stream_options", "max_tokens", "max_output_tokens", "max_completion_tokens", "temperature",
                "top_p", "top_k", "thinking", "output_config", "store", "include", "reasoning", "text", "tool_choice",
-               "parallel_tool_calls", "response_format", "service_tier", "stop", "n", "user", "context_management")
+               "parallel_tool_calls", "response_format", "service_tier", "stop", "n", "user", "context_management", "search_parameters")
 GENERATION_CONFIG_KEYS = ("temperature", "topP", "topK", "maxOutputTokens", "thinkingConfig", "responseMimeType", "candidateCount")
 
 

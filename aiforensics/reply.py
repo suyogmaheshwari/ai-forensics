@@ -20,10 +20,13 @@ from .features import family_of
 SHELL_TOOLS = ("bash", "shell", "exec", "exec_command", "run_shell_command", "run_commands", "execute_command",
                "shell_command", "run_command", "run_terminal_cmd", "terminal", "developer__shell", "command")
 READ_TOOLS = ("read", "read_file", "read_files", "view_file", "view", "cat", "text_editor", "str_replace_based_edit_tool")
-DONE_TOOLS = ("submit_and_exit", "attempt_completion", "complete_task", "task_complete", "finish", "done")
+DONE_TOOLS = ("submit_and_exit", "attempt_completion", "complete_task", "task_complete", "finish", "done", "submit")
 PATH_PROPS = ("file_path", "filepath", "path", "absolute_path", "file", "target_file", "notebook_path")
 DIR_PROPS = ("workdir", "cwd", "directory", "dir_path", "working_directory", "working_dir")
 TEXT_REPLY = "ok"
+# Names answered by the model listings; agents that validate the configured model against GET /v1/models
+# (Forge) or LiteLLM's GET /v1/model/info (Junie, built-in names only) need to find it here.
+KNOWN_MODELS = ("aiforensics", "gpt-4o", "gpt-5", "gpt-5.4", "claude-sonnet-4-5", "claude-sonnet-4-6", "gemini-2.5-pro", "probe-model")
 _COUNTER = {"n": 0}
 _MODEL_IN_PATH = re.compile(r"/models/([^/:]+):")
 
@@ -279,7 +282,8 @@ def _chat_reply(model: str, call: Optional[dict], stream: bool, include_usage: b
 
 def _responses_reply(model: str, call: Optional[dict], stream: bool):
     created = int(time.time())
-    usage = {"input_tokens": 10, "output_tokens": 10, "total_tokens": 20}
+    usage = {"input_tokens": 10, "input_tokens_details": {"cached_tokens": 0}, "output_tokens": 10,
+             "output_tokens_details": {"reasoning_tokens": 0}, "total_tokens": 20}
     if call and call["type"] == "custom":
         item = {"type": "custom_tool_call", "id": "ctc_" + call["id"], "call_id": "call_" + call["id"], "name": call["name"],
                 "input": call["args"], "status": "completed"}
@@ -350,7 +354,12 @@ def build_reply(record: dict, mode: str, work_dir: str = "") -> dict:
     family = family_of(path)
     if method == "GET" and path.rstrip("/").endswith("/models"):
         return {"status": 200, "content_type": "application/json", "kind": "models",
-                "body": json.dumps({"object": "list", "data": [{"id": "aiforensics", "object": "model", "owned_by": "aiforensics"}]}).encode()}
+                "body": json.dumps({"object": "list", "data": [{"id": m, "object": "model", "owned_by": "aiforensics"} for m in KNOWN_MODELS]}).encode()}
+    if method == "GET" and path.rstrip("/").endswith("/model/info"):
+        data = [{"model_name": m, "litellm_params": {"model": m}, "model_info": {
+            "id": m, "litellm_provider": "anthropic" if m.startswith("claude") else "openai", "max_input_tokens": 200000,
+            "max_output_tokens": 32000, "supports_function_calling": True, "supports_vision": True, "mode": "chat"}} for m in KNOWN_MODELS]
+        return {"status": 200, "content_type": "application/json", "kind": "models", "body": json.dumps({"data": data}).encode()}
     if method != "POST" or family not in ("messages", "chat_completions", "responses", "gemini"):
         return {"status": 404, "content_type": "application/json", "kind": "unhandled",
                 "body": b'{"error":{"type":"not_found_error","message":"aiforensics recorder: no reply for this path"}}'}

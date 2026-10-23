@@ -1,0 +1,219 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "user-agent": "Charm-Crush/v0.98.2 (https://charm.land/crush)",
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-session-affinity": "<redacted-id>",
+  "x-session-id": "<redacted-id>",
+  "x-stainless-arch": "x64",
+  "x-stainless-lang": "go",
+  "x-stainless-os": "Linux",
+  "x-stainless-package-version": "3.64.0",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "go",
+  "x-stainless-runtime-version": "go1.27.1"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 4096,
+  "tool_choice": "auto",
+  "tools": [
+   {
+    "name": "agent",
+    "type": "function",
+    "description_prefix": "Launch a new agent that has access to the following tools: glob, grep, ls, view. When you are searching for a keyword or file and are not confident that you will find the right match on the first try,"
+   },
+   {
+    "name": "agentic_fetch",
+    "type": "function",
+    "description_prefix": "Fetch a URL or search the web using an AI sub-agent that can extract, summarize, and answer questions. Slower and costlier than fetch; use fetch for raw content or API responses.\n"
+   },
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Execute shell commands; long-running commands automatically move to background and return a shell ID.\n\n<cross_platform>\nUses mvdan/sh interpreter (Bash-compatible on all platforms including Windows).\n"
+   },
+   {
+    "name": "crush_info",
+    "type": "function",
+    "description_prefix": "Get Crush's current runtime state: active model, provider, LSP/MCP status, skills, hooks, permissions, and disabled tools. No parameters needed.\n\n<usage>\n- Shows active model and provider, LSP/MCP ser"
+   },
+   {
+    "name": "crush_logs",
+    "type": "function",
+    "description_prefix": "Read Crush's internal application logs (default 50 entries, max 100); useful for diagnosing provider errors, tool failures, LSP/MCP issues.\n\n<usage>\n- Returns recent log entries from Crush's internal "
+   },
+   {
+    "name": "download",
+    "type": "function",
+    "description_prefix": "Download a URL directly to a local file (binary-safe, streaming, max 600s timeout); overwrites without warning. For reading content into context use fetch.\n"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Edit a file by exact find-and-replace; can also create or delete content. If old_string differs from the file only in whitespace, the matching lines are still edited and new_string is re-indented to t"
+   },
+   {
+    "name": "fetch",
+    "type": "function",
+    "description_prefix": "Fetch raw content from a URL as text, markdown, or html (max 100KB); no AI processing. For analysis or extraction use agentic_fetch. For GitHub content when an exact repo, issue, or PR link is provide"
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "Find files by name/pattern (glob syntax), sorted by modification time; max 100 results; skips hidden files. Use grep to search file contents.\n"
+   },
+   {
+    "name": "grep",
+    "type": "function",
+    "description_prefix": "Search file contents by regex or literal text; returns matching file paths sorted by modification time (max 100); respects .gitignore. Use glob to filter by filename, not contents.\n"
+   },
+   {
+    "name": "job_kill",
+    "type": "function",
+    "description_prefix": "Terminate a background shell process.\n\n<usage>\n- Provide the shell ID returned from a background bash execution\n- Cancels the running process and cleans up resources\n</usage>\n\n<features>\n- Stop long-r"
+   },
+   {
+    "name": "job_output",
+    "type": "function",
+    "description_prefix": "Get stdout/stderr from a background shell by ID; set wait=true to block until completion."
+   },
+   {
+    "name": "ls",
+    "type": "function",
+    "description_prefix": "List files and directories as a tree; skips hidden files and common system dirs; max 1000 files. Use glob to find files by pattern, grep to search contents.\n"
+   },
+   {
+    "name": "lsp_call_hierarchy",
+    "type": "function",
+    "description_prefix": "Show the call hierarchy for a symbol — either incoming calls (who calls this) or outgoing calls (what does this call). Use before refactoring to understand blast radius, or when tracing execution flow"
+   },
+   {
+    "name": "lsp_definition",
+    "type": "function",
+    "description_prefix": "Find the definition of a symbol by name via LSP. Prefer this over `grep` for finding where something is defined: it is language-aware and skips matches in comments, strings, and partial identifiers. R"
+   },
+   {
+    "name": "lsp_diagnostics",
+    "type": "function",
+    "description_prefix": "Get LSP errors, warnings, and hints for a file or the whole project."
+   },
+   {
+    "name": "lsp_references",
+    "type": "function",
+    "description_prefix": "Find all references to a symbol by name via LSP; more accurate than grep for code symbols."
+   },
+   {
+    "name": "lsp_rename",
+    "type": "function",
+    "description_prefix": "Rename a symbol across all files using LSP rename. Prefer this over manual multi-file `edit` for any rename: it performs a true semantic rename that respects scopes, overloads, and imports automatical"
+   },
+   {
+    "name": "lsp_replace_symbol",
+    "type": "function",
+    "description_prefix": "Replace, insert, or delete an entire symbol (function, method, class, struct) by name using LSP document symbols to find exact boundaries. Prefer this over `edit` for whole-symbol changes: it eliminat"
+   },
+   {
+    "name": "lsp_restart",
+    "type": "function",
+    "description_prefix": "Restart one or all LSP clients by name; use when diagnostics are stale or the LSP is unresponsive."
+   },
+   {
+    "name": "lsp_symbols",
+    "type": "function",
+    "description_prefix": "List document symbols (functions, types, methods, etc.) for a file via LSP. Returns a structured outline showing symbol names, kinds, and line ranges. Use this before editing unfamiliar files to under"
+   },
+   {
+    "name": "multiedit",
+    "type": "function",
+    "description_prefix": "Apply multiple find-and-replace edits to a single file in one operation; edits run sequentially. Prefer over edit for multiple changes to the same file. Same exact-match rules as edit apply."
+   },
+   {
+    "name": "sourcegraph",
+    "type": "function",
+    "description_prefix": "Search code across public GitHub repositories via Sourcegraph; supports regex, language/repo/file filters, and symbol search (max 20 results). Only searches public repos.\n"
+   },
+   {
+    "name": "todos",
+    "type": "function",
+    "description_prefix": "Manage a structured task list for multi-step work; each task has pending/in_progress/completed state. Keep exactly one task in_progress at a time. Skip for simple or single-step tasks."
+   },
+   {
+    "name": "view",
+    "type": "function",
+    "description_prefix": "Read a file by path with line numbers; supports offset and line limit (default 200, max 200KB returned file content section); renders images (PNG, JPEG, GIF, WebP); use ls for directories.\n"
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Create or overwrite a file with given content; auto-creates parent dirs. Cannot append. Read the file first to avoid conflicts. For surgical changes use edit or multiedit."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Crush, a powerful AI Assistant that runs in the CLI.\n\n<critical_rules>\nThese rules override everything else. Follow them strictly:\n\n1. **READ THE RELEVANT CONTEXT BEFORE EDITING**: Never edit ",
+      "text_len": 21779
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "tool-call",
+ "agent": "crush",
+ "agent_version": "0.98.2",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

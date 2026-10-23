@@ -1,0 +1,159 @@
+{
+ "method": "POST",
+ "path": "/v1/responses",
+ "headers": {
+  "content-type": "application/json",
+  "x-stainless-helper-method": "stream",
+  "x-stainless-retry-count": "0",
+  "x-stainless-package-version": "5.20.1",
+  "x-stainless-os": "Linux",
+  "user-agent": "OpenAI/JS 5.20.1",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-lang": "js",
+  "x-stainless-runtime-version": "unknown",
+  "accept": "application/json",
+  "x-stainless-timeout": "600",
+  "x-initiator": "agent"
+ },
+ "body": {
+  "model": "gpt-5",
+  "stream": true,
+  "store": false,
+  "include": [
+   "reasoning.encrypted_content"
+  ],
+  "reasoning": {
+   "effort": "medium",
+   "summary": "auto"
+  },
+  "parallel_tool_calls": true,
+  "prompt_cache_key": "<redacted-id>",
+  "instructions": {
+   "text_prefix": "You are the GitHub Copilot CLI, a terminal assistant built by GitHub. You are running in non-interactive mode and have no way to communicate with the user. You must work on the task until it is comple",
+   "text_len": 23281
+  },
+  "tools": [
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Runs a Bash command.\n* The \"command\" parameter does NOT need to be XML-escaped.\n* You can run Python, Node.js and Go code with `python`, `node` and `go`.\n* Sync sessions are discarded after the comman"
+   },
+   {
+    "name": "read_bash",
+    "type": "function",
+    "description_prefix": "Reads output from a Bash command.\n* Reads output from the Bash session identified by shellId.\n* The shellId MUST be the same one used to invoke the bash command.\n* You will be automatically notified w"
+   },
+   {
+    "name": "stop_bash",
+    "type": "function",
+    "description_prefix": "Stops a running Bash command by terminating its process tree.\n* For detached commands, use the same shellId returned by bash. After stopping any command, redefine environment variables if its ID is re"
+   },
+   {
+    "name": "list_bash",
+    "type": "function",
+    "description_prefix": "Lists all active Bash sessions.\n* Returns information about all currently running Bash sessions.\n* Useful for discovering shellIds to use with read_bash, or stop_bash.\n* Shows shellId, command, mode, "
+   },
+   {
+    "name": "view",
+    "type": "function",
+    "description_prefix": "View files, images, or directories.\n* Images return base64 data and MIME type.\n* Text files return their content.\n* Directories list non-hidden entries up to 2 levels deep.\n* `path` must be absolute.\n"
+   },
+   {
+    "name": "create",
+    "type": "function",
+    "description_prefix": "Tool for creating new files.\n* Creates a new file with the specified content at the given path\n* Cannot be used if the specified path already exists\n* Parent directories must exist before creating the"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Tool for making string replacements in files.\n* Replaces exactly one occurrence of `old_str` with `new_str` in the specified file\n* When called multiple times in a single response, edits are independe"
+   },
+   {
+    "name": "fetch_copilot_cli_documentation",
+    "type": "function",
+    "description_prefix": "Fetch authoritative GitHub Copilot CLI README/help for questions about your capabilities, usage, or features."
+   },
+   {
+    "name": "skill",
+    "type": "function",
+    "description_prefix": "Load a skill into the main conversation\n\n<skills_instructions>\nBefore acting on a task, check current or previously listed <available_skills>. If a skill matches, invoking it is mandatory and must be "
+   },
+   {
+    "name": "run_dynamic_workflow",
+    "type": "function",
+    "description_prefix": "Starts a registered workflow by name, or resumes a prior run by ID, and returns immediately with a run ID while execution continues in the background. Use only when the user explicitly requests a work"
+   },
+   {
+    "name": "dynamic_workflows_manage",
+    "type": "function",
+    "description_prefix": "Manage registered agent workflows. A workflow is a reusable JavaScript orchestration that coordinates multiple subagents; it may spawn dozens of agents and consume substantial credits. Use one only wh"
+   },
+   {
+    "name": "sql",
+    "type": "function",
+    "description_prefix": "Query the session SQLite database for structured workflows. `todos` and `todo_deps` already exist—do not recreate them; create other tables as needed. Supports SQLite SELECT, INSERT, UPDATE, DELETE, C"
+   },
+   {
+    "name": "session_store_sql",
+    "type": "function",
+    "description_prefix": "Query cross-session history with read-only DuckDB. Use proactively for recent/past work, prior approaches, project or file changes, sessions linked to PRs/issues/commits, and temporal questions. Prefe"
+   },
+   {
+    "name": "read_agent",
+    "type": "function",
+    "description_prefix": "Reads a background agent's status and results by agent_id.\n* Call directly with each known ID from task results or notifications. Statuses: running, idle, completed, failed, cancelled.\n* If a known ag"
+   },
+   {
+    "name": "list_agents",
+    "type": "function",
+    "description_prefix": "Lists visible background agents by status: running, idle, completed, failed, or cancelled.\n* Use only for requested overviews or when no usable agent_id is in recent context. For status or a same-task"
+   },
+   {
+    "name": "write_agent",
+    "type": "function",
+    "description_prefix": "Sends a message to one or more running or idle background agents, delivered as a new user turn in each agent's conversation.\n* Use write_agent only for same-task follow-ups where retained context is u"
+   },
+   {
+    "name": "grep",
+    "type": "function",
+    "description_prefix": "Search file contents quickly and precisely with ripgrep."
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "Find files quickly by glob pattern."
+   },
+   {
+    "name": "task",
+    "type": "function",
+    "description_prefix": "Custom agent: Launch specialized agents in separate context windows for specific tasks.\n\nAvailable agent types:\n- **explore**: Read-only exploration for multiple independent research threads needing s"
+   }
+  ],
+  "input": [
+   {
+    "type": "message",
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text"
+    ]
+   },
+   {
+    "type": "function_call",
+    "role": null,
+    "name": "bash"
+   },
+   {
+    "type": "function_call_output",
+    "role": null,
+    "content": "<redacted>"
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "copilot",
+ "agent_version": "1.0.103",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

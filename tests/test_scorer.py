@@ -40,10 +40,15 @@ def test_every_product_has_fixtures_for_each_session_shape():
     for path in FIXTURES:
         label = os.path.basename(os.path.dirname(path))
         shapes.setdefault(label, set()).add(_load(path).get("turn"))
+    # agents whose headless mode cannot produce one of the shapes (the reason is in the rule's notes)
+    partial = {
+        "aider": {"followup"},                         # no tools; its canned priming exchange makes every turn a follow-up
+        "grok_cli": {"first-turn", "after-tool-call"},  # headless -p is one-shot, no resume
+    }
     for rule in RULES:
         got = shapes.get(rule["product"], set())
-        if rule["product"] == "aider":   # no tools; its canned priming exchange makes every turn a follow-up
-            assert got == {"followup"}, got
+        if rule["product"] in partial:
+            assert got == partial[rule["product"]], (rule["product"], got)
             continue
         assert {"first-turn", "after-tool-call", "followup"} <= got, (rule["product"], got)
 

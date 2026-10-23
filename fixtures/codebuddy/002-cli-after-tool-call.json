@@ -1,0 +1,201 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "x-requested-with": "XMLHttpRequest",
+  "x-stainless-arch": "x64",
+  "x-stainless-lang": "js",
+  "x-stainless-os": "Linux",
+  "x-stainless-package-version": "6.25.0",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "x-conversation-id": "<redacted-id>",
+  "x-agent-intent": "craft",
+  "x-agent-runtime": "other",
+  "x-agent-purpose": "conversation",
+  "x-ide-type": "CLI",
+  "x-ide-name": "CLI",
+  "x-ide-version": "2.174.0",
+  "x-codebuddy-request": "1",
+  "x-request-id": "<redacted-id>",
+  "x-conversation-message-id": "<redacted-id>",
+  "x-conversation-request-id": "<redacted-id>",
+  "x-root-request-id": "<redacted-id>",
+  "x-agent-type": "main",
+  "traceparent": "<redacted-id>",
+  "b3": "00000000000000000000000000000000-0000000000000000-0",
+  "x-b3-traceid": "<redacted-id>",
+  "x-b3-spanid": "0000000000000000",
+  "x-b3-sampled": "0",
+  "x-trace-id": "<redacted-id>",
+  "x-product": "SaaS",
+  "user-agent": "CLI/2.174.0 CodeBuddy/2.174.0"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "tools": [
+   {
+    "name": "Read",
+    "type": "function",
+    "description_prefix": "Reads a file from the local filesystem. You can access any file directly by using this tool.\nAssume this tool is able to read all files on the machine. If the User provides a path to a file assume tha"
+   },
+   {
+    "name": "Write",
+    "type": "function",
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool first to rea"
+   },
+   {
+    "name": "Edit",
+    "type": "function",
+    "description_prefix": "Performs exact string replacements in files.\n\nUsage:\n- This tool reads the file's current contents from disk and matches `old_string` against them directly; a prior `Read` is not required. If `old_str"
+   },
+   {
+    "name": "Bash",
+    "type": "function",
+    "description_prefix": "Executes a bash command and returns its output. The working directory persists between commands; shell state (variables, functions, aliases) does not. The shell environment is initialized from the use"
+   },
+   {
+    "name": "Glob",
+    "type": "function",
+    "description_prefix": "- Fast file pattern matching tool that works with any codebase size\n- Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"\n- Returns matching file paths sorted by modification time\n- Supports pagina"
+   },
+   {
+    "name": "Grep",
+    "type": "function",
+    "description_prefix": "A powerful search tool built on ripgrep\n\n  Usage:\n  - ALWAYS use Grep for search tasks. NEVER invoke `grep` or `rg` as a Bash command. The Grep tool has been optimized for correct permissions and acce"
+   },
+   {
+    "name": "EnterPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool proactively when you're about to start a non-trivial implementation task. Getting user sign-off on your approach before writing code prevents wasted effort and ensures alignment. This to"
+   },
+   {
+    "name": "ExitPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool when you are in plan mode and have finished writing your plan to the plan file and are ready for user approval.\n\n## How This Tool Works\n- You should have already written your plan to the"
+   },
+   {
+    "name": "TaskCreate",
+    "type": "function",
+    "description_prefix": "Use this tool to create a structured task list for your current coding session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.\nIt also helps the user "
+   },
+   {
+    "name": "TaskGet",
+    "type": "function",
+    "description_prefix": "Use this tool to retrieve a task by its ID from the task list.\n\n## When to Use This Tool\n\n- When you need the full description and context before starting work on a task\n- To understand task dependenc"
+   },
+   {
+    "name": "TaskUpdate",
+    "type": "function",
+    "description_prefix": "Use this tool to update a task in the task list.\n\n## When to Use This Tool\n\n**Mark tasks as resolved:**\n- When you have completed the work described in a task\n- When a task is no longer needed or has "
+   },
+   {
+    "name": "WebFetch",
+    "type": "function",
+    "description_prefix": "\n- Fetches content from a specified URL and processes it using an AI model\n- Takes a URL and a prompt as input\n- Fetches the URL content, converts HTML to markdown\n- Processes the content with the pro"
+   },
+   {
+    "name": "WebSearch",
+    "type": "function",
+    "description_prefix": "\n- Searches the web and uses the results to inform responses\n- Supports WeChat Official Account (微信公众号、公众号) content as a search source.\n- Provides up-to-date information for current events and recent "
+   },
+   {
+    "name": "TaskStop",
+    "type": "function",
+    "description_prefix": "\n- Stops a running background task by its ID\n- Takes a task_id parameter identifying the task to stop\n- Returns a success or failure status\n- Use this tool when you need to terminate a long-running ta"
+   },
+   {
+    "name": "TaskOutput",
+    "type": "function",
+    "description_prefix": "- Retrieves output from a running or completed task (background shell, agent, or remote session)\n- Takes a task_id parameter identifying the task\n- Returns the task output along with status informatio"
+   },
+   {
+    "name": "DeferExecuteTool",
+    "type": "function",
+    "description_prefix": "Execute a deferred tool by name. Use this to invoke tools discovered via ToolSearch without needing them in the active tools list.\n\nUsage:\n- First use ToolSearch to discover a tool and learn its param"
+   },
+   {
+    "name": "SendMessage",
+    "type": "function",
+    "description_prefix": "# SendMessageTool\n\nSend messages to agent teammates and handle protocol requests/responses in a team.\n\n## Message Types\n\n### type: \"message\" - Send a Direct Message\n\nSend a message to a **single speci"
+   },
+   {
+    "name": "ViewImage",
+    "type": "function",
+    "description_prefix": "Read and inspect an image file. For multimodal models the image itself is returned; otherwise a vision model reads the image and returns a text answer.\n\nUsage:\n- image_path must be an absolute path to"
+   },
+   {
+    "name": "WaitForMcpServers",
+    "type": "function",
+    "description_prefix": "Wait for MCP servers that are still connecting and whose tools are not\nyet in your tool list. Pass `servers` to wait for specific ones, or omit\nit to wait for all pending servers.\n\nIf the user's reque"
+   },
+   {
+    "name": "Agent",
+    "type": "function",
+    "description_prefix": "Launch a new agent to handle complex, multi-step tasks autonomously.\n\nThe Agent tool launches specialized agents (subprocesses) that autonomously handle complex tasks. Each agent type has specific cap"
+   },
+   {
+    "name": "TaskList",
+    "type": "function",
+    "description_prefix": "Use this tool to list all tasks in the task list.\n\n## When to Use This Tool\n\n- To see what tasks are available to work on (status: 'pending', no owner, not blocked)\n- To check overall progress on the "
+   },
+   {
+    "name": "Skill",
+    "type": "function",
+    "description_prefix": "Execute a skill within the main conversation\n\nWhen users ask you to perform tasks, check if any of the available skills below match. Skills provide specialized capabilities and domain knowledge.\n\nWhen"
+   },
+   {
+    "name": "ToolSearch",
+    "type": "function",
+    "description_prefix": "Load tool schemas before invoking deferred tools.\n\nDeferred tools are NOT directly callable — use ToolSearch to load their schema, then DeferExecuteTool to invoke.\n\n## Lookup modes\n\n1. Exact (preferre"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are CodeBuddy Code.You are an interactive CLI tool that helps users with software engineering tasks. Use the instructions below and the tools available to you to assist the user. Your main goal is",
+      "text_len": 15622
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text",
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "Bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "codebuddy",
+ "agent_version": "2.174.0",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

@@ -1,0 +1,242 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "x-stainless-retry-count": "0",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "6.34.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "user-agent": "kimi-code-cli/2.3.1",
+  "content-type": "application/json",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "prompt_cache_key": "<redacted-id>",
+  "tools": [
+   {
+    "name": "Agent",
+    "type": "function",
+    "description_prefix": "Launch a subagent to handle a task. The subagent runs as a same-process loop instance with its own context and wire file. Delegating also keeps the bulk of intermediate file contents out of your own c"
+   },
+   {
+    "name": "AgentSwarm",
+    "type": "function",
+    "description_prefix": "Launch multiple subagents from one prompt template, existing agent resumes, or both.\n\nUse AgentSwarm when many subagents should run the same kind of task over different inputs. The placeholder is exac"
+   },
+   {
+    "name": "AskUserQuestion",
+    "type": "function",
+    "description_prefix": "Use this tool when you need to ask the user questions with structured options during execution. This allows you to:\n1. Collect user preferences or requirements before proceeding\n2. Resolve ambiguous o"
+   },
+   {
+    "name": "Bash",
+    "type": "function",
+    "description_prefix": "Execute a `bash` command. Use this for shell semantics — pipes, env, processes, git, package managers, build/test runners, anything genuinely interactive or multi-step.\n\n**Translate these to a dedicat"
+   },
+   {
+    "name": "CreateGoal",
+    "type": "function",
+    "description_prefix": "Create a durable, structured goal that the runtime will pursue across multiple turns.\n\nCall `CreateGoal` only when:\n\n- the user explicitly asks you to start a goal or work autonomously toward an outco"
+   },
+   {
+    "name": "CronCreate",
+    "type": "function",
+    "description_prefix": "Schedule a prompt to be enqueued at a future time. Use for both recurring schedules and one-shot reminders.\n\nUses standard 5-field cron in the user's local timezone: minute hour day-of-month month day"
+   },
+   {
+    "name": "CronDelete",
+    "type": "function",
+    "description_prefix": "Cancel a scheduled cron job by id.\n\nUse this tool to remove a cron task previously scheduled with\n`CronCreate`. The `id` is the ULID value returned by `CronCreate`, or\nshown in the `id:` column of `Cr"
+   },
+   {
+    "name": "CronList",
+    "type": "function",
+    "description_prefix": "List all cron jobs currently scheduled in this session.\n\nUse this tool to see every pending cron task — both recurring jobs and\none-shot reminders — that you (or the user) have scheduled with\n`CronCre"
+   },
+   {
+    "name": "Edit",
+    "type": "function",
+    "description_prefix": "Perform exact replacements in existing files.\n\n- Edit is mandatory for every incremental change, especially small edits. DO NOT use Write or Bash `sed`.\n- Read the target file before every Edit. DO NO"
+   },
+   {
+    "name": "EnterPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool proactively when you're about to start a non-trivial implementation task.\nGetting user sign-off on your approach via ExitPlanMode before writing code prevents wasted effort.\n\nUse it when"
+   },
+   {
+    "name": "ExitPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool when you are in plan mode and have finished writing your plan to the plan file and are ready for user approval.\n\n## How This Tool Works\n- You should have already written your plan to the"
+   },
+   {
+    "name": "FetchURL",
+    "type": "function",
+    "description_prefix": "Fetch content from a URL. The content is returned either as the main text extracted from the page, or as the full response body verbatim; a note at the top of the result states which of the two you re"
+   },
+   {
+    "name": "GetGoal",
+    "type": "function",
+    "description_prefix": "Read the current goal: its objective, completion criterion, status, and budgets (turns, tokens,\ntime, and how much of each remains). When the goal has stopped, it also reports the terminal reason.\n\nUs"
+   },
+   {
+    "name": "Glob",
+    "type": "function",
+    "description_prefix": "Find files by glob pattern, sorted by modification time (most recent first).\n\nPowered by ripgrep. Respects `.gitignore`, `.ignore`, and `.rgignore` by default — set `include_ignored` to also match ign"
+   },
+   {
+    "name": "Grep",
+    "type": "function",
+    "description_prefix": "Search file contents using regular expressions (powered by ripgrep).\n\nUse Grep when the task is to find unknown content or unknown file locations. Do not use shell `grep` or `rg` directly; this tool a"
+   },
+   {
+    "name": "Read",
+    "type": "function",
+    "description_prefix": "Read a text file from the local filesystem.\n\nThe path may be a `kimi-file://` attachment reference. Its bytes come from the current session's storage, independently of the workspace runtime. Next Read"
+   },
+   {
+    "name": "SetGoalBudget",
+    "type": "function",
+    "description_prefix": "Set a hard budget limit for the current goal.\n\nUse this only when the user clearly gives a runtime limit, such as:\n\n- \"stop after 20 turns\"\n- \"use no more than 500k tokens\"\n- \"finish within 30 minutes"
+   },
+   {
+    "name": "Skill",
+    "type": "function",
+    "description_prefix": "Invoke a registered skill from the current skill listing. BLOCKING REQUIREMENT: when a skill from the listing matches the user's request, you MUST call this tool (not free-form text). Do not re-invoke"
+   },
+   {
+    "name": "TaskList",
+    "type": "function",
+    "description_prefix": "List background tasks and their current status.\n\nUse this tool to discover which background tasks exist and where each one\nstands. It is the entry point for inspecting background work: it returns a\nta"
+   },
+   {
+    "name": "TaskOutput",
+    "type": "function",
+    "description_prefix": "Retrieve a snapshot of a running or completed background task.\n\nUse this after `Bash(run_in_background=true)`, `Agent(run_in_background=true)`, or `AskUserQuestion(background=true)` to check progress,"
+   },
+   {
+    "name": "TaskStop",
+    "type": "function",
+    "description_prefix": "Stop a running background task.\n\nOnly use this when a task must genuinely be cancelled — for a task that is\nfinishing normally, wait for its completion notification or inspect it with\n`TaskOutput` ins"
+   },
+   {
+    "name": "TodoList",
+    "type": "function",
+    "description_prefix": "Use this tool to maintain a structured TODO list as you work through a multi-step task. Use it proactively and often when progress tracking helps the current work. The list is shown to the user as a l"
+   },
+   {
+    "name": "UpdateGoal",
+    "type": "function",
+    "description_prefix": "Set the status of the current goal. This is how you resume, complete, or block an autonomous goal.\n\n- `active` — resume a paused or blocked goal when the user explicitly asks you to work on that goal."
+   },
+   {
+    "name": "WaitFor",
+    "type": "function",
+    "description_prefix": "Wait for background tasks to finish without ending the current turn.\n\nOnly call this tool when you really have no other work to do and your next step cannot proceed without the result of a running bac"
+   },
+   {
+    "name": "Write",
+    "type": "function",
+    "description_prefix": "Create, append to, or replace a file entirely.\n\n- Missing parent directories are created automatically (like `mkdir(parents=True, exist_ok=True)`).\n- Mode defaults to overwrite; append adds content at"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Kimi Code CLI, an interactive general AI agent running on a user's computer.\n\nYour primary goal is to help users with software engineering tasks.\n\n\n\n# Communicating with the user\n\nMatch the us",
+      "text_len": 8533
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "Bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "Bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "kimi_code",
+ "agent_version": "2.3.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

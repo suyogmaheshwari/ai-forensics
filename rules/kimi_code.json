@@ -1,0 +1,22 @@
+{
+  "product": "kimi_code",
+  "display_name": "Kimi Code CLI (Moonshot AI, @moonshot-ai/kimi-code)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_kimi_code_cli", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "kimi-code-cli/", "weight": 40},
+    {"id": "stainless_js", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "js", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Kimi Code CLI"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Agent", "AgentSwarm", "AskUserQuestion", "Bash", "CreateGoal", "Edit", "FetchURL", "Glob", "Grep", "Read", "Skill", "TodoList", "Write"], "weight": 30},
+    {"id": "prompt_cache_key", "group": "habits", "op": "habit_present", "value": "prompt_cache_key", "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "iFlow-Cli"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "2.3.1: user-agent 'kimi-code-cli/<version>' on the openai-node client; prompt_cache_key carries the session id. Headers, identity ('You are Kimi Code CLI, an interactive general AI agent…') and the 25-tool set are identical on the first turn, after the tool call and on the follow-up (-c or -S <session>); the date and permission-mode <system-reminder>s are extra user messages. Provider types anthropic, openai_responses, google-genai and vertexai are configurable but were not captured."
+}

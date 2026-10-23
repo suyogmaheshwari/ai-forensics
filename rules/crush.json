@@ -1,0 +1,22 @@
+{
+  "product": "crush",
+  "display_name": "Crush (Charmbracelet, @charmland/crush)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_charm_crush", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "Charm-Crush/", "weight": 40},
+    {"id": "stainless_go", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "go", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Crush", "You will generate a short title based on the first message"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["agent", "bash", "edit", "fetch", "glob", "grep", "ls", "multiedit", "sourcegraph", "todos", "view", "write", "lsp_diagnostics"], "weight": 30},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5},
+    {"id": "tool_choice_auto", "group": "habits", "op": "habit_equals", "name": "tool_choice", "value": "auto", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/", "opencode/", "ai-sdk/", "claude-cli/", "iFlow-Cli"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.98.2: Go client (openai-go, x-stainless-lang go) with its own user-agent 'Charm-Crush/v<version> (https://charm.land/crush)'; x-session-id and x-session-affinity carry the session id. Headers, identity and the 26-tool set are identical on the first turn, after the tool call and on the follow-up; a fixed user-role <system_reminder> about the todo list precedes the real prompt on every turn. The first turn also fires a title side request on the small model (identity 'You will generate a short title…', max_tokens 40, no tools), covered by the second identity prefix. An anthropic-type provider (/v1/messages) is configurable but was not captured."
+}

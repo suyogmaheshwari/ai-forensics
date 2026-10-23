@@ -1,0 +1,23 @@
+{
+  "product": "codebuddy",
+  "display_name": "CodeBuddy Code (Tencent, @tencent-ai/codebuddy-code)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_codebuddy", "group": "header", "op": "header_contains", "name": "user-agent", "value": "CodeBuddy/", "weight": 30},
+    {"id": "x_codebuddy_request", "group": "header", "op": "header_present", "name": "x-codebuddy-request", "weight": 20},
+    {"id": "ide_type_cli", "group": "header", "op": "header_equals", "name": "x-ide-type", "value": "CLI", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are CodeBuddy Code"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Agent", "Bash", "DeferExecuteTool", "Edit", "EnterPlanMode", "Glob", "Grep", "Read", "Skill", "TaskCreate", "ToolSearch", "ViewImage", "WebFetch", "WebSearch", "Write"], "weight": 30},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "iFlow-Cli"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "2.174.0 with a custom model in ~/.codebuddy/models.json (no login needed in -p mode): user-agent 'CLI/<v> CodeBuddy/<v>' plus a product header block (x-codebuddy-request, X-Product, X-IDE-Type/Name/Version, X-Agent-Intent/Runtime/Purpose/Type) and conversation/request ids. The tool names are Claude Code's (Read, Write, Edit, Bash, Glob, Grep, Agent, Skill, ToolSearch…) on the chat-completions family; the family gate and the user-agent keep the two apart. Identical on the first turn, after the tool call and on the --continue follow-up; the user prompt is wrapped in <user_query> after a memory <system-reminder>."
+}

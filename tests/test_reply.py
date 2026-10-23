@@ -194,7 +194,10 @@ def test_unique_tool_call_ids():
 
 
 def test_models_listing_and_unknown_paths():
-    assert build_reply(_rec("/v1/models", "", "GET"), "tool-call")["status"] == 200
+    listing = build_reply(_rec("/v1/models", "", "GET"), "tool-call")
+    assert listing["status"] == 200 and "gpt-4o" in [m["id"] for m in json.loads(listing["body"])["data"]]
+    info = json.loads(build_reply(_rec("/v1/model/info", "", "GET"), "tool-call")["body"])
+    assert any(m["model_name"] == "gpt-5.4" and m["model_info"]["supports_function_calling"] for m in info["data"])
     assert build_reply(_rec("/v1/embeddings", {"input": "x"}), "tool-call")["status"] == 404
 
 
