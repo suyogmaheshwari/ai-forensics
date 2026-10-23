@@ -1,0 +1,23 @@
+{
+  "product": "junie",
+  "display_name": "Junie CLI (JetBrains, @jetbrains/junie, LiteLLM provider)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_junie_cli", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "junie-cli", "weight": 40},
+    {"id": "litellm_headers", "group": "header", "op": "header_present", "name": "litellm-disable-message-redaction", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_contains", "value": ["You are Junie, an autonomous programmer developed by JetBrains"], "weight": 30},
+    {"id": "summarisers", "group": "identity", "op": "identity_prefix", "value": ["You are a programming task description summarizer", "You are a task step summarizer", "You are a chat response title creator"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["open", "open_entire_file", "scroll_down", "scroll_up", "glob_search", "grep_search", "bash", "discover_tools", "search_replace", "multi_edit", "create", "undo_edit", "submit", "spawn_subagent", "agent_skill_read_doc"], "weight": 30},
+    {"id": "no_stream", "group": "habits", "op": "habit_equals", "name": "stream", "value": false, "weight": 5},
+    {"id": "tool_choice_auto", "group": "habits", "op": "habit_equals", "name": "tool_choice", "value": "auto", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["OpenAI/", "QwenCode/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "26.9.7 (npm 3110.7.0) with --provider=litellm: user-agent 'junie-cli-batch:<version>', LiteLLM client headers (LiteLLM-Disable-Message-Redaction, x-litellm-num-retries, x-litellm-tags), 'Openai-Version: 2020-11-07'; never streams, n 1, seed 100000, stop ['</COMMAND>'], reasoning_effort high, user 'primary'. The system prompt opens with '## ENVIRONMENT' and names the model; the identity clause follows within the first 200 characters. Each run also sends a task-description summariser and a step summariser request (no tools), covered by the second identity feature. Junie rejects a plain text answer ('missing a tool call') and nudges until a tool or submit is called; the follow-up (--resume --session-id) arrives as <issue_update>. The model name must be one of Junie's built-ins and must appear in GET /v1/model/info."
+}

@@ -1,0 +1,182 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "text/event-stream,application/json",
+  "litellm-disable-message-redaction": "true",
+  "x-litellm-num-retries": "1",
+  "x-litellm-tags": "<uuid>",
+  "openai-version": "2020-11-07",
+  "user-agent": "junie-cli-batch:26.9.7",
+  "content-type": "application/json"
+ },
+ "body": {
+  "model": "gpt-5.4",
+  "stream": false,
+  "tool_choice": "auto",
+  "parallel_tool_calls": false,
+  "stop": [
+   "</COMMAND>"
+  ],
+  "n": 1,
+  "user": "primary",
+  "tools": [
+   {
+    "name": "open",
+    "type": "function",
+    "description_prefix": "Open 100 lines of the specified file in the editor, starting from the specified line number.\nSince files are often larger than the visible window, specifying the line number helps you view a specific "
+   },
+   {
+    "name": "open_entire_file",
+    "type": "function",
+    "description_prefix": "A variant of the `open` tool that attempts to show the entire file's content when possible.\nUse it only if you absolutely certain you need to see the whole file, as it can be very slow and costly for "
+   },
+   {
+    "name": "scroll_down",
+    "type": "function",
+    "description_prefix": "Moves the view window down to show next 300 lines of currently open file."
+   },
+   {
+    "name": "scroll_up",
+    "type": "function",
+    "description_prefix": "Moves the view window up to show previous 300 lines of currently open file."
+   },
+   {
+    "name": "glob_search",
+    "type": "function",
+    "description_prefix": "Search file and folder paths using a Git glob (pathspec) inside a repository.\nThe tool searches by glob and matches the pattern against repository-relative paths.\nResults are returned as absolute file"
+   },
+   {
+    "name": "grep_search",
+    "type": "function",
+    "description_prefix": "Search file contents in a Git repository using a PCRE (Perl-compatible) regular expression (this includes any plain text as well).\n\nThis tool runs `grep` against repository files starting at the direc"
+   },
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "executes standard terminal commands (Bash) in local terminal. \nTerminal state: After each command, `<terminal_status>` contains actual terminal state (current directory, active agent's processes, adde"
+   },
+   {
+    "name": "discover_tools",
+    "type": "function",
+    "description_prefix": "Fast discover available tools, utilities, packages that can help solve a specific task.\nThis tool scans the system for available commands, packages, and utilities, then uses AI to filter and return on"
+   },
+   {
+    "name": "search_replace",
+    "type": "function",
+    "description_prefix": "Applies edit to the code using search and replace approach.\nEach `search` parameter must match the existing source code exactly once, line for line, character for character, including all comments, do"
+   },
+   {
+    "name": "multi_edit",
+    "type": "function",
+    "description_prefix": "This is a tool for making multiple edits to a single file in one operation. \nIt is built on top of the `search_replace` tool and allows you to perform multiple search-and-replace operations efficientl"
+   },
+   {
+    "name": "create",
+    "type": "function",
+    "description_prefix": "Create a new file with the given name and given content. \nDo not use line numbers in *content* parameter. Do not enclose the *content* parameter in triple quotes."
+   },
+   {
+    "name": "undo_edit",
+    "type": "function",
+    "description_prefix": "Reverts the last edit made to the project.\nEdits form a stack where each element is one edit tool call. Each call undoes the most recent edit tool call;\ncall it repeatedly to undo earlier edits one to"
+   },
+   {
+    "name": "submit",
+    "type": "function",
+    "description_prefix": "Submits your solution and terminates the session.\nUse only the parameter `solution_summary` to provide a summary of your solution.\n`solution_summary` MUST be a short, structured Markdown summary that "
+   },
+   {
+    "name": "spawn_subagent",
+    "type": "function",
+    "description_prefix": "Spawn a subagent to work on a delegated task. A subagent runs in an isolated context with its own\nsystem prompt and tools, then reports its final result back to you. The call blocks and returns\nthe su"
+   },
+   {
+    "name": "agent_skill_read_doc",
+    "type": "function",
+    "description_prefix": "Use this tool to access detailed instructions and resources for a specific Agent Skill.\n\nUsage patterns:\n- To read the main skill body (SKILL.md content): call with `name` only, omit `path`\n- To read "
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "## ENVIRONMENT      \n  You are Junie, an autonomous programmer developed by JetBrains. You are powered by the `gpt-5.4` LLM model. You're working with a special interface.\n  This message starts the se",
+      "text_len": 20695
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "junie",
+ "agent_version": "26.9.7",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

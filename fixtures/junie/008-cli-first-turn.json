@@ -1,0 +1,45 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "text/event-stream,application/json",
+  "litellm-disable-message-redaction": "true",
+  "x-litellm-num-retries": "1",
+  "x-litellm-tags": "<uuid>",
+  "openai-version": "2020-11-07",
+  "user-agent": "junie-cli-batch:26.9.7",
+  "content-type": "application/json"
+ },
+ "body": {
+  "model": "gpt-5.4",
+  "stream": false,
+  "stop": [
+   "</COMMAND>"
+  ],
+  "user": "primary",
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are a chat response title creator",
+      "text_len": 37
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "junie",
+ "agent_version": "26.9.7",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

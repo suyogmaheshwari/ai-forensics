@@ -47,7 +47,7 @@ RECORDER_PID=
 start_recorder() {  # start_recorder <agent> <work-dir>
   stop_recorder
   rm -rf "$RAW/$1"; mkdir -p "$RAW/$1"
-  "$PY" -m aiforensics.cli record --out "$RAW/$1" --port $PORT --reply tool-call --work-dir "$2" --max-requests 16 \
+  "$PY" -m aiforensics.cli record --out "$RAW/$1" --port $PORT --reply tool-call --work-dir "$2" --max-requests 32 \
     >>"$WORK/recorder.log" 2>&1 &
   RECORDER_PID=$!
   for _ in $(seq 1 50); do
@@ -528,7 +528,7 @@ cap_junie() {  # JetBrains Junie with --provider=litellm: no JetBrains login; th
 }
 
 cap_open_interpreter() {  # the legacy PyPI package; the current Codex-based CLI ships only through GitHub releases
-  py_venv "$WORK/oi-venv" open-interpreter setuptools || return   # pkg_resources is gone from 3.12 venvs
+  py_venv "$WORK/oi-venv" open-interpreter "setuptools<80" || return   # it imports pkg_resources, dropped by setuptools 80+
   local v; v=$("$WORK/oi-venv/bin/pip" show open-interpreter | awk '/^Version/{print $2}')
   local h; h=$(fresh_home open_interpreter); start_recorder open_interpreter "$h/project"
   local env=(LITELLM_LOCAL_MODEL_COST_MAP=True)
