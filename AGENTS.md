@@ -42,9 +42,11 @@ which is a policy decision rather than a fingerprint.
 
 ## Definition of done for one agent
 
-1. A sanitised fixture under `fixtures/<agent>/` for a named version, with no credentials, ids,
-   paths, emails or conversation content.
+1. Sanitised fixtures under `fixtures/<agent>/` for a named version covering the session shapes:
+   first turn, after a tool call, follow-up (and each entry point where they differ), with no
+   credentials, ids, paths, emails or conversation content.
 2. A rule under `rules/` using at least two feature groups, with a deny feature where another
    product shares a layer.
-3. `aiforensics eval` at precision 1.0 and recall 1.0 over all fixtures, and the tests green.
+3. `aiforensics eval` at precision 1.0 and recall 1.0 over all fixtures, which means the rule
+   identifies every turn shape of its agent and none of any other agent's, and the tests green.
 4. A line in this table moved to `rule (<version>)`.
