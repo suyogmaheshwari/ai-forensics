@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -549,6 +549,28 @@ interpreter.chat("$PROMPT2", display=False)
 EOF
   run "$h" "$h/project" "${env[@]}" -- "$WORK/oi-venv/bin/python" "$WORK/oi-sdk-driver.py"
   stop_recorder; sanitize_all open_interpreter "$v" cli-sdk "$RAW/open_interpreter__sdk"
+}
+
+cap_mini_swe_agent() {
+  py_venv "$WORK/mini-venv" mini-swe-agent mcp || return   # litellm imports mcp on every completion
+  local v; v=$("$WORK/mini-venv/bin/pip" show mini-swe-agent | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home mini_swe_agent); start_recorder mini_swe_agent "$h/project"
+  local env=(MSWEA_CONFIGURED=true MSWEA_COST_TRACKING=ignore_errors MSWEA_MODEL_API_KEY=dummy OPENAI_API_KEY=dummy)
+  # one-shot only: no resume; a text answer triggers its format-error loop, which ends by itself after three rounds
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/mini-venv/bin/mini" -c model.model_name=openai/gpt-4o -c "model.model_kwargs.api_base=$BASE/v1" \
+    -c model.model_kwargs.api_key=dummy -c model.model_kwargs.custom_llm_provider=openai -c model.cost_tracking=ignore_errors \
+    -c agent.cost_limit=0 -t "$PROMPT1" -y --exit-immediately -o "$h/trajectory.json"
+  stop_recorder; sanitize_all mini_swe_agent "$v"
+}
+
+cap_gptme() {
+  py_venv "$WORK/gptme-venv" gptme || return
+  local v; v=$("$WORK/gptme-venv/bin/pip" show gptme | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home gptme); start_recorder gptme "$h/project"
+  local env=(OPENAI_BASE_URL=$BASE/v1 OPENAI_API_KEY=dummy)
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/gptme-venv/bin/gptme" -n -y --name probe -m local/gpt-4o "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$WORK/gptme-venv/bin/gptme" -n -y --name probe -m local/gpt-4o -r "$PROMPT2"
+  stop_recorder; sanitize_all gptme "$v"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture

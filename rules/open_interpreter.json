@@ -1,0 +1,23 @@
+{
+  "product": "open_interpreter",
+  "display_name": "Open Interpreter (legacy PyPI open-interpreter, via litellm)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Python", "weight": 20},
+    {"id": "stainless_raw_response", "group": "header", "op": "header_present", "name": "x-stainless-raw-response", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Open Interpreter"], "weight": 30},
+    {"id": "tool_execute", "group": "tools", "op": "tool_set", "value": ["execute"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "max_tokens", "group": "habits", "op": "habit_present", "value": "max_tokens", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "identity_prefix", "value": ["Act as an expert software developer", "You are OpenHands agent", "You are an expert AI software engineering agent"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.4.3 (the last PyPI release) through litellm: the same OpenAI/Python + x-stainless-raw-response headers as Aider and OpenHands, told apart by the identity ('You are Open Interpreter, a world-class programmer that can complete any goal by executing code') and the single 'execute' tool (language enum + code). Identical on the first turn, after the tool call and on the follow-up; the CLI entry point sends max_tokens 4096, the Python SDK entry point 16384. The current Codex-based Open Interpreter CLI (github releases only) is a different program: its native wire shape is Codex's (originator codex_exec, codex_exec/0.159.0 user-agent, 'You are Codex' prompt) and its claude-code harness imitates Claude Code's headers, so it identifies as those products; not captured here."
+}

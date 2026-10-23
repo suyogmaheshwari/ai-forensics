@@ -20,7 +20,7 @@ from .features import family_of
 SHELL_TOOLS = ("bash", "shell", "exec", "exec_command", "run_shell_command", "run_commands", "execute_command",
                "shell_command", "run_command", "run_terminal_cmd", "terminal", "developer__shell", "command")
 READ_TOOLS = ("read", "read_file", "read_files", "view_file", "view", "cat", "text_editor", "str_replace_based_edit_tool")
-DONE_TOOLS = ("submit_and_exit", "attempt_completion", "complete_task", "task_complete", "finish", "done", "submit")
+DONE_TOOLS = ("submit_and_exit", "attempt_completion", "complete_task", "task_complete", "finish", "done", "submit", "complete")
 PATH_PROPS = ("file_path", "filepath", "path", "absolute_path", "file", "target_file", "notebook_path")
 DIR_PROPS = ("workdir", "cwd", "directory", "dir_path", "working_directory", "working_dir")
 TEXT_REPLY = "ok"
