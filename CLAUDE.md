@@ -1,0 +1,37 @@
+# Working in this repository
+
+ai-forensics identifies which AI coding agent sent an LLM API request. Read `README.md` for the
+three-layer model and `AGENTS.md` for the target list, capture method per agent and the
+definition of done. This file is the standing brief for any agent session working here.
+
+## Standing task
+
+1. **Keep `AGENTS.md` complete.** Using your own knowledge plus the npm and PyPI registries (and
+   the web when the environment allows it), add every AI coding agent that can be pointed at a
+   custom model endpoint: CLI tools and IDEs. For each: install command, the setting that changes
+   its base URL, the protocol family it speaks, whether it runs headless, and a status.
+2. **Capture every agent that runs headless.** Install it, start the recorder
+   (`python3 -m aiforensics.cli record --out capture/raw/<agent>`), point the agent at
+   `http://127.0.0.1:18599` (append `/v1` where the agent expects it) with a dummy key, send one
+   non-interactive prompt, stop. If an agent refuses to start without a login or a real-looking
+   key, note the obstacle in `AGENTS.md` and move on.
+3. **Make a fixture.** `python3 -m aiforensics.cli sanitize <raw> --agent <agent> --version <v>
+   -o fixtures/<agent>/001-<entrypoint>.json`. Open the result and confirm it contains no
+   credentials, ids, paths, emails or conversation text. Never commit anything under
+   `capture/raw/`.
+4. **Write the rule** under `rules/<agent>.json` using at least two feature groups, and a deny
+   feature wherever another product shares a layer. Prefer stable identity prefixes (first clause
+   of the hard-coded prompt) and the core tool-name set over version-specific strings.
+5. **Prove it.** `python3 -m aiforensics.cli eval` must show precision 1.0 and recall 1.0 over
+   all fixtures, and the tests must pass. Add a test when you add an operator or change scoring.
+6. **Open one pull request per batch** with the new fixtures, rules, tests and the `AGENTS.md`
+   rows updated. Desktop IDEs stay `todo`; they are captured on a workstation by a person.
+
+## Conventions
+
+- Python 3.9 compatible, standard library only; no new dependencies without a reason in the PR.
+- Run the CLI as `python3 -m aiforensics.cli …`; installing the package is optional.
+- Rule operators are documented in `aiforensics/rules.py`; extend there, not in rule files.
+- Keep fixtures small: the sanitiser already truncates texts to 200 characters.
+- Commit messages: one line, imperative, what changed and for which agent or version.
+- Do not add a co-author trailer.
