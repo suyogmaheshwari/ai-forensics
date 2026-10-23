@@ -57,8 +57,9 @@ One JSON file per product under `rules/`; the format and operators are documente
 `habits`), a minimum number of distinct groups, deny features that veto a product, and a
 threshold. Exactly one eligible product is `identified`; several is `conflict`; none is `unknown`.
 
-Current catalog: Claude Code, Codex CLI. Contributions of captures for other agents are welcome:
-run steps 1, 2 and 4 above and open a pull request with the fixture.
+Current catalog: Claude Code, Codex CLI. The target list, capture method per agent and the
+definition of done are in [AGENTS.md](AGENTS.md). Contributions of captures are welcome: run
+steps 1, 2 and 4 above and open a pull request with the fixture.
 
 ## Layout
 
