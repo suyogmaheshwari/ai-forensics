@@ -1,0 +1,128 @@
+{
+ "method": "POST",
+ "path": "/v1beta/models/gemini-3.8-flash:streamGenerateContent?alt=sse",
+ "headers": {
+  "user-agent": "GeminiCLI-tui/0.65.0/gemini-3.1-pro-preview (linux; x64; terminal)",
+  "x-goog-api-client": "google-genai-sdk/1.30.0 gl-node/v22.22.0",
+  "content-type": "application/json",
+  "accept": "*/*",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "systemInstruction": {
+   "role": "user",
+   "parts": [
+    {
+     "type": null,
+     "text_prefix": "You are Gemini CLI, an autonomous CLI agent specializing in software engineering tasks. You are currently operating in **YOLO** mode. Your primary goal is to help users safely and effectively.\n\n# Core",
+     "text_len": 30387
+    }
+   ]
+  },
+  "generationConfig": {
+   "temperature": 1,
+   "topP": 0.95,
+   "topK": 64,
+   "thinkingConfig": {
+    "includeThoughts": true,
+    "thinkingLevel": "HIGH"
+   }
+  },
+  "tools": [
+   {
+    "functionDeclarations": [
+     {
+      "name": "update_topic",
+      "type": null,
+      "description_prefix": "Manages your narrative flow. Include `title` and `summary` only when starting a new Chapter (logical phase) or shifting strategic intent."
+     },
+     {
+      "name": "list_directory",
+      "type": null,
+      "description_prefix": "Lists the names of files and subdirectories directly within a specified directory path. Can optionally ignore entries matching provided glob patterns."
+     },
+     {
+      "name": "read_file",
+      "type": null,
+      "description_prefix": "Reads and returns the content of a specified file. To maintain context efficiency, you MUST use 'start_line' and 'end_line' for targeted, surgical reads of specific sections. For your safety, the tool"
+     },
+     {
+      "name": "grep_search",
+      "type": null,
+      "description_prefix": "Searches for a regular expression pattern within file contents. This tool is FAST and optimized, powered by ripgrep. PREFERRED over standard `run_shell_command(\"grep ...\")` due to better performance a"
+     },
+     {
+      "name": "glob",
+      "type": null,
+      "description_prefix": "Efficiently finds files matching specific glob patterns (e.g., `src/**/*.ts`, `**/*.md`), returning absolute paths sorted by modification time (newest first). Ideal for quickly locating files based on"
+     },
+     {
+      "name": "replace",
+      "type": null,
+      "description_prefix": "Replaces text within a file. By default, the tool expects to find and replace exactly ONE occurrence of `old_string`. If you want to replace multiple occurrences of the exact same string, set `allow_m"
+     },
+     {
+      "name": "write_file",
+      "type": null,
+      "description_prefix": "Writes the complete content to a file, automatically creating missing parent directories. Overwrites existing files. The user has the ability to modify 'content' before it is saved. Best for new or sm"
+     },
+     {
+      "name": "web_fetch",
+      "type": null,
+      "description_prefix": "Analyzes and extracts information from up to 20 URLs. Ideal for documentation review, technical research, or reading raw code from GitHub. You can provide specific, complex instructions for the extrac"
+     },
+     {
+      "name": "run_shell_command",
+      "type": null,
+      "description_prefix": "This tool executes a given shell command as `bash -c <command>`. Command can start background processes using `&`. Command is executed as a subprocess that leads its own process group. Command process"
+     },
+     {
+      "name": "list_background_processes",
+      "type": null,
+      "description_prefix": "Lists all active and recently completed background shell processes orchestrating by the agent."
+     },
+     {
+      "name": "read_background_output",
+      "type": null,
+      "description_prefix": "Reads the output log of a background shell process. Support reading tail snapshot."
+     },
+     {
+      "name": "google_web_search",
+      "type": null,
+      "description_prefix": "Performs a grounded Google Search to find information across the internet. Returns a synthesized answer with citations (e.g., [1]) and source URIs. Best for finding up-to-date documentation, troublesh"
+     },
+     {
+      "name": "enter_plan_mode",
+      "type": null,
+      "description_prefix": "Switch to Plan Mode to safely research, design, and plan complex changes using read-only tools."
+     },
+     {
+      "name": "invoke_agent",
+      "type": null,
+      "description_prefix": "Invoke a subagent to perform a specific task or investigation."
+     },
+     {
+      "name": "activate_skill",
+      "type": null,
+      "description_prefix": "Activates a specialized agent skill by name (Available: 'skill-creator', 'antigravity-support'). Returns the skill's instructions wrapped in `<activated_skill>` tags. These provide specialized guidanc"
+     }
+    ]
+   }
+  ],
+  "contents": [
+   {
+    "role": "user",
+    "parts": [
+     "text",
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "gemini_cli",
+ "agent_version": "0.65.0",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

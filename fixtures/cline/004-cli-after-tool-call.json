@@ -1,0 +1,115 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "user-agent": "ai-sdk/openai-compatible/3.0.58 ai-sdk/provider-utils/5.0.50 runtime/bun/1.4.2",
+  "accept": "*/*"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 32000,
+  "tool_choice": "auto",
+  "tools": [
+   {
+    "name": "read_files",
+    "type": "function",
+    "description_prefix": "Read the content of text or image files at the provided absolute paths, or return only an inclusive one-based line range when start_line/end_line are provided on the same file entry as its path. When "
+   },
+   {
+    "name": "run_commands",
+    "type": "function",
+    "description_prefix": "Run non-interactive shell commands from the root of the workspace. Use for listing files, checking git status, running builds, executing tests, etc. Commands must be non-interactive. Commands that req"
+   },
+   {
+    "name": "editor",
+    "type": "function",
+    "description_prefix": "An editor for controlled filesystem edits on the text file at the provided path. Provide `insert_line` to insert `new_text` at a specific line number. Otherwise, the tool replaces `old_text` with `new"
+   },
+   {
+    "name": "submit_and_exit",
+    "type": "function",
+    "description_prefix": "Submit the final answer and exit the conversation. For example, submit a summary of the investigation and confirm the issue is resolved. You should only submit once all necessary steps are completed A"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Cline, a careful and helpful coding agent that works in the background.\nYou are tasked to solve an issue reported by the user who you cannot communicate with directly.\nYour goal is to utilize ",
+      "text_len": 4532
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "run_commands"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "run_commands"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "tool-call",
+ "agent": "cline",
+ "agent_version": "3.0.73",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

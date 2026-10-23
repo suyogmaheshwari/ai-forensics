@@ -1,0 +1,176 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "agent-session-id": "<redacted-id>",
+  "content-type": "application/json",
+  "accept": "*/*",
+  "anthropic-version": "2023-06-01"
+ },
+ "body": {
+  "model": "claude-sonnet-4-5",
+  "stream": true,
+  "max_tokens": 64000,
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are a general-purpose AI agent called goose, created by AAIF (Agentic AI Foundation).\ngoose is being developed as an open-source software project.\n\n# Turn Context\n\nEach turn may include a `<turn-c",
+    "text_len": 4262,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "tools": [
+   {
+    "name": "analyze",
+    "type": null,
+    "description_prefix": "Analyze code structure in 3 modes: 1) Directory overview - file tree with LOC/function/class counts to max_depth. 2) File details - functions, classes, imports. 3) Symbol focus - call graphs across di"
+   },
+   {
+    "name": "apps__create_app",
+    "type": null,
+    "description_prefix": "Create a new Goose app based on a description or PRD. The extension will use an LLM to generate the HTML/CSS/JavaScript. Apps are sandboxed and run in standalone windows."
+   },
+   {
+    "name": "apps__delete_app",
+    "type": null,
+    "description_prefix": "Delete an app permanently"
+   },
+   {
+    "name": "apps__iterate_app",
+    "type": null,
+    "description_prefix": "Improve an existing app based on feedback. The extension will use an LLM to update the HTML while preserving the app's intent."
+   },
+   {
+    "name": "apps__list_apps",
+    "type": null,
+    "description_prefix": "List all available Goose apps with their names and descriptions. Use this to see what apps exist before creating or modifying apps."
+   },
+   {
+    "name": "delegate",
+    "type": null,
+    "description_prefix": "Delegate a task to a subagent that runs independently with its own context.\n\nModes:\n1. Ad-hoc: Provide `instructions` for a custom task\n2. Source-based: Provide `source` name to run a subrecipe, recip"
+   },
+   {
+    "name": "edit",
+    "type": null,
+    "description_prefix": "Edit a file by finding and replacing text. The before text must match exactly and uniquely. Use empty after text to delete."
+   },
+   {
+    "name": "extensionmanager__list_resources",
+    "type": null,
+    "description_prefix": "List resources from an extension(s).\n\nResources allow extensions to share data that provide context to LLMs, such as\nfiles, database schemas, or application-specific information. This tool lists resou"
+   },
+   {
+    "name": "extensionmanager__manage_extensions",
+    "type": null,
+    "description_prefix": "Tool to manage extensions and tools in goose context.\n            Enable or disable extensions to help complete tasks.\n            Enable or disable an extension by providing the extension name.\n     "
+   },
+   {
+    "name": "extensionmanager__read_resource",
+    "type": null,
+    "description_prefix": "Read a resource from a specific extension.\n\nResources allow extensions to share data that provide context to LLMs, such as\nfiles, database schemas, or application-specific information. You must pass t"
+   },
+   {
+    "name": "extensionmanager__search_available_extensions",
+    "type": null,
+    "description_prefix": "Searches for additional extensions available to help complete tasks.\n        Use this tool when you're unable to find a specific feature or functionality you need to complete your task, or when standa"
+   },
+   {
+    "name": "load",
+    "type": null,
+    "description_prefix": "Load knowledge into your current context or discover available sources.\n\nCall with no arguments to list all available sources (subrecipes, recipes, agents).\nCall with a source name to load its content"
+   },
+   {
+    "name": "load_skill",
+    "type": null,
+    "description_prefix": "Load a skill's full content into your context so you can follow its instructions.\n\nSkills are listed in your system instructions. When you need to use one, load it first to get the detailed instructio"
+   },
+   {
+    "name": "read_image",
+    "type": null,
+    "description_prefix": "Read an image from a local file path or http(s) URL and return it as image content for the model to inspect. Supports png, jpeg, gif, and webp."
+   },
+   {
+    "name": "shell",
+    "type": null,
+    "description_prefix": "Execute a shell command in the current dir. Commands run under `bash` (set GOOSE_SHELL to override) - write command strings in that shell's syntax. Returns an object with stdout and stderr as separate"
+   },
+   {
+    "name": "tree",
+    "type": null,
+    "description_prefix": "List a directory tree with line counts. Traversal respects .gitignore rules."
+   },
+   {
+    "name": "write",
+    "type": null,
+    "description_prefix": "Create a new file or overwrite an existing file. Creates parent directories if needed."
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text",
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "shell"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text",
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "shell"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "goose",
+ "agent_version": "1.56.0",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

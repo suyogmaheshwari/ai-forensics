@@ -10,11 +10,12 @@
     {"id": "ua_codex", "group": "header", "op": "header_prefix", "name": "user-agent", "value": ["codex_cli_rs/", "codex_exec/"], "weight": 20},
     {"id": "codex_headers", "group": "header", "op": "header_present", "name": "x-codex-turn-metadata", "weight": 10},
     {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Codex", "You are a coding agent running in the Codex CLI"], "weight": 30},
-    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["shell", "exec_command", "write_stdin", "apply_patch", "update_plan", "view_image"], "weight": 30},
+    {"id": "tool_present", "group": "tools", "op": "tool_present", "value": ["exec", "exec_command", "shell", "apply_patch", "write_stdin", "request_user_input"], "weight": 30},
     {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5},
     {"id": "reasoning_block", "group": "habits", "op": "habit_present", "value": "reasoning", "weight": 5}
   ],
   "deny": [
-    {"op": "header_prefix", "name": "user-agent", "value": "claude-cli/"}
-  ]
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "opencode/"]}
+  ],
+  "notes": "0.163.0 and 0.164.0: tools arrive as namespaces inside an input item of type additional_tools (functions, clock, collaboration); the shell tool is a grammar-typed custom tool named exec (exec_command with a config.toml model, shell in older versions), so tool_present is used instead of a tool set. Headers, identity and habits are identical on the first turn and after the tool call. The built-in openai provider ignores OPENAI_BASE_URL since 0.16x; captures need a custom model provider with base_url."
 }

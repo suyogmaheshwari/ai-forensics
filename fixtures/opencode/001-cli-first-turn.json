@@ -1,0 +1,62 @@
+{
+ "method": "POST",
+ "path": "/v1/responses",
+ "headers": {
+  "content-type": "application/json",
+  "user-agent": "opencode/1.19.4 (linux 6.18.44-fc-v153; x64) ai-sdk/provider-utils/4.0.40 runtime/bun/1.4.4",
+  "originator": "opencode",
+  "session-id": "<redacted-id>",
+  "x-opencode-session-id": "<redacted-id>",
+  "x-session-affinity": "<redacted-id>",
+  "x-session-id": "<redacted-id>",
+  "accept": "*/*"
+ },
+ "body": {
+  "model": "gpt-5.4-nano",
+  "stream": true,
+  "temperature": 0.5,
+  "store": false,
+  "include": [
+   "reasoning.encrypted_content"
+  ],
+  "reasoning": {
+   "effort": "none",
+   "summary": "auto"
+  },
+  "service_tier": "flex",
+  "input": [
+   {
+    "type": null,
+    "role": "developer",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are a title generator. You output ONLY a thread title. Nothing else.\n\n<task>\nGenerate a brief title that would help the user find this conversation later.\n\nFollow all rules in <rules>\nUse the <exa",
+      "text_len": 2096
+     }
+    ]
+   },
+   {
+    "type": null,
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text"
+    ]
+   },
+   {
+    "type": null,
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "opencode",
+ "agent_version": "1.19.4",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

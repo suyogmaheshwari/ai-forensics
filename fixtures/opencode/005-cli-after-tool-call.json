@@ -1,0 +1,135 @@
+{
+ "method": "POST",
+ "path": "/v1/responses",
+ "headers": {
+  "content-type": "application/json",
+  "user-agent": "opencode/1.19.4 (linux 6.18.44-fc-v153; x64) ai-sdk/provider-utils/4.0.40 runtime/bun/1.4.4",
+  "originator": "opencode",
+  "session-id": "<redacted-id>",
+  "x-opencode-session-id": "<redacted-id>",
+  "x-session-affinity": "<redacted-id>",
+  "x-session-id": "<redacted-id>",
+  "accept": "*/*"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "store": false,
+  "tool_choice": "auto",
+  "prompt_cache_key": "<redacted-id>",
+  "tools": [
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Executes a given bash command in a persistent shell session with optional timeout, ensuring proper handling and security measures.\n\nBe aware: OS: linux, Shell: bash\n\nAll commands run in the current wo"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Performs exact string replacements in files. \n\nUsage:\n- You must use your `Read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the "
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "- Fast file pattern matching tool that works with any codebase size\n- Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"\n- Returns matching file paths\n- Use this tool when you need to find files b"
+   },
+   {
+    "name": "grep",
+    "type": "function",
+    "description_prefix": "- Fast content search tool that works with any codebase size\n- Searches file contents using regular expressions\n- Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)\n- Filter files b"
+   },
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read a file or directory from the local filesystem. If the path does not exist, an error is returned.\n\nUsage:\n- The filePath parameter should be an absolute path.\n- By default, this tool returns up to"
+   },
+   {
+    "name": "skill",
+    "type": "function",
+    "description_prefix": "Load a specialized skill when the task at hand matches one of the skills listed in the system prompt.\n\nUse this tool to inject the skill's instructions and resources into current conversation. The out"
+   },
+   {
+    "name": "task",
+    "type": "function",
+    "description_prefix": "Launch a new agent to handle complex, multistep tasks autonomously.\n\nWhen using the Task tool, you must specify a subagent_type parameter to select which agent type to use.\n\nWhen NOT to use the Task t"
+   },
+   {
+    "name": "todowrite",
+    "type": "function",
+    "description_prefix": "Create and maintain a structured task list for the current coding session. Tracks progress, organizes multi-step work, and surfaces status to the user.\n\n## When to use\nUse proactively when:\n- The task"
+   },
+   {
+    "name": "webfetch",
+    "type": "function",
+    "description_prefix": "- Fetches content from a specified URL\n- Takes a URL and optional format as input\n- Fetches the URL content, converts to requested format (markdown by default)\n- Returns the content in the specified f"
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool first to rea"
+   }
+  ],
+  "input": [
+   {
+    "type": null,
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are opencode, an agent - please keep going until the user’s query is completely resolved, before ending your turn and yielding back to the user.\n\nYour thinking should be thorough and so it's fine ",
+      "text_len": 12114
+     }
+    ]
+   },
+   {
+    "type": null,
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text"
+    ]
+   },
+   {
+    "type": "function_call",
+    "role": null,
+    "name": "bash"
+   },
+   {
+    "type": "function_call_output",
+    "role": null,
+    "content": "<redacted>"
+   },
+   {
+    "type": null,
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "output_text"
+    ]
+   },
+   {
+    "type": null,
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text"
+    ]
+   },
+   {
+    "type": "function_call",
+    "role": null,
+    "name": "bash"
+   },
+   {
+    "type": "function_call_output",
+    "role": null,
+    "content": "<redacted>"
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "opencode",
+ "agent_version": "1.19.4",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

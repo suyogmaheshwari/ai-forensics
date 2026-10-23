@@ -1,0 +1,22 @@
+{
+  "product": "cline",
+  "display_name": "Cline CLI (cline, headless --yolo mode)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_ai_sdk_openai_compatible", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "ai-sdk/openai-compatible/", "weight": 30},
+    {"id": "ua_bun_runtime", "group": "header", "op": "header_contains", "name": "user-agent", "value": "runtime/bun/", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Cline"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["read_files", "run_commands", "editor", "submit_and_exit"], "weight": 30},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5},
+    {"id": "tool_choice_auto", "group": "habits", "op": "habit_equals", "name": "tool_choice", "value": "auto", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["opencode/", "QwenCode/", "OpenAI/", "claude-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "3.0.73: the user-agent is the Vercel AI SDK's generic 'ai-sdk/openai-compatible/<v> ai-sdk/provider-utils/<v> runtime/bun/<v>' with no product name, so the identity prefix and the small headless tool set (read_files, run_commands, editor, submit_and_exit) carry the verdict. Headers, identity and tools are identical on the first turn, after the tool call and on the '[SYSTEM] … call submit_and_exit' follow-up Cline sends after a text answer. The interactive (non --yolo) mode registers a larger tool set and a different prompt; not captured."
+}

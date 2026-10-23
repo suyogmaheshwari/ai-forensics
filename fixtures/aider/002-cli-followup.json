@@ -1,0 +1,86 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 2.20.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "2.20.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-raw-response": "true",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "600.0"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "temperature": 0,
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "Act as an expert software developer.\nAlways use best practices when coding.\nRespect and use existing conventions, libraries, etc that are already present in the code base.\nYou are diligent and tireles",
+      "text_len": 6855
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "# *SEARCH/REPLACE block* Rules:\n\nEvery *SEARCH/REPLACE block* must use this format:\n1. The *FULL* file path alone on a line, verbatim. No bold asterisks, no quotes around it, no escaping of characters",
+      "text_len": 3185
+     }
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "text",
+ "agent": "aider",
+ "agent_version": "0.86.2",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

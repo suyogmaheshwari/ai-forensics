@@ -1,0 +1,21 @@
+{
+  "product": "aider",
+  "display_name": "Aider (aider-chat, via litellm)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 40, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Python", "weight": 20},
+    {"id": "stainless_raw_response", "group": "header", "op": "header_present", "name": "x-stainless-raw-response", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["Act as an expert software developer", "Act as an expert code analyst", "Act as an expert architect engineer"], "weight": 30},
+    {"id": "edit_block_rules", "group": "identity", "op": "identity_contains", "value": ["*SEARCH/REPLACE block* Rules", "Describe each change with a *SEARCH/REPLACE block*"], "weight": 10},
+    {"id": "temperature_zero", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0, "weight": 5},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "ai-sdk/", "opencode/"]},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.86.2: no tools, no product header; the stock openai-python client through litellm (x-stainless-raw-response is litellm's). Identity is the first system message plus a second system message at the end of the conversation with the edit-format rules; both stable across the turns. Every request, the first included, carries a canned 'I am not sharing any files…' / 'Ok.' exchange before the prompt, so the turn classifier reports aider's first turn as a follow-up."
+}
