@@ -212,12 +212,12 @@ cap_goose() {
   run "$h" "$h/project" "${env[@]}" -- "$gbin/goose" run --name probe --resume -t "$PROMPT2"
   stop_recorder; sanitize_all goose "$v"
   # second entry point: the same CLI speaking the Anthropic protocol
-  h=$(fresh_home goose_anthropic); start_recorder goose_anthropic "$h/project"
+  h=$(fresh_home goose__anthropic); start_recorder goose__anthropic "$h/project"
   env=(GOOSE_DISABLE_KEYRING=1 GOOSE_TELEMETRY_ENABLED=false GOOSE_MODE=auto GOOSE_PROVIDER=anthropic GOOSE_MODEL=claude-sonnet-4-5
        ANTHROPIC_API_KEY=dummy ANTHROPIC_HOST=$BASE)
   run "$h" "$h/project" "${env[@]}" -- "$gbin/goose" run --name probe -t "$PROMPT1"
   run "$h" "$h/project" "${env[@]}" -- "$gbin/goose" run --name probe --resume -t "$PROMPT2"
-  stop_recorder; sanitize_all goose "$v" cli-anthropic "$RAW/goose_anthropic"
+  stop_recorder; sanitize_all goose "$v" cli-anthropic "$RAW/goose__anthropic"
 }
 
 cap_cline() {
@@ -247,13 +247,54 @@ EOF
   run "$h" "$h/project" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT1" --json
   run "$h" "$h/project" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT2" --json
   stop_recorder; sanitize_all openclaw "$v"
+  # second entry point: the native openai provider with its base URL overridden. OpenClaw only adds its
+  # attribution headers (originator, version) for native provider ids, so this is a second header variant.
+  h=$(fresh_home openclaw__openai); start_recorder openclaw__openai "$h/project"
+  mkdir -p "$h/.openclaw"
+  cat > "$h/.openclaw/openclaw.json" <<EOF
+{"agents": {"defaults": {"model": {"primary": "openai/gpt-4o"}, "workspace": "$h/project"}},
+ "models": {"mode": "merge", "providers": {"openai": {"baseUrl": "$BASE/v1", "apiKey": "dummy"}}}}
+EOF
+  run "$h" "$h/project" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT1" --json
+  run "$h" "$h/project" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT2" --json
+  stop_recorder; sanitize_all openclaw "$v" cli-openai "$RAW/openclaw__openai"
+  # third entry point: what a gateway sees on real api.openai.com traffic. OpenClaw adds its attribution headers
+  # (originator, version, User-Agent) only when the openai provider's base URL names api.openai.com, so the base URL
+  # keeps that hostname (on the recorder's port, so a miss can only hang) and a net.connect shim preloaded into the
+  # OpenClaw process sends the connection to the recorder on 127.0.0.1 instead.
+  cat > "$WORK/net-shim.cjs" <<'EOF'
+// Preloaded into the agent process: TCP connections to api.openai.com go to the recorder on 127.0.0.1 instead.
+const net = require("net");
+const port = Number(process.env.AIFORENSICS_PORT || "18599");
+for (const name of ["connect", "createConnection"]) {
+  const orig = net[name];
+  net[name] = function (...args) {
+    const o = args[0];
+    if (o && typeof o === "object" && !Array.isArray(o) && (o.host === "api.openai.com" || o.hostname === "api.openai.com")) {
+      args[0] = Object.assign({}, o, { host: "127.0.0.1", hostname: "127.0.0.1", port });
+    }
+    return orig.apply(this, args);
+  };
+}
+EOF
+  h=$(fresh_home openclaw__native); start_recorder openclaw__native "$h/project"
+  mkdir -p "$h/.openclaw"
+  cat > "$h/.openclaw/openclaw.json" <<EOF
+{"agents": {"defaults": {"model": {"primary": "openai/gpt-4o"}, "workspace": "$h/project"}},
+ "models": {"mode": "merge", "providers": {"openai": {"baseUrl": "http://api.openai.com:$PORT/v1", "apiKey": "dummy"}}}}
+EOF
+  local env=(NODE_OPTIONS="--require $WORK/net-shim.cjs" AIFORENSICS_PORT=$PORT)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT1" --json
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/openclaw" agent --local --session-id probe -m "$PROMPT2" --json
+  stop_recorder; sanitize_all openclaw "$v" cli-native "$RAW/openclaw__native"
 }
 
-resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>/ after a sanitiser change, no recapture
-  local agent=$1 raw
-  for raw in "$RAW/$agent" "$RAW/${agent}_anthropic"; do
+resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture
+  local agent=$1 raw entry
+  for raw in "$RAW/$agent" "$RAW/${agent}__"*; do
     [ -f "$raw/VERSION" ] || continue
-    sanitize_all "$agent" "$(cat "$raw/VERSION")" "$([ "$raw" = "$RAW/$agent" ] && echo cli || echo cli-anthropic)" "$raw"
+    entry=cli; [ "$raw" != "$RAW/$agent" ] && entry="cli-${raw##*__}"
+    sanitize_all "$agent" "$(cat "$raw/VERSION")" "$entry" "$raw"
   done
 }
 

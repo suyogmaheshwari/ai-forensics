@@ -1,0 +1,248 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "traceparent": "<redacted-id>",
+  "user-agent": "OpenAI/JS 6.39.1",
+  "x-stainless-arch": "x64",
+  "x-stainless-lang": "js",
+  "x-stainless-os": "Linux",
+  "x-stainless-package-version": "6.39.1",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_completion_tokens": 172306,
+  "tool_choice": "auto",
+  "tools": [
+   {
+    "name": "agents_list",
+    "type": "function",
+    "description_prefix": "List agent ids allowed for `sessions_spawn runtime=\"subagent\"`."
+   },
+   {
+    "name": "apply_patch",
+    "type": "function",
+    "description_prefix": "Apply a patch to one or more files using the apply_patch format. The input should include *** Begin Patch and *** End Patch markers."
+   },
+   {
+    "name": "browser",
+    "type": "function",
+    "description_prefix": "Control the browser via OpenClaw's browser control server (status/start/stop/profiles/tabs/open/snapshot/screenshot/actions). Browser choice: omit profile by default for the isolated OpenClaw-managed "
+   },
+   {
+    "name": "canvas",
+    "type": "function",
+    "description_prefix": "Control node canvases (present/hide/navigate/eval/snapshot/A2UI). Use snapshot to capture the rendered UI."
+   },
+   {
+    "name": "create_goal",
+    "type": "function",
+    "description_prefix": "Create a goal only when explicitly requested by the user or system instructions. Fails if a goal already exists; use user-facing goal controls to clear it."
+   },
+   {
+    "name": "cron",
+    "type": "function",
+    "description_prefix": "Manage Gateway cron jobs and wake events: reminders, check-back-later, delayed follow-ups, recurring work. Do not emulate scheduling with exec sleep/process polling.\n\nMain cron => system events for he"
+   },
+   {
+    "name": "dir_fetch",
+    "type": "function",
+    "description_prefix": "Retrieve a directory tree from a paired node as a gzipped tarball, unpack it on the gateway, and return a manifest of saved paths. Use to pull source trees, asset folders, or log directories in a sing"
+   },
+   {
+    "name": "dir_list",
+    "type": "function",
+    "description_prefix": "Retrieve a structured directory listing from a paired node, not the local workspace. Returns file and subdirectory metadata (name, path, size, mimeType, isDir, mtime) without transferring file content"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Edit a single file using exact text replacement. Every edits[].oldText must match a unique, non-overlapping region of the original file. If two changes affect the same block or nearby lines, merge the"
+   },
+   {
+    "name": "exec",
+    "type": "function",
+    "description_prefix": "Execute shell commands with background continuation for work that starts now. Use yieldMs/background to continue later via process tool. For long-running work started now, rely on automatic completion"
+   },
+   {
+    "name": "file_fetch",
+    "type": "function",
+    "description_prefix": "Retrieve a file from a paired node by absolute path. Returns image content blocks for image MIME types, inlines small text files (≤8 KB) as text content, and saves everything else under the gateway me"
+   },
+   {
+    "name": "file_write",
+    "type": "function",
+    "description_prefix": "Write file bytes to a paired node by absolute path. Atomic write (temp + rename). Refuses to overwrite by default — pass overwrite=true to replace. Refuses to write through symlink targets unless poli"
+   },
+   {
+    "name": "gateway",
+    "type": "function",
+    "description_prefix": "Gateway restart/config/update. Before config edits, use config.schema.lookup with targeted dot path. Prefer config.patch for partial merge; config.apply only full replace. For config.patch that intent"
+   },
+   {
+    "name": "get_goal",
+    "type": "function",
+    "description_prefix": "Get the current goal for this thread, including status and token usage."
+   },
+   {
+    "name": "memory_get",
+    "type": "function",
+    "description_prefix": "Safe exact excerpt read from MEMORY.md or memory/*.md. Defaults to a bounded excerpt when lines are omitted, includes truncation/continuation info when more content exists, and `corpus=wiki` reads fro"
+   },
+   {
+    "name": "memory_search",
+    "type": "function",
+    "description_prefix": "Mandatory recall step: semantically search MEMORY.md + memory/*.md (and optional session transcripts) before answering questions about prior work, decisions, dates, people, preferences, or todos. Opti"
+   },
+   {
+    "name": "message",
+    "type": "function",
+    "description_prefix": "Send/delete/manage channel messages. Supports actions: broadcast, send."
+   },
+   {
+    "name": "nodes",
+    "type": "function",
+    "description_prefix": "Discover/control paired nodes: status, describe, pairing, notify, camera/photos/screen/location/notifications/invoke. Use file_fetch for files."
+   },
+   {
+    "name": "process",
+    "type": "function",
+    "description_prefix": "Manage running exec sessions for commands already started: list, poll, log, write, send-keys, submit, paste, kill. Use poll/log when you need status, logs, quiet-success confirmation, or completion co"
+   },
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read the contents of a file. Supports text files and images (jpg, png, gif, webp). Images are sent as attachments. For text files, output is truncated to 2000 lines or 50KB (whichever is hit first). U"
+   },
+   {
+    "name": "session_status",
+    "type": "function",
+    "description_prefix": "Show /status-like card for current/visible session: model, usage, time, cost, tasks. Use `sessionKey=\"current\"` for current session; UI labels like `openclaw-tui` are not keys. `model` sets session ov"
+   },
+   {
+    "name": "sessions_history",
+    "type": "function",
+    "description_prefix": "Fetch sanitized history for visible session. Use before replying, debugging, resuming; supports limits/tool messages."
+   },
+   {
+    "name": "sessions_list",
+    "type": "function",
+    "description_prefix": "List visible sessions; filter by kind, label, agentId, search, activity. Use before sessions_history or sessions_send target selection."
+   },
+   {
+    "name": "sessions_send",
+    "type": "function",
+    "description_prefix": "Send message to visible session by sessionKey/label, or configured agent by agentId; sessionKey wins when redundant label metadata is present. Thread-scoped chats rejected; target parent channel sessi"
+   },
+   {
+    "name": "sessions_spawn",
+    "type": "function",
+    "description_prefix": "Spawn clean child session; default `runtime=\"subagent\"`. `mode=\"run\"` one-shot background work. Subagents inherit parent workspace. Native subagents get task in first visible `[Subagent Task]` message"
+   },
+   {
+    "name": "sessions_yield",
+    "type": "function",
+    "description_prefix": "End current turn. Use after spawning subagents; results arrive as next message."
+   },
+   {
+    "name": "skill_workshop",
+    "type": "function",
+    "description_prefix": "Create, update, revise, list, inspect, apply, reject, or quarantine Skill Workshop proposals when reusable procedures should be captured, improved, or explicitly approved."
+   },
+   {
+    "name": "subagents",
+    "type": "function",
+    "description_prefix": "List active and recent subagents for the requester session. If sessions_yield exists, use it for completion; do not poll wait loops."
+   },
+   {
+    "name": "tts",
+    "type": "function",
+    "description_prefix": "Use only for explicit audio intent (voice/speech/TTS) or active TTS config. Never use for ordinary text replies. Audio auto-delivered from tool result; after success follow reply instructions, no dupl"
+   },
+   {
+    "name": "update_goal",
+    "type": "function",
+    "description_prefix": "Mark the current goal complete only when achieved, or blocked only after the same blocking condition recurs for at least three consecutive goal turns. Do not use blocked for ordinary difficulty or mis"
+   },
+   {
+    "name": "web_fetch",
+    "type": "function",
+    "description_prefix": "Fetch URL and extract readable markdown/text. Lightweight page access; no browser automation."
+   },
+   {
+    "name": "web_search",
+    "type": "function",
+    "description_prefix": "Search web for current info; returns normalized provider results."
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Write content to a file. Creates the file if it doesn't exist, overwrites if it does. Automatically creates parent directories."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are a personal assistant running inside OpenClaw.\n## Tooling\nAvailable tools are policy-filtered. Names are case-sensitive; call exactly as listed.\n- read: Read file contents\n- write: Create or ov",
+      "text_len": 36086
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "exec"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "tool-call",
+ "agent": "openclaw",
+ "agent_version": "2026.6.35",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
