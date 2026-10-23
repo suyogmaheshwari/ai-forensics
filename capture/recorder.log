@@ -1,7 +1,0 @@
-aiforensics recorder listening on http://127.0.0.1:18599, writing to capture/raw/claude_code
-recorded POST /v1/messages?beta=true -> capture/raw/claude_code/req_001.json (142127 bytes)
-recorded POST /v1/messages?beta=true -> capture/raw/claude_code/req_002.json (135691 bytes)
-recorded POST /v1/messages?beta=true -> capture/raw/claude_code/req_003.json (208669 bytes)
-recorded POST /v1/messages?beta=true -> capture/raw/claude_code/req_004.json (202233 bytes)
-aiforensics recorder listening on http://127.0.0.1:18599, writing to capture/raw/codex
-recorded POST /v1/responses -> capture/raw/codex/req_001.json (60314 bytes)
