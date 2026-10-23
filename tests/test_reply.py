@@ -58,6 +58,8 @@ def test_fill_schema_argv_arrays_and_object_items():
         "type": "object", "required": ["path"], "properties": {"path": {"type": "string"}}}}}}
     assert fill_schema(files, "") == {"files": [{"path": "README.md"}]}
     assert fill_schema({"type": "OBJECT", "required": ["score"], "properties": {"score": {"type": "INTEGER"}}}, "") == {"score": 1}
+    execute = {"type": "object", "required": ["language", "code"], "properties": {"language": {"type": "string", "enum": ["ruby", "python", "shell"]}, "code": {"type": "string"}}}
+    assert fill_schema(execute, "") == {"language": "shell", "code": "echo ok"}
 
 
 # ------------------------------------------------------------------ turn shape

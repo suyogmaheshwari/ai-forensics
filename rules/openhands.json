@@ -1,0 +1,23 @@
+{
+  "product": "openhands",
+  "display_name": "OpenHands CLI (All-Hands AI, headless)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Python", "weight": 20},
+    {"id": "stainless_raw_response", "group": "header", "op": "header_present", "name": "x-stainless-raw-response", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are OpenHands agent"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["terminal", "file_editor", "task_tracker", "task", "finish", "think", "invoke_skill"], "weight": 30},
+    {"id": "prompt_cache_key", "group": "habits", "op": "habit_present", "value": "prompt_cache_key", "weight": 5},
+    {"id": "max_completion_tokens", "group": "habits", "op": "habit_present", "value": "max_completion_tokens", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "identity_prefix", "value": ["Act as an expert software developer", "You are an expert AI software engineering agent"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "1.16.0 (openhands-sdk 1.21.0) headless with LLM_BASE_URL: plain litellm→openai-python headers (the same OpenAI/Python user-agent and x-stainless-raw-response as Aider and other LiteLLM clients), so identity ('You are OpenHands agent, a helpful AI assistant…') and the 7-tool set carry the verdict; prompt_cache_key holds the conversation id and the request is non-streaming with max_completion_tokens. The system message is a list of two text parts: the static prompt and a dated skills/environment part. Identical on the first turn, after the tool call and on the --resume follow-up; no title or condenser side request before 80 events."
+}

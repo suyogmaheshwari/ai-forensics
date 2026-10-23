@@ -1,0 +1,120 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 2.54.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "2.54.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-raw-response": "true",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "300.0"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "max_completion_tokens": 16384,
+  "prompt_cache_key": "<redacted-id>",
+  "tools": [
+   {
+    "name": "terminal",
+    "type": "function",
+    "description_prefix": "Execute a shell command in the terminal within a persistent shell session.\n\n\n### Command Execution\n* One command at a time: You can only execute one shell command at a time.\n  If you need to run multi"
+   },
+   {
+    "name": "file_editor",
+    "type": "function",
+    "description_prefix": "Custom editing tool for viewing, creating and editing files in plain-text format\n* State is persistent across command calls and discussions with the user\n* If `path` is an image file (.png, .jpg, .jpe"
+   },
+   {
+    "name": "task_tracker",
+    "type": "function",
+    "description_prefix": "This tool provides structured task management capabilities for development workflows.\nIt enables systematic tracking of work items, progress monitoring, and efficient\norganization of complex developme"
+   },
+   {
+    "name": "task",
+    "type": "function",
+    "description_prefix": "Launch a subagent to handle complex, multi-step tasks autonomously.\n\nSubagents are autonomous agents that work independently and return results to you. They are your primary tool for understanding cod"
+   },
+   {
+    "name": "finish",
+    "type": "function",
+    "description_prefix": "Signals the completion of the current task or conversation.\n\nUse this tool when:\n- You have successfully completed the user's requested task\n- You cannot proceed further due to technical limitations o"
+   },
+   {
+    "name": "think",
+    "type": "function",
+    "description_prefix": "Use the tool to think about something. It will not obtain new information or make any changes to the repository, but just log the thought. Use it when complex reasoning or brainstorming is needed.\n\nCo"
+   },
+   {
+    "name": "invoke_skill",
+    "type": "function",
+    "description_prefix": "Invoke a skill by name.\n\nThis is the only supported way to invoke a skill listed in\n`<available_skills>`. Call it with the `<name>` shown in that block; the\nskill's full content is rendered (including"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are OpenHands agent, a helpful AI assistant that can interact with a computer to solve tasks.\n\n<ROLE>\n* Your primary role is to assist users by executing commands, modifying code, and solving tech",
+      "text_len": 13733
+     },
+     {
+      "type": "text",
+      "text_prefix": "<CURRENT_DATETIME>\nThe current date and time is: <timestamp>\n</CURRENT_DATETIME>\n\n\n\n<SKILLS>\nThe following skills are available. Some are auto-injected when their keywords or task types",
+      "text_len": 25188
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "terminal"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ],
+    "name": "terminal"
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "tool-call",
+ "agent": "openhands",
+ "agent_version": "1.16.0",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

@@ -101,6 +101,10 @@ def fill_schema(schema: dict, work_dir: str, name: str = "", depth: int = 0) -> 
     lname = name.lower()
     types = _types(schema)
     if "enum" in schema and schema["enum"]:
+        by_lower = {str(v).lower(): v for v in schema["enum"]}
+        for want in ("shell", "bash", "sh", "python"):
+            if want in by_lower:
+                return by_lower[want]
         return schema["enum"][0]
     desc = str(schema.get("description") or "").lower()
     if lname in ("command", "cmd", "commands", "script", "code"):
