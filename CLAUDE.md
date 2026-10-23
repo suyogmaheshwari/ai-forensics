@@ -41,6 +41,16 @@ definition of done. This file is the standing brief for any agent session workin
 6. **Open one pull request per batch** with the new fixtures, rules, tests and the `AGENTS.md`
    rows updated. Desktop IDEs stay `todo`; they are captured on a workstation by a person.
 
+## Engineering tasks that unblock the standing task
+
+- **Recorder reply mode.** Today the recorder is a dead end (400), so agents never get a tool call
+  back and never send their after-tool-call turn. Add `--reply tool-call` to the recorder: for
+  each protocol family (`/v1/messages`, `/v1/chat/completions`, `/v1/responses`) return a minimal
+  valid response containing one harmless tool call (for example a shell `echo ok` or a file read
+  of `README.md`), as SSE when the request has `stream: true` and as JSON otherwise, then return a
+  plain final text answer on the next request so the session ends cleanly. Record every request
+  as before. Add fixtures that prove each family's reply shape is accepted by at least one agent.
+
 ## Conventions
 
 - Python 3.9 compatible, standard library only; no new dependencies without a reason in the PR.
