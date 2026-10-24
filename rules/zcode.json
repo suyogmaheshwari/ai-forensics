@@ -1,0 +1,23 @@
+{
+  "product": "zcode",
+  "display_name": "Z Code (Zhipu AI / Z.ai, zcode CLI runtime)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "x_zcode_agent", "group": "header", "op": "header_present", "name": "x-zcode-agent", "weight": 30},
+    {"id": "ua_zcode", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "ZCode/", "weight": 20},
+    {"id": "x_title_zcode", "group": "header", "op": "header_prefix", "name": "x-title", "value": "Z Code", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are ZCode, an interactive coding agent"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Agent", "AskUserQuestion", "Bash", "Edit", "EnterPlanMode", "ExitPlanMode", "Read", "Skill", "TaskOutput", "TaskStop", "TodoRead", "TodoWrite", "WebFetch", "Write", "SendMessage", "ReadSessionContext"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "thinking", "group": "habits", "op": "habit_present", "value": "thinking", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "Charm-Crush/", "kimi-code-cli/", "codex"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "Runtime 3.16.3 (zcode 0.17.0) installed through the community npm wrapper zcode-app-cli, which repackages the Apache-2.0 runtime from the official ZCode Desktop release; no Z.ai login with a custom provider in ~/.zcode/v2/provider_config.json (api.type openai-chat-completions, anthropic-messages or openai-responses). Product headers on every request of both families: 'x-zcode-agent: glm' (hard-coded), 'user-agent: ZCode/<version> ai-sdk/provider-utils/<v> runtime/node.js/<v>', 'x-title: Z Code@cli', 'http-referer: https://zcode.z.ai', x-zcode-app-version, x-release-channel, x-platform, x-zcode-session-type and per-turn ids. Claude Code-like tool names (no Grep/Glob) plus ReadSessionContext, TaskOutput and 20 document mcp__plugin_* tools; the chat body adds thinking/enable_thinking/reasoning_effort max and max_completion_tokens 128000, the anthropic body metadata.user_id, output_config and a three-block system. Identical on the first turn, after the tool call and on the -c follow-up."
+}

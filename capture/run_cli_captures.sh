@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -620,6 +620,32 @@ EOF
   run "$h" "$h/project" -- "$BIN/pi" --mode json -p "$PROMPT1"
   run "$h" "$h/project" -- "$BIN/pi" --mode json -c -p "$PROMPT2"
   stop_recorder; sanitize_all pi "$v" "$entry" "$RAW/$raw"
+}
+
+cap_zcode() {  # Z Code (Zhipu): the official open-source runtime, installed through the community npm wrapper zcode-app-cli
+  npm_install zcode-app-cli zcode || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/zcode-app-cli/package.json" | semver)
+  zcode_pass cli openai-chat-completions "$BASE/v1" "$v"
+  zcode_pass cli-anthropic anthropic-messages "$BASE" "$v"
+}
+zcode_pass() {  # zcode_pass <entry> <api-type> <base-url> <version>
+  local entry=$1 api=$2 url=$3 v=$4
+  local raw=zcode; [ "$entry" != cli ] && raw="zcode__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  mkdir -p "$h/.zcode/v2" "$h/.zcode/cli"
+  cp "$NPM_PREFIX/lib/node_modules/zcode-app-cli/setting.example.json" "$h/.zcode/cli/setting.json"
+  cat > "$h/.zcode/v2/provider_config.json" <<EOF
+{"schemaVersion": 1, "config": {
+  "providerConfigRules": {"providerRules": [{"providerId": "custom", "providerName": "Custom provider", "config": {
+    "group": "standard-personal", "access": {"type": "api-key", "apiKey": "dummy"},
+    "api": {"type": "$api", "baseUrl": "$url"}, "personalModelIds": ["glm-5.3"]}}]},
+  "modelConfigRules": {"providerModelRules": [], "manualProviderModelRules": []},
+  "defaultModelSelection": {"providerId": "custom", "modelId": "glm-5.3"}}}
+EOF
+  local env=(ZCODE_DISABLE_UPDATE_CHECK=1)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/zcode" --cwd "$h/project" --mode yolo -p "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/zcode" --cwd "$h/project" --mode yolo -c -p "$PROMPT2"
+  stop_recorder; sanitize_all zcode "$v" "$entry" "$RAW/$raw"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture

@@ -1,0 +1,274 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "http-referer": "https://zcode.z.ai",
+  "user-agent": "ZCode/3.16.3 ai-sdk/provider-utils/4.0.39 runtime/node.js/22",
+  "x-client-language": "en-US",
+  "x-client-timezone": "UTC",
+  "x-os-category": "linux",
+  "x-os-version": "6.18.44-fc-v153",
+  "x-platform": "linux-x64",
+  "x-query-id": "<uuid>",
+  "x-release-channel": "production",
+  "x-request-id": "<redacted-id>",
+  "x-session-id": "<redacted-id>",
+  "x-title": "Z Code@cli",
+  "x-zcode-agent": "glm",
+  "x-zcode-app-version": "3.16.3",
+  "x-zcode-query-source": "main_turn",
+  "x-zcode-session-type": "<redacted-id>",
+  "x-zcode-trace-id": "<redacted-id>",
+  "accept": "*/*",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "glm-5.3",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_completion_tokens": 128000,
+  "thinking": {
+   "type": "enabled"
+  },
+  "reasoning": {
+   "effort": "max"
+  },
+  "tool_choice": "auto",
+  "tools": [
+   {
+    "name": "Agent",
+    "type": "function",
+    "description_prefix": "Launch a new agent to handle complex, multi-step tasks. Each agent type has specific capabilities and tools available to it.\n\nAvailable agent types are listed in <system-reminder> messages in the conv"
+   },
+   {
+    "name": "AskUserQuestion",
+    "type": "function",
+    "description_prefix": "Use this tool only when you are blocked on a decision that is genuinely the user's to make: one you cannot resolve from the request, the code, or sensible defaults.\n\nUsage notes:\n- Users will always b"
+   },
+   {
+    "name": "Bash",
+    "type": "function",
+    "description_prefix": "Executes a bash command and returns its output.\n\n- Working directory persists between calls, but prefer absolute paths — `cd` in a compound command can trigger a permission prompt. Shell state (env va"
+   },
+   {
+    "name": "Edit",
+    "type": "function",
+    "description_prefix": "Performs exact string replacement in a file.\n\n- You must Read the file in this conversation before editing, or the call will fail.\n- `old_string` must match the file exactly, including indentation, an"
+   },
+   {
+    "name": "EnterPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool proactively when you're about to start a non-trivial implementation task. Getting user sign-off on your approach before writing code prevents wasted effort and ensures alignment. This to"
+   },
+   {
+    "name": "ExitPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool when you are in plan mode and have finished writing your plan and are ready for user approval.\n\n## How This Tool Works\n- You should have already explored the codebase and finalized the p"
+   },
+   {
+    "name": "Read",
+    "type": "function",
+    "description_prefix": "Reads a file from the local filesystem.\n\n- `file_path` must be an absolute path.\n- Reads up to 2000 lines by default.\n- You can optionally specify a line offset and limit (especially handy for long fi"
+   },
+   {
+    "name": "Skill",
+    "type": "function",
+    "description_prefix": "Execute a skill within the main conversation\n\nWhen users ask you to perform tasks, check if any of the available skills match. Skills provide specialized capabilities and domain knowledge.\n\nWhen users"
+   },
+   {
+    "name": "TaskOutput",
+    "type": "function",
+    "description_prefix": "DEPRECATED: Background tasks return their output file path in the tool result, and you receive a <task-notification> with the same path when the task completes.\n- For bash tasks: prefer using the Read"
+   },
+   {
+    "name": "TaskStop",
+    "type": "function",
+    "description_prefix": "\n- Stops a running background task by its ID\n- Takes a task_id parameter identifying the task to stop\n- Returns a success or failure status\n- Use this tool when you need to terminate a long-running ta"
+   },
+   {
+    "name": "TodoRead",
+    "type": "function",
+    "description_prefix": "Read the current session todo list"
+   },
+   {
+    "name": "TodoWrite",
+    "type": "function",
+    "description_prefix": "Create and update a task list for the current session. The list is rendered to the user as your working plan.\n\n- Each todo has `content`, `status` (\"pending\" | \"in_progress\" | \"completed\"), and `prior"
+   },
+   {
+    "name": "WebFetch",
+    "type": "function",
+    "description_prefix": "Fetches a URL, converts the page to markdown, and answers `prompt` against it using a small fast model.\n\n- Fails on authenticated/private URLs — use an authenticated MCP tool or `gh` for those instead"
+   },
+   {
+    "name": "Write",
+    "type": "function",
+    "description_prefix": "Writes a file to the local filesystem, overwriting if one exists.\n\nWhen to use: creating a new file, or fully replacing one you've already Read. Overwriting an existing file you haven't Read will fail"
+   },
+   {
+    "name": "SendMessage",
+    "type": "function",
+    "description_prefix": "# SendMessage\n\nSend a message to another agent.\n\n```json\n{\"to\": \"agent_<uuid>\", \"summary\": \"assign task 1\", \"message\": \"start on task #1\"}\n```\n\nYour plain text output is NOT visible to other agents — "
+   },
+   {
+    "name": "ReadSessionContext",
+    "type": "function",
+    "description_prefix": "Read relevant or handoff context from a persisted ZCode session, or use topic to look up original archived discussion in the current session.\n\nUsage:\n- Use for context from a prior ZCode session menti"
+   },
+   {
+    "name": "mcp__plugin_documents_documents__open_document",
+    "type": "function",
+    "description_prefix": "Open a .docx file from the workspace in the Documents viewer panel, which the user sees. Optionally jump to a location. Returns the document's outline and how to address locations in it. Use this when"
+   },
+   {
+    "name": "mcp__plugin_documents_documents__read_document",
+    "type": "function",
+    "description_prefix": "Read the content of a document or of one location in it as text: Word paragraphs and tables (markdown). Each block is prefixed with its location so you can cite or show it. Long results are paged: cal"
+   },
+   {
+    "name": "mcp__plugin_documents_documents__search_document",
+    "type": "function",
+    "description_prefix": "Find text in a document (case-insensitive). Returns matching locations as anchors with a snippet each; pass them to read_document or show_in_viewer."
+   },
+   {
+    "name": "mcp__plugin_documents_documents__show_in_viewer",
+    "type": "function",
+    "description_prefix": "Point the user at specific places in a document: the Documents panel opens the document, scrolls to the first target and highlights all targets. Use it whenever your answer refers to a particular para"
+   },
+   {
+    "name": "mcp__plugin_documents_documents__get_view",
+    "type": "function",
+    "description_prefix": "See what the user is looking at in the Documents panel: the open document, the visible location and the user's current selection with its text. Call this when the user says \"this\", \"here\" or \"the sele"
+   },
+   {
+    "name": "mcp__plugin_pdf_pdf__open_document",
+    "type": "function",
+    "description_prefix": "Open a .pdf file from the workspace in the PDF viewer panel, which the user sees. Optionally jump to a location. Returns the document's outline and how to address locations in it. Use this when the us"
+   },
+   {
+    "name": "mcp__plugin_pdf_pdf__read_document",
+    "type": "function",
+    "description_prefix": "Read the content of a document or of one location in it as text: PDF page text. Each block is prefixed with its location so you can cite or show it. Long results are paged: call again with the returne"
+   },
+   {
+    "name": "mcp__plugin_pdf_pdf__search_document",
+    "type": "function",
+    "description_prefix": "Find text in a document (case-insensitive). Returns matching locations as anchors with a snippet each; pass them to read_document or show_in_viewer."
+   },
+   {
+    "name": "mcp__plugin_pdf_pdf__show_in_viewer",
+    "type": "function",
+    "description_prefix": "Point the user at specific places in a document: the PDF panel opens the document, scrolls to the first target and highlights all targets. Use it whenever your answer refers to a particular page. All "
+   },
+   {
+    "name": "mcp__plugin_pdf_pdf__get_view",
+    "type": "function",
+    "description_prefix": "See what the user is looking at in the PDF panel: the open document, the visible location and the user's current selection with its text. Call this when the user says \"this\", \"here\" or \"the selected …"
+   },
+   {
+    "name": "mcp__plugin_presentations_presentations__open_document",
+    "type": "function",
+    "description_prefix": "Open a .pptx file from the workspace in the Presentations viewer panel, which the user sees. Optionally jump to a location. Returns the document's outline and how to address locations in it. Use this "
+   },
+   {
+    "name": "mcp__plugin_presentations_presentations__read_document",
+    "type": "function",
+    "description_prefix": "Read the content of a document or of one location in it as text: slides with their shapes and speaker notes. Each block is prefixed with its location so you can cite or show it. Long results are paged"
+   },
+   {
+    "name": "mcp__plugin_presentations_presentations__search_document",
+    "type": "function",
+    "description_prefix": "Find text in a document (case-insensitive). Returns matching locations as anchors with a snippet each; pass them to read_document or show_in_viewer."
+   },
+   {
+    "name": "mcp__plugin_presentations_presentations__show_in_viewer",
+    "type": "function",
+    "description_prefix": "Point the user at specific places in a document: the Presentations panel opens the document, scrolls to the first target and highlights all targets. Use it whenever your answer refers to a particular "
+   },
+   {
+    "name": "mcp__plugin_presentations_presentations__get_view",
+    "type": "function",
+    "description_prefix": "See what the user is looking at in the Presentations panel: the open document, the visible location and the user's current selection with its text. Call this when the user says \"this\", \"here\" or \"the "
+   },
+   {
+    "name": "mcp__plugin_spreadsheets_spreadsheets__open_document",
+    "type": "function",
+    "description_prefix": "Open a .xlsx file from the workspace in the Spreadsheets viewer panel, which the user sees. Optionally jump to a location. Returns the document's outline and how to address locations in it. Use this w"
+   },
+   {
+    "name": "mcp__plugin_spreadsheets_spreadsheets__read_document",
+    "type": "function",
+    "description_prefix": "Read the content of a document or of one location in it as text: spreadsheet cells as a grid with formulas. Each block is prefixed with its location so you can cite or show it. Long results are paged:"
+   },
+   {
+    "name": "mcp__plugin_spreadsheets_spreadsheets__search_document",
+    "type": "function",
+    "description_prefix": "Find text in a document (case-insensitive). Returns matching locations as anchors with a snippet each; pass them to read_document or show_in_viewer."
+   },
+   {
+    "name": "mcp__plugin_spreadsheets_spreadsheets__show_in_viewer",
+    "type": "function",
+    "description_prefix": "Point the user at specific places in a document: the Spreadsheets panel opens the document, scrolls to the first target and highlights all targets. Use it whenever your answer refers to a particular c"
+   },
+   {
+    "name": "mcp__plugin_spreadsheets_spreadsheets__get_view",
+    "type": "function",
+    "description_prefix": "See what the user is looking at in the Spreadsheets panel: the open document, the visible location and the user's current selection with its text. Call this when the user says \"this\", \"here\" or \"the s"
+   },
+   {
+    "name": "mcp__node_repl__js",
+    "type": "function",
+    "description_prefix": "Browser Use and Computer Use only. Run JavaScript in a fresh Node-backed kernel with top-level await only as instructed by the corresponding official skill to control a browser or computer. Do not use"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are ZCode, an interactive coding agent\nYou are an interactive ZCode agent that helps users with software engineering tasks.\n\nIMPORTANT: Assist with authorized security testing, defensive security,",
+      "text_len": 8801
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "zcode",
+ "agent_version": "3.16.3",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
