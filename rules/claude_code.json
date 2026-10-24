@@ -4,19 +4,101 @@
   "family": "messages",
   "threshold": 60,
   "min_groups": 2,
-  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "group_caps": {
+    "header": 50,
+    "identity": 30,
+    "tools": 30,
+    "habits": 10
+  },
   "features": [
-    {"id": "ua_claude_cli", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "claude-cli/", "weight": 30},
-    {"id": "beta_claude_code", "group": "header", "op": "header_contains", "name": "anthropic-beta", "value": "claude-code-", "weight": 20},
-    {"id": "x_app_cli", "group": "header", "op": "header_equals", "name": "x-app", "value": "cli", "weight": 10},
-    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Claude Code", "You are a Claude agent, built on Anthropic's Claude Agent SDK"], "weight": 30},
-    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Agent", "Bash", "Edit", "Glob", "Grep", "LSP", "NotebookEdit", "Read", "Skill", "TodoWrite", "WebFetch", "WebSearch", "Write"], "weight": 30},
-    {"id": "thinking_adaptive", "group": "habits", "op": "habit_present", "value": "thinking", "weight": 5},
-    {"id": "context_management", "group": "habits", "op": "habit_present", "value": "context_management", "weight": 5}
+    {
+      "id": "ua_claude_cli",
+      "group": "header",
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": "claude-cli/",
+      "weight": 30
+    },
+    {
+      "id": "beta_claude_code",
+      "group": "header",
+      "op": "header_contains",
+      "name": "anthropic-beta",
+      "value": "claude-code-",
+      "weight": 20
+    },
+    {
+      "id": "x_app_cli",
+      "group": "header",
+      "op": "header_equals",
+      "name": "x-app",
+      "value": "cli",
+      "weight": 10
+    },
+    {
+      "id": "identity",
+      "group": "identity",
+      "op": "identity_prefix",
+      "value": [
+        "You are Claude Code",
+        "You are a Claude agent, built on Anthropic's Claude Agent SDK"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "tool_set",
+      "group": "tools",
+      "op": "tool_set",
+      "value": [
+        "Agent",
+        "Bash",
+        "Edit",
+        "Glob",
+        "Grep",
+        "LSP",
+        "NotebookEdit",
+        "Read",
+        "Skill",
+        "TodoWrite",
+        "WebFetch",
+        "WebSearch",
+        "Write"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "thinking_adaptive",
+      "group": "habits",
+      "op": "habit_present",
+      "value": "thinking",
+      "weight": 5
+    },
+    {
+      "id": "context_management",
+      "group": "habits",
+      "op": "habit_present",
+      "value": "context_management",
+      "weight": 5
+    }
   ],
   "deny": [
-    {"op": "header_present", "name": "originator"},
-    {"op": "header_present", "name": "agent-session-id"}
+    {
+      "op": "header_present",
+      "name": "originator"
+    },
+    {
+      "op": "header_present",
+      "name": "agent-session-id"
+    },
+    {
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": [
+        "kode/",
+        "OpenAI/",
+        "Anthropic/"
+      ]
+    }
   ],
   "notes": "2.1.306 (VS Code) and 2.1.309 (CLI): the user-agent is claude-cli/<version> (<entrypoint>) on every turn; the anthropic-beta list and the tool list vary by version and entry point (the CLI registers deferred tools behind ToolSearch), the three identity blocks (billing header, 'You are a Claude agent…', the long instructions) and x-app: cli do not. After a tool call Claude Code appends role: system reminder messages to the messages array; they are extracted as identity texts too. Known imitation: the Codex-based Open Interpreter CLI has a 'claude-code' harness that sends user-agent 'claude-cli/2.1.158 (external, sdk-cli)', x-app and anthropic-beta on purpose; at the request layer it is indistinguishable from this product except by the pinned version string (not captured: its installer needs GitHub releases)."
 }

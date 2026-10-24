@@ -1,0 +1,53 @@
+{
+ "method": "POST",
+ "path": "/v1/responses",
+ "headers": {
+  "accept": "application/json",
+  "x-stainless-retry-count": "0",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "7.19.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "session_id": "<redacted-id>",
+  "x-client-request-id": "<redacted-id>",
+  "user-agent": "deepseek-harness/0.2.1-rc.2 (+https://github.com/deepseek-ai/deepseek-harness)",
+  "content-type": "application/json",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": true,
+  "max_output_tokens": 4096,
+  "store": false,
+  "prompt_cache_key": "<redacted-id>",
+  "input": [
+   {
+    "type": null,
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "Create a concise title for an AI coding-assistant session from the supplied human messages.\nReturn only the title on one line, **in plain text of natural language**, with no quotes, prefix, explanatio",
+      "text_len": 481
+     }
+    ]
+   },
+   {
+    "type": null,
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "input_text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "dsh",
+ "agent_version": "0.2.1-rc.2",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

@@ -1,0 +1,168 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "x-stainless-retry-count": "0",
+  "x-stainless-timeout": "1200",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "0.91.1",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "anthropic-version": "2023-06-01",
+  "accept": "application/json",
+  "anthropic-dangerous-direct-browser-access": "true",
+  "anthropic-beta": "interleaved-thinking-2025-05-14",
+  "user-agent": "MiniMaxCode",
+  "x-mavis-session-id": "<redacted-id>",
+  "x-mavis-agent-id": "main",
+  "x-mavis-timezone-offset": "0",
+  "content-type": "application/json",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": true,
+  "max_tokens": 16384,
+  "thinking": {
+   "type": "enabled",
+   "budget_tokens": 8192,
+   "display": "summarized"
+  },
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are a coding agent running in the MiniMax Code terminal, developed by MiniMax.\nWhen asked about your identity, runtime environment, product ownership, or comparisons with other\ncoding tools, state",
+    "text_len": 14801,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "tools": [
+   {
+    "name": "read",
+    "type": null,
+    "description_prefix": "Reads a file from the local filesystem.\n\n- `path` can be workspace-relative or absolute; the desktop permission gate reviews it.\n- Text reads return up to 2000 lines, subject to byte limits. Use `offs"
+   },
+   {
+    "name": "write",
+    "type": null,
+    "description_prefix": "Writes a file to the local filesystem, overwriting if it exists and creating parent directories as needed.\n\n- `path` can be workspace-relative or absolute; the desktop permission gate reviews it.\n- Us"
+   },
+   {
+    "name": "edit",
+    "type": null,
+    "description_prefix": "Performs exact string replacement in a local file.\n\n- `file_path` must be an absolute local path; the desktop permission gate reviews it.\n- Use current file content from `read` or your own successful "
+   },
+   {
+    "name": "bash",
+    "type": null,
+    "description_prefix": "Executes a shell command and returns its output.\n\n- Each call starts in the session workspace. Changes to the working directory and shell state (variables and functions) do not persist between calls. "
+   },
+   {
+    "name": "grep",
+    "type": null,
+    "description_prefix": "Search local file contents using ripgrep. ALWAYS use this tool for content search — NEVER invoke `grep`/`rg` via bash (that would bypass filtering and permission review). `pattern` is a raw ripgrep re"
+   },
+   {
+    "name": "glob",
+    "type": null,
+    "description_prefix": "Search for local files by glob pattern using ripgrep. ALWAYS use this tool to find files by name/pattern — NEVER use `find`/`ls -R` via bash (that would bypass filtering and permission review). Projec"
+   },
+   {
+    "name": "todowrite",
+    "type": null,
+    "description_prefix": "Replace the visible session task list with a complete snapshot.\n\n- Use for multiple meaningful steps or an explicit task-list request; skip single-step, trivial, or conversational work.\n- Keep items c"
+   },
+   {
+    "name": "skill",
+    "type": null,
+    "description_prefix": "Loads the complete SKILL.md instructions for an available local or plugin skill.\n\n- Load a skill when the user explicitly names it (including `/name`), or its name and description in `available_skills"
+   },
+   {
+    "name": "web_fetch",
+    "type": null,
+    "description_prefix": "Fetches raw text from an absolute HTTP/HTTPS URL over the local network.\n\n- Supports reachable localhost, intranet, VPN, and public URLs.\n- Does not render JavaScript, extract, or summarize content.\n-"
+   },
+   {
+    "name": "web_search",
+    "type": null,
+    "description_prefix": "Search the web for external facts and current information such as news, prices, places, and recent posts.\nUse before answering or asking for clarification when external facts are unfamiliar or unsuppo"
+   },
+   {
+    "name": "task",
+    "type": null,
+    "description_prefix": "Launch a fresh child Agent for one concrete, bounded subtask.\n\n## When to use\nDelegate when the child buys something concrete that direct tools cannot: a\nsweep across many files where you only need th"
+   },
+   {
+    "name": "task_append",
+    "type": null,
+    "description_prefix": "Send follow-up work to a task you already started, addressed by its task_id.\n\nThe content is delivered into that task's child Agent, which keeps its\nown context, so use it to continue, correct or exte"
+   },
+   {
+    "name": "task_query",
+    "type": null,
+    "description_prefix": "Query local desktop background tasks started in this session. Omit task_id to list tasks; pass task_id to get one."
+   },
+   {
+    "name": "task_output",
+    "type": null,
+    "description_prefix": "Read output from a local background task. Completion automatically notifies and resumes the owning conversation; do not poll frequently while waiting. For an incremental read, pass the previous next_o"
+   },
+   {
+    "name": "task_stop",
+    "type": null,
+    "description_prefix": "Request a local background task to stop by task_id. Queued tasks are cancelled; running child sessions are aborted."
+   },
+   {
+    "name": "website_deploy",
+    "type": null,
+    "description_prefix": "⚠️ **Public deployment — user confirmation required.** This publishes files from THIS machine to a **publicly-accessible URL on the open Internet**. Anyone with the link can view the deployed site. Be"
+   },
+   {
+    "name": "update_goal",
+    "type": null,
+    "description_prefix": "Propose a terminal status for the existing goal, or—only when explicitly requested by the user—update its token budget. Always set `mode` to choose exactly one operation per call; fields belonging to "
+   },
+   {
+    "name": "get_goal",
+    "type": null,
+    "description_prefix": "Get the current goal for this thread, including status, timestamps, token usage, and token budget. Returns an empty result if no goal is set."
+   },
+   {
+    "name": "tool_search",
+    "type": null,
+    "description_prefix": "Discover on-demand tools, including scheduled-task management and configured integrations, that are absent from your default tool list. Search by keyword `query` and/or `regex`; returns the full defin"
+   },
+   {
+    "name": "mcp_invoke",
+    "type": null,
+    "description_prefix": "Execute an on-demand tool, including built-in scheduled-task management and integrations. Pass exactly one selector. `tool_name` from tool_search uses free-form `arguments` (or an empty object when om"
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "mcode",
+ "agent_version": "0.6.13",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

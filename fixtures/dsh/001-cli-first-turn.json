@@ -1,0 +1,185 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "x-stainless-retry-count": "0",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "7.19.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "user-agent": "deepseek-harness/0.2.1-rc.2 (+https://github.com/deepseek-ai/deepseek-harness)",
+  "content-type": "application/json",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_completion_tokens": 32768,
+  "store": false,
+  "tools": [
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Execute a bash command (`bash -c`) and return its stdout/stderr. Each call runs in a fresh shell; pass `workdir` instead of using `cd`. Managed `$DSH_*` variables expose current harness environment fa"
+   },
+   {
+    "name": "create_goal",
+    "type": "function",
+    "description_prefix": "Create a persisted goal that keeps this session working across automatic continuation rounds. Use it when the direct human request is a long-running objective, even if the user did not say \"goal\"; not"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Edit an existing UTF-8 text file by replacing literal text."
+   },
+   {
+    "name": "exit_plan_mode",
+    "type": "function",
+    "description_prefix": "Use only in plan mode. Present your plan for the user's review and, on approval, leave plan mode. The user may approve (carry out the plan from your next step) or keep planning — their feedback comes "
+   },
+   {
+    "name": "get_goal",
+    "type": "function",
+    "description_prefix": "Read the current session goal, including the id and revision that update_goal requires."
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "Find files, not directories, whose paths match a glob pattern, including hidden and ignored files. Returns up to 100 paths in modification-time order; a larger result keeps the first paths and reports"
+   },
+   {
+    "name": "grep",
+    "type": "function",
+    "description_prefix": "Search file contents with a ripgrep regular expression. Returns matching lines with line numbers, grouped by file. Returns up to 250 matches; a larger result reports where the complete match list was "
+   },
+   {
+    "name": "interrupt_agent",
+    "type": "function",
+    "description_prefix": "Ask a subagent to stop its current work. This call returns without waiting for it to stop. You can continue a local direct child's conversation later with send_message. External executions stop perman"
+   },
+   {
+    "name": "job_kill",
+    "type": "function",
+    "description_prefix": "Request cancellation of a running background job."
+   },
+   {
+    "name": "job_list",
+    "type": "function",
+    "description_prefix": "List your background jobs (running and finished) with their ids, kinds, and statuses."
+   },
+   {
+    "name": "job_output",
+    "type": "function",
+    "description_prefix": "Read a background job: output since the previous read for stream jobs, or the result of a finished final-output job."
+   },
+   {
+    "name": "list_agents",
+    "type": "function",
+    "description_prefix": "List subagents you started, with their ids, labels, and status. running means it is working; inactive means it is not currently working. You will be notified when a subagent finishes; there is no need"
+   },
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read a UTF-8 text file and return line-numbered content."
+   },
+   {
+    "name": "read_image",
+    "type": "function",
+    "description_prefix": "Read a PNG/JPEG/WebP/GIF file and return the image itself. Large images are downscaled automatically; do not install image libraries or create thumbnails to inspect an image."
+   },
+   {
+    "name": "send_message",
+    "type": "function",
+    "description_prefix": "Send a message to an agent. A working agent receives it at its next step; an idle agent starts a new turn with it. Returns delivery confirmation, not the agent's answer."
+   },
+   {
+    "name": "skill",
+    "type": "function",
+    "description_prefix": "Load the full instructions for a skill. Call it before acting on a task that names or clearly matches a skill in the session skill catalog."
+   },
+   {
+    "name": "subagent",
+    "type": "function",
+    "description_prefix": "Delegate a self-contained task to a subagent (a separate agent that works in its own context) to offload focused, independent work — research, a scoped implementation, an analysis — so it does not con"
+   },
+   {
+    "name": "subagent_fork",
+    "type": "function",
+    "description_prefix": "Delegate a task to a subagent that inherits this conversation: a child agent seeded with all completed turns so far (it does not see the current in-flight turn). Use this when the subtask builds on th"
+   },
+   {
+    "name": "todo_write",
+    "type": "function",
+    "description_prefix": "Record and update a task list to plan multi-step work and show progress; skip it for trivial single-step tasks. Add one todo per concrete step before you start. While work remains, keep the todos bein"
+   },
+   {
+    "name": "update_goal",
+    "type": "function",
+    "description_prefix": "Update the current goal."
+   },
+   {
+    "name": "web_fetch",
+    "type": "function",
+    "description_prefix": "Fetch the content of a specific HTTP(S) URL and return it decoded to text."
+   },
+   {
+    "name": "web_search",
+    "type": "function",
+    "description_prefix": "Search the web for current information. Returns an optional summary answer and a list of source URLs."
+   },
+   {
+    "name": "workflow",
+    "type": "function",
+    "description_prefix": "Run a JavaScript workflow script that orchestrates subagents at scale. Use this for work that fans out across many independent pieces — an audit over many files, a migration, multi-angle research, adv"
+   },
+   {
+    "name": "working_directory",
+    "type": "function",
+    "description_prefix": "Read the current working directory, or change it with cd. Relative paths use the current directory. Existing shells and running processes keep their own directories."
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Create or fully replace a UTF-8 text file."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are an AI agent powered by DeepSeek Harness.\n\nYou are a coding agent powered by the aiforensics model.\n\nCheck the [exit code: N] marker on every bash result; investigate failures before moving on.",
+      "text_len": 2559
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "dsh",
+ "agent_version": "0.2.1-rc.2",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

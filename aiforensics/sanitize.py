@@ -24,7 +24,7 @@ _UUID_RX = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]
 _TIMESTAMP_RX = re.compile(r"\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2})?(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?")
 KEPT_PARAMS = ("model", "stream", "stream_options", "max_tokens", "max_output_tokens", "max_completion_tokens", "temperature",
                "top_p", "top_k", "thinking", "output_config", "store", "include", "reasoning", "text", "tool_choice",
-               "parallel_tool_calls", "response_format", "service_tier", "stop", "n", "user", "context_management", "search_parameters")
+               "parallel_tool_calls", "response_format", "service_tier", "stop", "n", "user", "context_management", "search_parameters", "reasoning_effort")
 GENERATION_CONFIG_KEYS = ("temperature", "topP", "topK", "maxOutputTokens", "thinkingConfig", "responseMimeType", "candidateCount")
 
 

@@ -87,7 +87,7 @@ def extract(record: dict) -> dict:
         if key in body:
             habits[key] = body[key]
     for key in ("thinking", "output_config", "reasoning", "include", "text", "context_management", "metadata", "metadata_keys",
-                "client_metadata_keys", "prompt_cache_key", "stream_options", "generationConfig", "search_parameters"):
+                "client_metadata_keys", "prompt_cache_key", "stream_options", "generationConfig", "search_parameters", "reasoning_effort"):
         if key in body:
             habits[key] = True
     gc = body.get("generationConfig")

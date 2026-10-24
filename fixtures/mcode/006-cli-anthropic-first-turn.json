@@ -1,0 +1,31 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "content-type": "application/json",
+  "anthropic-version": "2023-06-01",
+  "user-agent": "MiniMaxCode",
+  "accept": "*/*",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "aiforensics",
+  "stream": false,
+  "max_tokens": 16384,
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "mcode",
+ "agent_version": "0.6.13",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

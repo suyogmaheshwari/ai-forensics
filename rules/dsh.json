@@ -1,0 +1,22 @@
+{
+  "product": "dsh",
+  "display_name": "DeepSeek Harness (DeepSeek, @deepseek-ai/dsh)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_deepseek_harness", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "deepseek-harness/", "weight": 40},
+    {"id": "stainless_js", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "js", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are an AI agent powered by DeepSeek Harness", "Create a concise title for an AI coding-assistant session"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "create_goal", "edit", "exit_plan_mode", "get_goal", "glob", "grep", "interrupt_agent", "job_kill", "job_list", "job_output", "list_agents", "read", "read_image", "send_message", "skill", "subagent", "subagent_fork", "todo_write", "update_goal", "web_fetch", "web_search", "workflow", "working_directory", "write"], "weight": 30},
+    {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "Anthropic/", "codex"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.2.1-rc.2 headless profile with a provider patch (no DeepSeek login): user-agent 'deepseek-harness/<version> (+https://github.com/deepseek-ai/deepseek-harness)' on both the chat-completions and the Responses paths; the Responses path adds session_id and x-client-request-id headers (redacted as ids). Identity 'You are an AI agent powered by DeepSeek Harness' is fixed; the second line interpolates the model name. Each session also sends a title request ('Create a concise title for an AI coding-assistant session…', no tools). The 25-tool set (subagent_fork, working_directory, job_output…) is identical on the first turn, after the tool call and on the --session-id follow-up; a second user message with the runtime context (cwd, file policy) follows the prompt. store false, max_completion_tokens 32768 / max_output_tokens 32768."
+}
