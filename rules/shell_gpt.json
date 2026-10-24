@@ -1,0 +1,24 @@
+{
+  "product": "shell_gpt",
+  "display_name": "Shell-GPT (sgpt)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Python", "weight": 20},
+    {"id": "stainless_python", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "python", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are ShellGPT", "You are Shell Command Generator", "You are Shell Command Descriptor", "You are Code Generator"], "weight": 30},
+    {"id": "tool_execute_shell", "group": "tools", "op": "tool_set", "value": ["execute_shell_command"], "weight": 30},
+    {"id": "temperature_zero", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0.0, "weight": 5},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "header_present", "name": "x-stainless-raw-response"},
+    {"op": "identity_prefix", "value": ["You are gptme"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "1.5.1: stock openai-python headers (no litellm, so no x-stainless-raw-response). Each role has a hard-coded prompt opening: 'You are ShellGPT' (default), 'You are Shell Command Generator' (-s), 'You are Shell Command Descriptor' (-d), 'You are Code Generator' (-c); the OS and shell names follow and vary. Function calling (OPENAI_USE_FUNCTIONS, --install-functions) adds the single tool execute_shell_command with tool_choice auto and parallel_tool_calls false; the -s/-d/-c roles send no tools, so headers plus identity carry those. temperature 0.0 and top_p 1.0 on every request. Identical on the first turn, after the tool call and on the --chat <id> follow-up. The response cache must be off (--no-cache) or repeated prompts never reach the API."
+}

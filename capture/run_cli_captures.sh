@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -646,6 +646,28 @@ EOF
   run "$h" "$h/project" "${env[@]}" -- "$BIN/zcode" --cwd "$h/project" --mode yolo -p "$PROMPT1"
   run "$h" "$h/project" "${env[@]}" -- "$BIN/zcode" --cwd "$h/project" --mode yolo -c -p "$PROMPT2"
   stop_recorder; sanitize_all zcode "$v" "$entry" "$RAW/$raw"
+}
+
+cap_shell_gpt() {
+  py_venv "$WORK/sgpt-venv" shell-gpt click || return   # typer no longer pulls click, sgpt imports it
+  local v; v=$("$WORK/sgpt-venv/bin/pip" show shell-gpt | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home shell_gpt); start_recorder shell_gpt "$h/project"
+  mkdir -p "$h/.config/shell_gpt"
+  cat > "$h/.config/shell_gpt/.sgptrc" <<EOF
+OPENAI_API_KEY=dummy
+API_BASE_URL=$BASE/v1
+DEFAULT_MODEL=gpt-4o
+OPENAI_USE_FUNCTIONS=true
+OPENAI_FUNCTIONS_PATH=$h/.config/shell_gpt/functions
+CACHE_PATH=$h/.cache/shell_gpt/cache
+CHAT_CACHE_PATH=$h/.cache/shell_gpt/chat_cache
+PRETTIFY_MARKDOWN=false
+EOF
+  run "$h" "$h/project" -- "$WORK/sgpt-venv/bin/sgpt" --install-functions
+  run "$h" "$h/project" -- "$WORK/sgpt-venv/bin/sgpt" --no-cache --chat probe "$PROMPT1"
+  run "$h" "$h/project" -- "$WORK/sgpt-venv/bin/sgpt" --no-cache --chat probe "$PROMPT2"
+  run "$h" "$h/project" -- "$WORK/sgpt-venv/bin/sgpt" --no-cache -s --no-interaction "print ok"   # shell role, no tools
+  stop_recorder; sanitize_all shell_gpt "$v"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture

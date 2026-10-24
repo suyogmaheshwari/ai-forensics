@@ -1,0 +1,48 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 2.54.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "2.54.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "60"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Shell Command Generator\nProvide only sh commands for Linux/Ubuntu 24.04.5 LTS without any description.\nIf there is a lack of details, provide most logical solution.\nEnsure the output is a vali",
+      "text_len": 384
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "shell_gpt",
+ "agent_version": "1.5.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
