@@ -1,0 +1,151 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "user-agent": "mimocode/0.1.15 ai-sdk/provider-utils/4.0.23 runtime/bun/1.3.14",
+  "x-session-affinity": "<redacted-id>",
+  "accept": "*/*"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 8192,
+  "tool_choice": "auto",
+  "tools": [
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Executes a given bash command in a persistent shell session with an optional timeout measured in milliseconds, ensuring proper handling and security measures.\n\nBe aware: OS: linux, Shell: bash\n\n`workd"
+   },
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read a file or directory from the local filesystem. If the path does not exist, an error is returned.\n\nUsage:\n- The `file_path` parameter identifies the file or directory to read.\n- By default, this t"
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "- Fast file pattern matching tool that works with any codebase size\n- Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"\n- Returns matching file paths sorted by modification time\n- Use this tool w"
+   },
+   {
+    "name": "grep",
+    "type": "function",
+    "description_prefix": "- Fast content search tool that works with any codebase size\n- Searches file contents using regular expressions\n- Supports full regex syntax (eg. \"log.*Error\", \"function\\s+\\w+\", etc.)\n- Filter files b"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Performs exact string replacements in files.\n\nUsage:\n- Prefer using your Read tool on the file first so `old_string` matches current disk contents. Creating a brand-new file with `old_string=\"\"` needs"
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- The `file_path` parameter identifies the file to write.\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is"
+   },
+   {
+    "name": "notebook_edit",
+    "type": "function",
+    "description_prefix": "Replaces, inserts, or deletes a single cell in a Jupyter notebook (.ipynb file).\n\nUsage:\n- Prefer using your Read tool on the notebook first so cell ids and sources match current disk contents. The to"
+   },
+   {
+    "name": "actor",
+    "type": "function",
+    "description_prefix": "Launch a new actor (subagent) to handle complex, multi-step tasks autonomously.\n\n**Subagent restriction:** When you are running as a subagent, you can ONLY use\n`actor send` to communicate with the par"
+   },
+   {
+    "name": "webfetch",
+    "type": "function",
+    "description_prefix": "- Fetches content from a specified URL\n- Takes a URL and optional format as input\n- Fetches the URL content, converts to requested format (markdown by default)\n- Returns the content in the specified f"
+   },
+   {
+    "name": "skill_search",
+    "type": "function",
+    "description_prefix": "Search the available non-Compose skills using exact ID/name/alias matching and BM25 relevance.\nInclude: action, input, desired output, and audience. Omit dimensions the user did not provide.\nAn exact "
+   },
+   {
+    "name": "skill",
+    "type": "function",
+    "description_prefix": "Load a specialized skill when the task at hand matches one of the skills listed in the system prompt.\n\nUse this tool to inject the skill's instructions and resources into current conversation. The out"
+   },
+   {
+    "name": "memory",
+    "type": "function",
+    "description_prefix": "Search session/project/global memory using BM25 over markdown\nbodies. Use this to recall content persisted previously: project\nmemory, task narratives (under sessions/<sid>/tasks/), project\nnotes, glo"
+   },
+   {
+    "name": "history",
+    "type": "function",
+    "description_prefix": "Search RAW conversation trajectory: prior user/assistant messages, tool inputs, tool errors.\n\nUse memory first when you need a quick curated answer. Use history when you need the raw source: verbatim "
+   },
+   {
+    "name": "task",
+    "type": "function",
+    "description_prefix": "Persistent work-item tool. Tasks are bounded, referenceable entities with\nIDs (T1, T2, ...; subtasks T1.1, T1.2, ...). This is the only work-item\ntool — use it to track every multi-step piece of work:"
+   },
+   {
+    "name": "cron",
+    "type": "function",
+    "description_prefix": "Schedule prompts to fire at future times. Recurring or one-shot, session-only\nor durable. Jobs fire only while the REPL is idle; fires enter the message\nqueue at 'later' priority so user input is neve"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are MiMoCode, an interactive CLI tool that helps users with software engineering tasks. Use the instructions below and the tools available to you to assist the user.\n\nIMPORTANT: Assist with author",
+      "text_len": 39977
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "tool-call",
+ "agent": "mimo",
+ "agent_version": "0.1.15",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

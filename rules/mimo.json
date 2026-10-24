@@ -1,0 +1,23 @@
+{
+  "product": "mimo",
+  "display_name": "MiMo Code (Xiaomi, @mimo-ai/cli, OpenCode fork)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_mimocode", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "mimocode/", "weight": 40},
+    {"id": "x_session_affinity", "group": "header", "op": "header_present", "name": "x-session-affinity", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are MiMoCode", "Generate only a title", "IMPORTANT: The user has requested structured output"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "read", "glob", "grep", "edit", "write", "notebook_edit", "actor", "webfetch", "skill_search", "skill", "memory", "history", "task", "cron"], "weight": 30},
+    {"id": "tool_choice_auto", "group": "habits", "op": "habit_equals", "name": "tool_choice", "value": "auto", "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["opencode/", "claude-cli/", "QwenCode/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "ai-sdk/"]},
+    {"op": "header_present", "name": "x-title"},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.1.15 with a custom openai-compatible provider (no Xiaomi login): OpenCode lineage with the user-agent rebranded to 'mimocode/<version> ai-sdk/provider-utils/<v> runtime/bun/<v>' and x-session-affinity on the main requests; the system prompt starts 'You are MiMoCode, an interactive CLI tool…' (Claude Code-style text), 15 tools including actor, memory, history, cron and skill_search. A title side request with a StructuredOutput tool and two system messages precedes the first turn (covered by the extra identity prefixes). Identical on the first turn, after the tool call and on the --continue follow-up. With the built-in openai provider id it switches to a Codex-style harness ('You are Codex…' prompt, one exec tool, /v1/responses, an un-rebranded 'originator: opencode'); that variant is not captured and is denied here by the originator header."
+}

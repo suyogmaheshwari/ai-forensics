@@ -1,0 +1,22 @@
+{
+  "product": "grok_build",
+  "display_name": "Grok Build (xAI official grok CLI)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "client_identifier", "group": "header", "op": "header_equals", "name": "x-grok-client-identifier", "value": "grok-shell", "weight": 30},
+    {"id": "ua_grok_shell", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "grok-shell/", "weight": 20},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Grok released by xAI", "You are tasked with generating the session title", "Write an ultra-short dashboard line"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["run_terminal_command", "read_file", "search_replace", "list_dir", "grep", "kill_command_or_subagent", "todo_write", "get_command_or_subagent_output", "spawn_subagent", "scheduler_create", "scheduler_delete", "scheduler_list", "monitor", "search_tool", "use_tool", "workflow", "enter_plan_mode", "exit_plan_mode", "ask_user_question", "send_feedback", "image_gen", "image_edit", "image_to_video", "reference_to_video", "write"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "stream_usage_or_store", "group": "habits", "op": "habit_present", "value": ["stream_options", "store", "max_tokens"], "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "Anthropic/", "codex"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "1.0.70 with a [model.<id>] table carrying its own base_url and env_key (no xAI login): product headers on every request of all three backends — 'x-grok-client-identifier: grok-shell', 'user-agent: grok-shell/<version> (<os>; <arch>)', x-grok-client-version, x-grok-client-mode headless, x-xai-token-auth, x-grok-model-override, x-grok-turn-idx, W3C traceparent and conversation/session ids (redacted). Identity 'You are Grok released by xAI. You are an autonomous agent…' on chat_completions and responses (system role) and messages (system[0] with cache_control); the title probe ('You are tasked with generating the session title', forced session_title tool, model hard-coded to a grok model) and the per-turn dashboard summary ('Write an ultra-short dashboard line…') are covered by the extra identity prefixes. 25 tools (run_terminal_command, search_replace, spawn_subagent, scheduler_*, image_*…) identical across turns and backends; the messages backend sends no anthropic-version or x-api-key. A GET / probe starts every session."
+}

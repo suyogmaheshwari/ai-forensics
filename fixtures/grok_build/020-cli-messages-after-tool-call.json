@@ -1,0 +1,240 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "content-type": "application/json",
+  "x-grok-client-mode": "headless",
+  "x-xai-token-auth": "xai-grok-cli",
+  "x-authenticateresponse": "authenticate-response",
+  "x-grok-client-version": "1.0.70",
+  "x-grok-client-identifier": "grok-shell",
+  "x-grok-conv-group-id": "<uuid>",
+  "user-agent": "grok-shell/1.0.70 (linux; x86_64)",
+  "traceparent": "<redacted-id>",
+  "x-grok-conv-id": "<uuid>",
+  "x-grok-req-id": "<uuid>",
+  "x-grok-model-override": "probe-model",
+  "x-grok-session-id": "<redacted-id>",
+  "x-grok-agent-id": "<uuid>",
+  "x-grok-turn-idx": "2",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "max_tokens": 128000,
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are Grok released by xAI. You are an autonomous agent that completes software engineering tasks. There is no human operator in this session. Your main goal is to complete the user's request in the",
+    "text_len": 5059,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "tools": [
+   {
+    "name": "run_terminal_command",
+    "type": null,
+    "description_prefix": "Run a bash command and return its output.\n\n- A command that is still running when block_until_ms ends moves to the background and keeps running. You get a task id.\n- If you cannot continue without the"
+   },
+   {
+    "name": "read_file",
+    "type": null,
+    "description_prefix": "Read a file.\n\n- The tool reads up to 1000 lines, starting at offset. A read that is too large fails, so use offset and limit to read a large file in parts. A SKILL.md, AGENTS.md, or CLAUDE.md file is "
+   },
+   {
+    "name": "search_replace",
+    "type": null,
+    "description_prefix": "Replace an exact string in a file.\n\n- The line numbers and → that `read_file` shows are not part of the file. Match the file text exactly, with its indentation.\n- `old_string` must match exactly one p"
+   },
+   {
+    "name": "list_dir",
+    "type": null,
+    "description_prefix": "List the files and directories in 'target_directory'. The path can be relative to the workspace root or absolute. The list leaves out dot-files and files that .gitignore ignores. For a large directory"
+   },
+   {
+    "name": "grep",
+    "type": null,
+    "description_prefix": "Search file contents with a regular expression. This tool uses ripgrep.\n\n- To match a regex special character literally, escape it. For example, use `functionCall\\(` or `interface\\{\\}`.\n- Pass pattern"
+   },
+   {
+    "name": "kill_command_or_subagent",
+    "type": null,
+    "description_prefix": "Stop a running background command, monitor, or subagent.\n\n- Pass the task_id from background commands, background subagents, or the monitor tool.\n- A command or monitor gets SIGTERM, sent to its proce"
+   },
+   {
+    "name": "todo_write",
+    "type": null,
+    "description_prefix": "Create or update the task list. The user sees this list live while you work. Use it for work with three or more steps. Skip it for a single-step task."
+   },
+   {
+    "name": "get_command_or_subagent_output",
+    "type": null,
+    "description_prefix": "Get the output and status of a background command, monitor, or subagent.\n\n- Pass the task_ids from background commands, background subagents, or the monitor tool.\n- Set timeout_ms to wait up to that l"
+   },
+   {
+    "name": "spawn_subagent",
+    "type": null,
+    "description_prefix": "Start a subagent that works on a task independently and reports back.\n\n## Usage notes\n- background is true by default. The call then returns a subagent_id immediately. You get a notification when it f"
+   },
+   {
+    "name": "scheduler_create",
+    "type": null,
+    "description_prefix": "Run a prompt on a repeating interval, or change an existing scheduled task.\n\nEach run starts a background subagent with the prompt. The result of each run arrives in a new turn after your current turn"
+   },
+   {
+    "name": "scheduler_delete",
+    "type": null,
+    "description_prefix": "Stop and remove a scheduled task."
+   },
+   {
+    "name": "scheduler_list",
+    "type": null,
+    "description_prefix": "List scheduled tasks with their IDs, prompts, intervals, and next run times."
+   },
+   {
+    "name": "monitor",
+    "type": null,
+    "description_prefix": "Run a script in the background and watch its output. Each line that the script prints to stdout is an event. You get each event as a notification while you keep working. When the script exits, you get"
+   },
+   {
+    "name": "search_tool",
+    "type": null,
+    "description_prefix": "Find MCP tools by keyword and get their input schemas.\n\nIf the result status is \"partial\", some servers are still connecting."
+   },
+   {
+    "name": "use_tool",
+    "type": null,
+    "description_prefix": "Call an MCP tool that you found with `search_tool`. Pass its name in `tool_name` and its arguments in `tool_input`. The arguments must match the input schema of the tool."
+   },
+   {
+    "name": "workflow",
+    "type": null,
+    "description_prefix": "Run a workflow. A workflow is a Rhai script that runs many subagents as one background job. Use it only for large, structured jobs. Examples are work over a known list of items, staged research with c"
+   },
+   {
+    "name": "enter_plan_mode",
+    "type": null,
+    "description_prefix": "Switch to plan mode. In plan mode, you can only read the codebase and write a plan. The user approves the plan before you change any code. Use this tool only when the user asks for a plan."
+   },
+   {
+    "name": "exit_plan_mode",
+    "type": null,
+    "description_prefix": "Show your plan to the user for approval. Plan mode ends when the user approves the plan."
+   },
+   {
+    "name": "ask_user_question",
+    "type": null,
+    "description_prefix": "Ask the user one or more multiple-choice questions.\n\n- Every question automatically gets an \"Other\" choice where the user can type their own answer.\n- Put your recommended option first and append \"(Re"
+   },
+   {
+    "name": "send_feedback",
+    "type": null,
+    "description_prefix": "Save a local draft of feedback about Grok Build or about your own behavior. You can also update an existing draft. The user reviews the drafts and decides whether to send them. The user does this in t"
+   },
+   {
+    "name": "image_gen",
+    "type": null,
+    "description_prefix": "Generate a new image from a text description using Imagine; returns the saved image's absolute path. When telling the user where it was saved, refer to it by its short session-relative path (e.g. `ima"
+   },
+   {
+    "name": "image_edit",
+    "type": null,
+    "description_prefix": "Edit or transform existing image(s) via the xAI Imagine API; use instead of image_gen for image-to-image work (preserve likeness, transfer style, remix). Returns the saved image's absolute path. When "
+   },
+   {
+    "name": "image_to_video",
+    "type": null,
+    "description_prefix": "Generate a video from a single source image; returns the saved video's absolute path. When telling the user where it was saved, refer to it by its short session-relative path (e.g. `videos/1.mp4`) rat"
+   },
+   {
+    "name": "reference_to_video",
+    "type": null,
+    "description_prefix": "Generate a video from reference images, preset voices, and/or pinned keyframes, guided by a required text prompt; returns the saved video's absolute path. When telling the user where it was saved, ref"
+   },
+   {
+    "name": "write",
+    "type": null,
+    "description_prefix": "Create a file or replace all of its content.\n\n- If the file exists, this tool replaces it. Read the file with read_file before you replace it.\n- The tool creates missing parent directories."
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "read_file"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "read_file"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "grok_build",
+ "agent_version": "1.0.70",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

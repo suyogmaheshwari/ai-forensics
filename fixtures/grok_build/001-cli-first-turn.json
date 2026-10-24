@@ -1,0 +1,66 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "x-grok-client-mode": "headless",
+  "x-xai-token-auth": "xai-grok-cli",
+  "x-authenticateresponse": "authenticate-response",
+  "x-grok-client-version": "1.0.70",
+  "x-grok-client-identifier": "grok-shell",
+  "x-grok-conv-group-id": "<uuid>",
+  "user-agent": "grok-shell/1.0.70 (linux; x86_64)",
+  "x-grok-conv-id": "",
+  "x-grok-req-id": "",
+  "x-grok-model-override": "grok-4.6",
+  "x-grok-session-id": "<redacted-id>",
+  "x-grok-agent-id": "",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "grok-4.6",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 100,
+  "temperature": 1.0,
+  "tool_choice": {
+   "type": "function",
+   "function": {
+    "name": "session_title"
+   }
+  },
+  "tools": [
+   {
+    "name": "session_title",
+    "type": "function",
+    "description_prefix": "Generate the session_title which we use for the user_message"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are tasked with generating the session title. The user is asking almost always software engineering related questions on their codebase.\nWe describe the session title below\n# Session Title\nA short",
+      "text_len": 423
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "grok_build",
+ "agent_version": "1.0.70",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

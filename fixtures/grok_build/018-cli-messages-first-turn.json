@@ -1,0 +1,57 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "content-type": "application/json",
+  "x-grok-client-mode": "headless",
+  "x-xai-token-auth": "xai-grok-cli",
+  "x-authenticateresponse": "authenticate-response",
+  "x-grok-client-version": "1.0.70",
+  "x-grok-client-identifier": "grok-shell",
+  "x-grok-conv-group-id": "<uuid>",
+  "user-agent": "grok-shell/1.0.70 (linux; x86_64)",
+  "traceparent": "<redacted-id>",
+  "x-grok-conv-id": "turn-summary-<uuid>",
+  "x-grok-req-id": "xai-turn-summary-<uuid>",
+  "x-grok-model-override": "probe-model",
+  "x-grok-session-id": "<redacted-id>",
+  "x-grok-agent-id": "<uuid>",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "max_tokens": 128000,
+  "thinking": {
+   "type": "adaptive",
+   "display": "summarized"
+  },
+  "output_config": {
+   "effort": "low"
+  },
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "Write an ultra-short dashboard line that captures the AGENT'S REPLY to the user's message. Focus on what the agent concluded, answered, recommended, or delivered, not a meta description of the turn (a",
+    "text_len": 1011,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "grok_build",
+ "agent_version": "1.0.70",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

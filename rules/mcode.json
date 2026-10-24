@@ -4,20 +4,123 @@
   "family": "any",
   "threshold": 60,
   "min_groups": 2,
-  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "group_caps": {
+    "header": 50,
+    "identity": 30,
+    "tools": 30,
+    "habits": 10
+  },
   "features": [
-    {"id": "ua_minimaxcode", "group": "header", "op": "header_equals", "name": "user-agent", "value": "MiniMaxCode", "weight": 30},
-    {"id": "x_mavis_session", "group": "header", "op": "header_present", "name": "x-mavis-session-id", "weight": 15},
-    {"id": "x_mavis_agent", "group": "header", "op": "header_present", "name": "x-mavis-agent-id", "weight": 5},
-    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a coding agent running in the MiniMax Code terminal"], "weight": 30},
-    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["read", "write", "edit", "bash", "grep", "glob", "todowrite", "skill", "web_fetch", "web_search", "task", "task_append", "task_query", "task_output", "task_stop", "website_deploy", "update_goal", "get_goal", "tool_search", "mcp_invoke"], "weight": 30},
-    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
-    {"id": "store_or_thinking", "group": "habits", "op": "habit_present", "value": ["store", "thinking"], "weight": 5}
+    {
+      "id": "ua_minimaxcode",
+      "group": "header",
+      "op": "header_equals",
+      "name": "user-agent",
+      "value": "MiniMaxCode",
+      "weight": 50
+    },
+    {
+      "id": "x_mavis_session",
+      "group": "header",
+      "op": "header_present",
+      "name": "x-mavis-session-id",
+      "weight": 15
+    },
+    {
+      "id": "x_mavis_agent",
+      "group": "header",
+      "op": "header_present",
+      "name": "x-mavis-agent-id",
+      "weight": 5
+    },
+    {
+      "id": "identity",
+      "group": "identity",
+      "op": "identity_prefix",
+      "value": [
+        "You are a coding agent running in the MiniMax Code terminal"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "tool_set",
+      "group": "tools",
+      "op": "tool_set",
+      "value": [
+        "read",
+        "write",
+        "edit",
+        "bash",
+        "grep",
+        "glob",
+        "todowrite",
+        "skill",
+        "web_fetch",
+        "web_search",
+        "task",
+        "task_append",
+        "task_query",
+        "task_output",
+        "task_stop",
+        "website_deploy",
+        "update_goal",
+        "get_goal",
+        "tool_search",
+        "mcp_invoke"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "max_tokens_16384",
+      "group": "habits",
+      "op": "habit_equals",
+      "name": "max_tokens",
+      "value": 16384,
+      "weight": 5
+    },
+    {
+      "id": "ping_no_stream",
+      "group": "habits",
+      "op": "habit_equals",
+      "name": "stream",
+      "value": false,
+      "weight": 5
+    },
+    {
+      "id": "store_or_thinking",
+      "group": "habits",
+      "op": "habit_present",
+      "value": [
+        "store",
+        "thinking",
+        "max_completion_tokens"
+      ],
+      "weight": 5
+    }
   ],
   "deny": [
-    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "Anthropic/"]},
-    {"op": "header_present", "name": "originator"},
-    {"op": "header_present", "name": "agent-session-id"}
+    {
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": [
+        "claude-cli/",
+        "QwenCode/",
+        "opencode/",
+        "ai-sdk/",
+        "Charm-Crush/",
+        "kimi-code-cli/",
+        "OpenAI/",
+        "Anthropic/"
+      ]
+    },
+    {
+      "op": "header_present",
+      "name": "originator"
+    },
+    {
+      "op": "header_present",
+      "name": "agent-session-id"
+    }
   ],
-  "notes": "0.6.13 with a BYOK custom provider (no MiniMax login): user-agent 'MiniMaxCode' and X-Mavis-Session-Id / X-Mavis-Agent-Id / X-Mavis-Timezone-Offset headers on both the openai-completions and the anthropic-messages formats (mavis is the internal agent name). The system prompt rides as a developer message on the openai format and as system[0] on the anthropic one; identity 'You are a coding agent running in the MiniMax Code terminal, developed by MiniMax'. 20 tools (task_*, website_deploy, tool_search, mcp_invoke…), reasoning_effort medium and store false on chat, thinking with budget on anthropic; two token-count calls (/v1/responses/input_tokens or /v1/messages/count_tokens) precede each model call and the provider add sends a 'ping' test request. Identical on the first turn, after the tool call and on the --continue follow-up. config.yaml stores the key literally and enables dataContribution by default."
+  "notes": "0.6.13 with a BYOK custom provider (no MiniMax login): user-agent 'MiniMaxCode' and X-Mavis-Session-Id / X-Mavis-Agent-Id / X-Mavis-Timezone-Offset headers on both the openai-completions and the anthropic-messages formats (mavis is the internal agent name). The system prompt rides as a developer message on the openai format and as system[0] on the anthropic one; identity 'You are a coding agent running in the MiniMax Code terminal, developed by MiniMax'. 20 tools (task_*, website_deploy, tool_search, mcp_invoke…), reasoning_effort medium and store false on chat, thinking with budget on anthropic; two token-count calls (/v1/responses/input_tokens or /v1/messages/count_tokens) precede each model call and the provider add sends a 'ping' test request that carries only the user-agent, no X-Mavis headers, no system prompt and no tools (non-streaming, max_tokens 16384), which is why the user-agent alone fills the header cap. Identical on the first turn, after the tool call and on the --continue follow-up. config.yaml stores the key literally and enables dataContribution by default."
 }

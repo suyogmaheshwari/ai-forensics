@@ -1,0 +1,126 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "content-type": "application/json",
+  "x-grok-client-mode": "headless",
+  "x-xai-token-auth": "xai-grok-cli",
+  "x-authenticateresponse": "authenticate-response",
+  "x-grok-client-version": "1.0.70",
+  "x-grok-client-identifier": "grok-shell",
+  "x-grok-conv-group-id": "<uuid>",
+  "user-agent": "grok-shell/1.0.70 (linux; x86_64)",
+  "traceparent": "<redacted-id>",
+  "x-grok-conv-id": "<uuid>",
+  "x-grok-req-id": "xai-title-refresh-<uuid>",
+  "x-grok-model-override": "probe-model",
+  "x-grok-session-id": "<redacted-id>",
+  "x-grok-agent-id": "<uuid>",
+  "accept": "text/event-stream"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "max_tokens": 128000,
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are Grok released by xAI. You are an autonomous agent that completes software engineering tasks. There is no human operator in this session. Your main goal is to complete the user's request in the",
+    "text_len": 5059,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "read_file"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "read_file"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "text",
+ "agent": "grok_build",
+ "agent_version": "1.0.70",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
