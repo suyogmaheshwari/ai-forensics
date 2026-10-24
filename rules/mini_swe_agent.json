@@ -4,20 +4,106 @@
   "family": "chat_completions",
   "threshold": 60,
   "min_groups": 2,
-  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "group_caps": {
+    "header": 50,
+    "identity": 30,
+    "tools": 30,
+    "habits": 10
+  },
   "features": [
-    {"id": "ua_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Python", "weight": 20},
-    {"id": "stainless_raw_response", "group": "header", "op": "header_present", "name": "x-stainless-raw-response", "weight": 10},
-    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a helpful assistant that can interact with a computer"], "weight": 30},
-    {"id": "tool_bash_only", "group": "tools", "op": "tool_set", "value": ["bash"], "weight": 30},
-    {"id": "no_stream", "group": "habits", "op": "habit_equals", "name": "stream", "value": null, "weight": 0}
+    {
+      "id": "ua_openai_python",
+      "group": "header",
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": "OpenAI/Python",
+      "weight": 20
+    },
+    {
+      "id": "stainless_raw_response",
+      "group": "header",
+      "op": "header_present",
+      "name": "x-stainless-raw-response",
+      "weight": 10
+    },
+    {
+      "id": "identity",
+      "group": "identity",
+      "op": "identity_prefix",
+      "value": [
+        "You are a helpful assistant that can interact with a computer"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "tool_bash_only",
+      "group": "tools",
+      "op": "tool_set",
+      "value": [
+        "bash"
+      ],
+      "weight": 30
+    },
+    {
+      "id": "no_stream",
+      "group": "habits",
+      "op": "habit_equals",
+      "name": "stream",
+      "value": null,
+      "weight": 0
+    }
   ],
   "deny": [
-    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
-    {"op": "identity_prefix", "value": ["Act as an expert software developer", "You are OpenHands agent", "You are an expert AI software engineering agent", "You are Open Interpreter", "You are gptme"]},
-    {"op": "tool_present", "value": ["edit", "read", "write", "glob", "grep", "view", "file_editor", "str_replace_based_edit_tool", "terminal", "execute"]},
-    {"op": "header_present", "name": "originator"},
-    {"op": "header_present", "name": "agent-session-id"}
+    {
+      "op": "header_prefix",
+      "name": "user-agent",
+      "value": [
+        "QwenCode/",
+        "OpenAI/JS",
+        "opencode/",
+        "ai-sdk/",
+        "claude-cli/",
+        "Charm-Crush/",
+        "kimi-code-cli/",
+        "AsyncOpenAI/",
+        "swe-agent/"
+      ]
+    },
+    {
+      "op": "identity_prefix",
+      "value": [
+        "Act as an expert software developer",
+        "You are OpenHands agent",
+        "You are an expert AI software engineering agent",
+        "You are Open Interpreter",
+        "You are gptme"
+      ]
+    },
+    {
+      "op": "tool_present",
+      "value": [
+        "edit",
+        "read",
+        "write",
+        "glob",
+        "grep",
+        "view",
+        "file_editor",
+        "str_replace_based_edit_tool",
+        "terminal",
+        "execute",
+        "str_replace_editor",
+        "submit"
+      ]
+    },
+    {
+      "op": "header_present",
+      "name": "originator"
+    },
+    {
+      "op": "header_present",
+      "name": "agent-session-id"
+    }
   ],
   "notes": "2.4.6 through litellm: the same OpenAI/Python + x-stainless-raw-response headers as Aider, OpenHands and Open Interpreter; the one-line system prompt ('You are a helpful assistant that can interact with a computer.') and a single 'bash' tool with no stream, temperature or max_tokens (drop_params) carry the verdict, so any other tool name is a deny feature. The task and workflow text sit in the first user message. Identical on the first turn and after the tool call; a text answer triggers its 'No tool calls found' format-error loop (three rounds, then exit); no resume, so no follow-up shape. Needs MSWEA_CONFIGURED=true to skip the setup wizard and the 'mcp' package for litellm."
 }

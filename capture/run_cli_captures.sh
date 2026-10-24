@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes pool"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes pool letta_code dsh mcode mimo grok_build"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -718,6 +718,129 @@ cap_pool() {  # Poolside pool CLI in standalone (BYOK) mode; the installer requi
   run "$h" "$h/project" "${env[@]}" -- "$ph/.local/bin/pool" exec --continue -p "$PROMPT2" "${flags[@]}"
   stop_recorder; sanitize_all pool "$v"
 }
+
+cap_letta_code() {  # Letta Code with the local backend: the agent loop runs in-process and calls the provider directly, no Letta Cloud login
+  npm_install @letta-ai/letta-code letta || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@letta-ai/letta-code/package.json" | semver)
+  local h; h=$(fresh_home letta_code); start_recorder letta_code "$h/project"
+  run "$h" "$h/project" -- "$BIN/letta" connect openai-compatible --base-url "$BASE/v1" --api-key dummy
+  run "$h" "$h/project" -- "$BIN/letta" --backend local --new-agent --model openai-compatible/gpt-4o -p "$PROMPT1"
+  run "$h" "$h/project" -- "$BIN/letta" --backend local -p --conversation local-conv-1 "$PROMPT2"
+  stop_recorder; sanitize_all letta_code "$v"
+}
+
+cap_dsh() {  # DeepSeek Harness: headless profile, provider patch with api openai-completions or openai-responses
+  npm_install @deepseek-ai/dsh dsh || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@deepseek-ai/dsh/package.json" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?' | head -1)
+  dsh_pass cli openai-completions "$v"
+  dsh_pass cli-responses openai-responses "$v"
+}
+dsh_pass() {  # dsh_pass <entry> <api> <version>
+  local entry=$1 api=$2 v=$3
+  local raw=dsh; [ "$entry" != cli ] && raw="dsh__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  local env=(DSH_TELEMETRY_DISABLED=1 DSH_PERMISSION_MODE=danger-full-access AIFORENSICS_API_KEY=dummy)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/dsh" headless --help   # initialises ~/.dsh/profiles/headless
+  mkdir -p "$h/.dsh/profiles/headless"
+  cat > "$h/.dsh/profiles/headless/cordis.patch.yml" <<EOF
+- id: llm-pi-ai
+  config:
+    providers:
+      aiforensics:
+        displayName: aiforensics
+        apiKeyEnv: AIFORENSICS_API_KEY
+        api: $api
+        baseURL: $BASE/v1
+        models: [{id: aiforensics, name: aiforensics, contextWindow: 128000, reasoningEfforts: false}]
+- id: agent-default-model
+  config: {provider: aiforensics, model: aiforensics}
+- id: session-telemetry-otel
+  disabled: true
+EOF
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/dsh" headless --json "$PROMPT1"
+  local sid; sid=$(grep -oE 'session-[0-9a-f-]{36}' "$WORK/last_run.log" | head -1)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/dsh" headless --json --session-id "$sid" "$PROMPT2"
+  stop_recorder; sanitize_all dsh "$v" "$entry" "$RAW/$raw"
+}
+
+cap_mcode() {  # MiniMax Code: BYOK provider, no MiniMax login; openai-completions and anthropic-messages formats
+  npm_install @minimax-ai/code mcode || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@minimax-ai/code/package.json" | semver)
+  local h; h=$(fresh_home mcode); start_recorder mcode "$h/project"
+  local env=(MCODE_PROVIDER_API_KEY=dummy)
+  local flags=(--cwd "$h/project" --permission full --max-steps 6 --timeout 150s)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mcode" provider add --name recorder --base-url "$BASE/v1" --api-format openai-completions --model aiforensics --api-key-env MCODE_PROVIDER_API_KEY --use
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mcode" exec "${flags[@]}" "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mcode" exec "${flags[@]}" --continue "$PROMPT2"
+  stop_recorder; sanitize_all mcode "$v"
+  h=$(fresh_home mcode__anthropic); start_recorder mcode__anthropic "$h/project"
+  flags=(--cwd "$h/project" --permission full --max-steps 6 --timeout 150s --model custom_provider:recorder/aiforensics)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mcode" provider add --name recorder --base-url "$BASE" --api-format anthropic-messages --model aiforensics --api-key-env MCODE_PROVIDER_API_KEY --use
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mcode" exec "${flags[@]}" "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mcode" exec "${flags[@]}" --continue "$PROMPT2"
+  stop_recorder; sanitize_all mcode "$v" cli-anthropic "$RAW/mcode__anthropic"
+}
+
+cap_mimo() {  # Xiaomi MiMo Code (OpenCode fork) with a custom openai-compatible provider; the openai provider id switches to a Codex harness
+  npm_install @mimo-ai/cli mimo || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@mimo-ai/cli/package.json" | semver)
+  local h; h=$(fresh_home mimo); start_recorder mimo "$h/project"
+  mkdir -p "$h/.config/mimocode"
+  cat > "$h/.config/mimocode/mimocode.jsonc" <<EOF
+{"autoupdate": false, "share": "disabled", "permission": "allow", "model": "custom/probe-model", "small_model": "custom/probe-model",
+ "provider": {"custom": {"npm": "@ai-sdk/openai-compatible", "name": "Custom", "options": {"baseURL": "$BASE/v1", "apiKey": "dummy"},
+   "models": {"probe-model": {"name": "probe-model", "tool_call": true, "limit": {"context": 128000, "output": 8192}}}}}}
+EOF
+  local env=(XDG_CONFIG_HOME=$h/.config XDG_DATA_HOME=$h/.local/share XDG_CACHE_HOME=$h/.cache XDG_STATE_HOME=$h/.local/state)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mimo" run --model custom/probe-model --dangerously-skip-permissions "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/mimo" run --model custom/probe-model --dangerously-skip-permissions --continue "$PROMPT2"
+  stop_recorder; sanitize_all mimo "$v"
+}
+
+cap_grok_build() {  # xAI Grok Build (official grok CLI); api_backend chat_completions, responses or messages
+  local gh=$WORK/grokbuild-home
+  if [ ! -x "$gh/.grok/bin/grok" ]; then
+    # the installer also symlinks /usr/local/bin/{grok,agent} when writable; it shadows the community grok-cli
+    mkdir -p "$gh" && curl -fsSL https://x.ai/cli/install.sh -o "$WORK/grokbuild-install.sh" && HOME=$gh sh "$WORK/grokbuild-install.sh" >/dev/null 2>&1 \
+      || { log "grok build install failed"; return; }
+  fi
+  local v; v=$("$gh/.grok/bin/grok" --version 2>/dev/null | semver)
+  grok_build_pass cli chat_completions "$v"
+  grok_build_pass cli-responses responses "$v"
+  grok_build_pass cli-messages messages "$v"
+}
+grok_build_pass() {  # grok_build_pass <entry> <api_backend> <version>
+  local entry=$1 backend=$2 v=$3 gh=$WORK/grokbuild-home
+  local raw=grok_build; [ "$entry" != cli ] && raw="grok_build__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  mkdir -p "$h/.grok/bin"; ln -sf "$gh/.grok/bin/grok" "$h/.grok/bin/grok"
+  cat > "$h/.grok/config.toml" <<EOF
+[cli]
+installer = "internal"
+auto_update = false
+[features]
+telemetry = "off"
+[diagnostics]
+error_reporting = false
+[models]
+default = "probe-model"
+[model."probe-model"]
+model = "probe-model"
+base_url = "$BASE/v1"
+env_key = "RECORDER_KEY"
+api_backend = "$backend"
+context_window = 128000
+EOF
+  local flags=(--output-format json --always-approve)
+  run "$h" "$h/project" RECORDER_KEY=dummy -- "$h/.grok/bin/grok" -p "$PROMPT1" "${flags[@]}"
+  local sid; sid=$(grep -oE '"sessionId": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
+  run "$h" "$h/project" RECORDER_KEY=dummy -- "$h/.grok/bin/grok" -p "$PROMPT2" --resume "$sid" "${flags[@]}"
+  stop_recorder; sanitize_all grok_build "$v" "$entry" "$RAW/$raw"
+}
+
+# SWE-agent (github.com/SWE-agent/SWE-agent) is not run by this script: its local deployment hard-codes /root/tools,
+# /root/.swe-agent-env, /root/state.json and copies the repo to /<name>, so it needs a private /root (unshare -Urm with a
+# bind mount). Its fixtures were made from such a run; see AGENTS.md for the command.
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture
   local agent=$1 raw entry

@@ -1,0 +1,22 @@
+{
+  "product": "swe_agent",
+  "display_name": "SWE-agent (Princeton / Stanford, sweagent run)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_swe_agent", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "swe-agent/", "weight": 40},
+    {"id": "stainless_raw_response", "group": "header", "op": "header_present", "name": "x-stainless-raw-response", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a helpful assistant that can interact with a computer to solve tasks"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["bash", "str_replace_editor", "submit"], "weight": 30},
+    {"id": "temperature_zero", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 0.0, "weight": 5},
+    {"id": "no_stream", "group": "habits", "op": "habit_equals", "name": "stream", "value": null, "weight": 0}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["OpenAI/", "QwenCode/", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "1.1.0 (commit 3ea751c, installed from git; the PyPI 'sweagent' is a stale placeholder) through litellm: the one product header is 'User-Agent: swe-agent/<version>' set via extra_headers, next to litellm's x-stainless-raw-response. The system prompt is a single sentence shared in its opening with mini-swe-agent ('You are a helpful assistant that can interact with a computer…'); SWE-agent's ends 'to solve tasks', mini's with a period, and mini denies on this user-agent and on str_replace_editor/submit. Function-calling mode sends bash, str_replace_editor and submit; the thought_action text mode sends no tools and the same prompt, carried by headers plus identity. Anthropic-style cache_control blocks on the last two messages inside a chat-completions body; temperature 0, top_p 1, non-streaming. A text answer triggers 'Your last output did not use any tool calls!' requery turns. Captured under a private /root (unshare -Urm) because the local deployment writes to fixed absolute paths."
+}
