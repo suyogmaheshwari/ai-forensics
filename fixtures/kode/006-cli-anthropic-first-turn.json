@@ -1,0 +1,51 @@
+{
+ "method": "POST",
+ "path": "/v1/messages?beta=true",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "kode/2.2.1 (undefined)",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "0.39.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "anthropic-dangerous-direct-browser-access": "true",
+  "anthropic-version": "2023-06-01",
+  "x-app": "cli",
+  "x-stainless-retry-count": "0",
+  "x-stainless-timeout": "60000"
+ },
+ "body": {
+  "model": "claude-sonnet-4-5",
+  "stream": true,
+  "max_tokens": 4096,
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are Kode, ShareAI-lab's Agent AI CLI for terminal & coding.",
+    "text_len": 63
+   },
+   {
+    "type": "text",
+    "text_prefix": "Extract any file paths that this command reads or modifies. For commands like \"git diff\" and \"cat\", include the paths of files being shown. Use paths verbatim -- don't add any slashes or try to resolv",
+    "text_len": 504
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "kode",
+ "agent_version": "2.2.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

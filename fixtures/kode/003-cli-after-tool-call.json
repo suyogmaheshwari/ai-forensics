@@ -1,0 +1,180 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "accept": "*/*",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors",
+  "user-agent": "undici"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 4096,
+  "temperature": 1,
+  "tool_choice": "auto",
+  "reasoning_effort": "low",
+  "tools": [
+   {
+    "name": "Task",
+    "type": "function",
+    "description_prefix": "Launch a new agent to handle complex, multi-step tasks autonomously. \n\nAvailable agent types and the tools they have access to:\n- general-purpose: General-purpose agent for researching complex questio"
+   },
+   {
+    "name": "AskExpertModel",
+    "type": "function",
+    "description_prefix": "Ask a question to a specific external AI model for expert analysis.\n\nThis tool allows you to consult different AI models for their unique perspectives and expertise.\n\nCRITICAL REQUIREMENT FOR QUESTION"
+   },
+   {
+    "name": "Bash",
+    "type": "function",
+    "description_prefix": "Executes a given bash command in a persistent shell session with optional timeout, ensuring proper handling and security measures.\n\nIMPORTANT: This tool is for terminal operations like git, npm, docke"
+   },
+   {
+    "name": "TaskOutput",
+    "type": "function",
+    "description_prefix": "- Retrieves output from a running or completed task (background shell, agent, or remote session)\n- Takes a task_id parameter identifying the task\n- Returns the task output along with status informatio"
+   },
+   {
+    "name": "KillShell",
+    "type": "function",
+    "description_prefix": "\n- Kills a running background bash shell by its ID\n- Takes a shell_id parameter identifying the shell to kill\n- Returns a success or failure status \n- Use this tool when you need to terminate a long-r"
+   },
+   {
+    "name": "Glob",
+    "type": "function",
+    "description_prefix": "- Fast file pattern matching tool that works with any codebase size\n- Supports glob patterns like \"**/*.js\" or \"src/**/*.ts\"\n- Returns matching file paths sorted by modification time\n- Use this tool w"
+   },
+   {
+    "name": "Grep",
+    "type": "function",
+    "description_prefix": "A powerful search tool built on ripgrep\n\n  Usage:\n  - ALWAYS use Grep for search tasks. NEVER invoke `grep` or `rg` as a Bash command. The Grep tool has been optimized for correct permissions and acce"
+   },
+   {
+    "name": "Read",
+    "type": "function",
+    "description_prefix": "Reads a file from the local filesystem. You can access any file directly by using this tool.\nAssume this tool is able to read all files on the machine. If the User provides a path to a file assume tha"
+   },
+   {
+    "name": "Edit",
+    "type": "function",
+    "description_prefix": "Performs exact string replacements in files. \n\nUsage:\n- You must use your `Read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the "
+   },
+   {
+    "name": "Write",
+    "type": "function",
+    "description_prefix": "Writes a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool first to rea"
+   },
+   {
+    "name": "NotebookEdit",
+    "type": "function",
+    "description_prefix": "Completely replaces the contents of a specific cell in a Jupyter notebook (.ipynb file) with new source. Jupyter notebooks are interactive documents that combine code, text, and visualizations, common"
+   },
+   {
+    "name": "TodoWrite",
+    "type": "function",
+    "description_prefix": "Use this tool to create and manage a structured task list for your current coding session. This helps you track progress, organize complex tasks, and demonstrate thoroughness to the user.\nIt also help"
+   },
+   {
+    "name": "WebSearch",
+    "type": "function",
+    "description_prefix": "- Allows the assistant to search the web and use the results to inform responses\n- Provides up-to-date information for current events and recent data\n- Returns search result information formatted as s"
+   },
+   {
+    "name": "WebFetch",
+    "type": "function",
+    "description_prefix": "- Fetches content from a specified URL and processes it using an AI model\n- Takes a URL and a prompt as input\n- Fetches the URL content, converts HTML to markdown\n- Processes the content with the prom"
+   },
+   {
+    "name": "AskUserQuestion",
+    "type": "function",
+    "description_prefix": "Use this tool when you need to ask the user questions during execution. This allows you to:\n1. Gather user preferences or requirements\n2. Clarify ambiguous instructions\n3. Get decisions on implementat"
+   },
+   {
+    "name": "EnterPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool proactively when you're about to start a non-trivial implementation task. Getting user sign-off on your approach before writing code prevents wasted effort and ensures alignment. This to"
+   },
+   {
+    "name": "ExitPlanMode",
+    "type": "function",
+    "description_prefix": "Use this tool when you are in plan mode and have finished writing your plan to the plan file and are ready for user approval.\n\n## How This Tool Works\n- You should have already written your plan to the"
+   },
+   {
+    "name": "SlashCommand",
+    "type": "function",
+    "description_prefix": "Execute a slash command within the main conversation\n\nHow slash commands work:\nWhen you use this tool or when a user types a slash command, you will see <command-message>{name} is running…</command-me"
+   },
+   {
+    "name": "Skill",
+    "type": "function",
+    "description_prefix": "Execute a skill within the main conversation\n\n<skills_instructions>\nWhen users ask you to perform tasks, check if any of the available skills below can help complete the task more effectively. Skills "
+   },
+   {
+    "name": "ListMcpResourcesTool",
+    "type": "function",
+    "description_prefix": "List available resources from configured MCP servers.\nEach returned resource will include all standard MCP resource fields plus a 'server' field \nindicating which server the resource belongs to.\n\nPara"
+   },
+   {
+    "name": "ReadMcpResourceTool",
+    "type": "function",
+    "description_prefix": "Reads a specific resource from an MCP server, identified by server name and resource URI.\n\nParameters:\n- server (required): The name of the MCP server from which to read the resource\n- uri (required):"
+   },
+   {
+    "name": "mcp",
+    "type": "function",
+    "description_prefix": ""
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Kode, ShareAI-lab's Agent AI CLI for terminal & coding.\nYou are an interactive CLI tool that helps users with software engineering tasks. Use the instructions below and the tools available to ",
+      "text_len": 12224
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "Bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "kode",
+ "agent_version": "2.2.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

@@ -1,0 +1,169 @@
+{
+ "method": "POST",
+ "path": "/v1/messages?beta=true",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "kode/2.2.1 (undefined)",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "0.39.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "anthropic-dangerous-direct-browser-access": "true",
+  "anthropic-version": "2023-06-01",
+  "x-app": "cli",
+  "x-stainless-retry-count": "0",
+  "x-stainless-timeout": "60000"
+ },
+ "body": {
+  "model": "claude-sonnet-4-5",
+  "stream": true,
+  "max_tokens": 4096,
+  "tool_choice": {
+   "type": "auto"
+  },
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "You are Kode, ShareAI-lab's Agent AI CLI for terminal & coding.",
+    "text_len": 63
+   },
+   {
+    "type": "text",
+    "text_prefix": "\nYou are an interactive CLI tool that helps users with software engineering tasks. Use the instructions below and the tools available to you to assist the user.\n\nIMPORTANT: Refuse to write code or exp",
+    "text_len": 12172,
+    "cache_control": {
+     "type": "ephemeral"
+    }
+   }
+  ],
+  "tools": [
+   {
+    "name": "Task",
+    "type": null,
+    "description_prefix": "Tool: Task"
+   },
+   {
+    "name": "AskExpertModel",
+    "type": null,
+    "description_prefix": "Tool: AskExpertModel"
+   },
+   {
+    "name": "Bash",
+    "type": null,
+    "description_prefix": "Run shell command"
+   },
+   {
+    "name": "TaskOutput",
+    "type": null,
+    "description_prefix": "Tool: TaskOutput"
+   },
+   {
+    "name": "KillShell",
+    "type": null,
+    "description_prefix": "Tool: KillShell"
+   },
+   {
+    "name": "Glob",
+    "type": null,
+    "description_prefix": "Tool: Glob"
+   },
+   {
+    "name": "Grep",
+    "type": null,
+    "description_prefix": "Tool: Grep"
+   },
+   {
+    "name": "Read",
+    "type": null,
+    "description_prefix": "Tool: Read"
+   },
+   {
+    "name": "Edit",
+    "type": null,
+    "description_prefix": "Tool: Edit"
+   },
+   {
+    "name": "Write",
+    "type": null,
+    "description_prefix": "Tool: Write"
+   },
+   {
+    "name": "NotebookEdit",
+    "type": null,
+    "description_prefix": "Tool: NotebookEdit"
+   },
+   {
+    "name": "TodoWrite",
+    "type": null,
+    "description_prefix": "Tool: TodoWrite"
+   },
+   {
+    "name": "WebSearch",
+    "type": null,
+    "description_prefix": "Tool: WebSearch"
+   },
+   {
+    "name": "WebFetch",
+    "type": null,
+    "description_prefix": "Tool: WebFetch"
+   },
+   {
+    "name": "AskUserQuestion",
+    "type": null,
+    "description_prefix": "Tool: AskUserQuestion"
+   },
+   {
+    "name": "EnterPlanMode",
+    "type": null,
+    "description_prefix": "Tool: EnterPlanMode"
+   },
+   {
+    "name": "ExitPlanMode",
+    "type": null,
+    "description_prefix": "Tool: ExitPlanMode"
+   },
+   {
+    "name": "SlashCommand",
+    "type": null,
+    "description_prefix": "Tool: SlashCommand"
+   },
+   {
+    "name": "Skill",
+    "type": null,
+    "description_prefix": "Tool: Skill"
+   },
+   {
+    "name": "ListMcpResourcesTool",
+    "type": null,
+    "description_prefix": "Tool: ListMcpResourcesTool"
+   },
+   {
+    "name": "ReadMcpResourceTool",
+    "type": null,
+    "description_prefix": "Tool: ReadMcpResourceTool"
+   },
+   {
+    "name": "mcp",
+    "type": null,
+    "description_prefix": "Tool: mcp"
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "kode",
+ "agent_version": "2.2.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

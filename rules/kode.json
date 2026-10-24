@@ -1,0 +1,22 @@
+{
+  "product": "kode",
+  "display_name": "Kode (shareAI-lab, @shareai-lab/kode)",
+  "family": "any",
+  "threshold": 50,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_kode", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "kode/", "weight": 40},
+    {"id": "ua_undici", "group": "header", "op": "header_equals", "name": "user-agent", "value": "undici", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Kode, ShareAI-lab's Agent AI CLI"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Task", "AskExpertModel", "Bash", "TaskOutput", "KillShell", "Glob", "Grep", "Read", "Edit", "Write", "NotebookEdit", "TodoWrite", "WebSearch", "WebFetch", "AskUserQuestion", "EnterPlanMode", "ExitPlanMode", "SlashCommand", "Skill", "ListMcpResourcesTool", "ReadMcpResourceTool", "mcp"], "weight": 30},
+    {"id": "temperature_one", "group": "habits", "op": "habit_equals", "name": "temperature", "value": 1, "weight": 5},
+    {"id": "reasoning_effort", "group": "habits", "op": "habit_present", "value": ["reasoning_effort", "stream_options"], "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "Anthropic/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "2.2.1 (anon-kode lineage; no login): on the openai route the bare undici fetch user-agent, so identity ('You are Kode, ShareAI-lab's Agent AI CLI for terminal & coding') and the 22 Claude Code-style tools (plus AskExpertModel, KillShell, SlashCommand) carry the verdict — the threshold is 50 so the tool-less 'extract file paths' side request (same prompt opening) is still identified; on the anthropic route the SDK sends 'user-agent: kode/<version> (undefined)', x-app: cli and anthropic-dangerous-direct-browser-access like Claude Code (whose rule needs the claude-cli user-agent and identity). temperature 1 and reasoning_effort low on chat. Identical on the first turn, after the tool call and on the --resume follow-up; tool descriptions are long on the openai route and stubs on the anthropic route."
+}

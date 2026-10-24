@@ -1,0 +1,45 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "accept": "*/*",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors",
+  "user-agent": "undici"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 4096,
+  "temperature": 1,
+  "reasoning_effort": "low",
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Kode, ShareAI-lab's Agent AI CLI for terminal & coding.Extract any file paths that this command reads or modifies. For commands like \"git diff\" and \"cat\", include the paths of files being show",
+      "text_len": 567
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "text",
+ "agent": "kode",
+ "agent_version": "2.2.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
