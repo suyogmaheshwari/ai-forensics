@@ -45,6 +45,13 @@ validate the configured model first (Forge, Junie).
 | mini-swe-agent | `pip install mini-swe-agent mcp` | `-c mini.yaml -c model.model_kwargs.api_base=…` (LiteLLM), `MSWEA_CONFIGURED=true` skips the wizard | `mini -t "…" -y --exit-immediately` (one-shot, no resume) | `/v1/chat/completions` (LiteLLM; one `bash` tool, no stream) | rule (2.4.6) |
 | Trae Agent (open source) | `git clone bytedance/trae-agent && uv sync --extra evaluation` | `model_providers.x.base_url` in `trae_config.yaml` (`--model-base-url`) | `trae-cli run "…" --provider … --model … --config-file …`; follow-up only via `trae-cli interactive` fed on stdin | `/v1/responses` (openai), `/v1/chat/completions` (openrouter), `/v1/messages` (anthropic); never streams | rule (e839e55, all three) |
 | nanobot | `pip install nanobot-ai` | `providers.custom.apiBase` + `agents.defaults.provider: custom` in `~/.nanobot/config.json` (after `nanobot onboard`) | `nanobot agent -m "…" -s <session>`; follow-up: same `-s` | `/v1/chat/completions` | rule (0.3.5) |
+| Code Puppy | `pip install code-puppy` | `~/.code_puppy/extra_models.json` (`custom_openai`, `custom_openai_responses`, `custom_endpoint.url`) | headless flag unverified | chat or responses | todo |
+| Nanocoder (Nano Collective) | `npm i -g @nanocollective/nanocoder` | `agents.config.json` providers (`NANOCODER_PROVIDERS`) | `nanocoder run --provider x --mode yolo "…"` | `/v1/chat/completions` | todo |
+| mycoder (drivecore) | `npm i -g mycoder` | `mycoder.config.js` `provider`, `baseUrl` | `headless: true`, `--userPrompt false` | chat or messages | todo |
+| RA.Aid | `pip install ra-aid` | `OPENAI_API_BASE` + `--provider openai-compatible` | `ra-aid -m "…" --cowboy-mode` | `/v1/chat/completions` (LangChain) | todo (last release 2025-05) |
+| Octofriend | `npm i -g octofriend` | `~/.config/octofriend/octofriend.json5` `baseUrl`, `apiEnvVar` | interactive only (no headless flag) | chat or messages | todo (needs a pty) |
+| Roo CLI (RooCodeInc, archived 2026-05) | `apps/cli/install.sh` from the Roo-Code repo | `--provider anthropic\|openai-native\|openrouter\|gemini\|vercel-ai-gateway`; no base-URL option documented | `roo --print --output-format json --oneshot` | chat or messages | todo (likely blocked: no endpoint override) |
+| Mentat, gpt-engineer, MetaGPT, smol-developer | pip (stale releases 2023–2025) | `OPENAI_API_BASE` / `llm.base_url` | `gpte`, `metagpt "…"` | `/v1/chat/completions` | todo (low value, unverified today) |
 | Shell-GPT | `pip install shell-gpt click` | `API_BASE_URL` in `~/.config/shell_gpt/.sgptrc` (`OPENAI_USE_FUNCTIONS=true` for tools) | `sgpt --no-cache "…"`, `-s`/`-d`/`-c` roles; follow-up `--chat <id>` | `/v1/chat/completions` | rule (1.5.1) |
 | aichat (sigoden) | GitHub release binary (npm/PyPI `aichat` are unrelated) | `clients[].api_base` in `~/.config/aichat/config.yaml` (`openai-compatible`, `claude` types) | `aichat "…"`, `-e`, `-s <session>`, `-r %functions%` | `/v1/chat/completions` or `/v1/messages` | captured, **no signature**: plain chat sends no user-agent, no system prompt and a body of `model`/`messages`/`stream` only — indistinguishable from a minimal client; only `-e` carries a hard-coded prompt and functions are user-defined (llm-functions). Not rule-able; a gateway sees a bare request |
 | veCLI (ByteDance Volcengine) | `npm i -g @volcengine/vecli` | `OPENAI_BASE_URL`/`ARK_BASE_URL` with `selectedType` `openai`/`ark-api-key` in `~/.ve/settings.json` | `vecli --yolo -p "…"` (no headless resume; follow-up only in the TUI) | `/v1/chat/completions` (Gemini CLI fork; `/v1/responses` with context cache, unfingerprintable) | rule (0.1.31, openai and ark) |
@@ -83,6 +90,17 @@ allow-listed by credential at a gateway, which is a policy decision rather than 
 | Warp Oz CLI | `WARP_API_KEY`, no BYO model |
 | Devin CLI | login; custom endpoints only in air-gapped builds |
 | Factory Droid CLI | `FACTORY_API_KEY` mandatory even with BYOK `customModels` |
+| Baidu Comate Zulu CLI (`@comate/zulu`) | talks only to comate.baidu.com; licence token mandatory |
+| IBM Bob Shell (`@ibm/bob`) | `BOB_API_KEY`/SSO, IBM-managed models, no endpoint setting |
+| StepFun Step Code (`step`, Pi fork) | only the Step provider (`STEP_API_KEY`, OAuth); no custom endpoint documented |
+| Command Code (`command-code`) | `cmd login`; no BYOK found |
+| JD JoyCode CLI, Huawei CodeArts Agent CLI | account login, hosted; no BYOK found |
+| Groq Code CLI (`groq-code-cli`) | Groq key only, no base URL, no headless flag |
+| Google Jules CLI (`@google/jules`), v0 CLI, Codebuff, Standard Code, CodeRabbit CLI, Graphite, Potpie, Emergent, Firebase Studio | hosted agents; model calls from vendor servers |
+| Google Antigravity | curated model list, no BYOK |
+| Blackbox CLI | Blackbox account key; wraps Claude Code / Codex / Goose / OpenCode / Qwen Code (identify the wrapped agent) |
+| Zencoder Zen CLI | installed by Zenflow; BYOM `baseUrl` applies to the IDE/Zenflow, CLI unverified |
+| Verdent, Dyad, Bolt.diy, Theia Coder, Twinny, CodeGPT, Kodu, CodeGeeX, Refact (IDE plugin + self-hosted server), Tabby | desktop, IDE or web only |
 | Qoder CLI (`@qoder-ai/qodercli`, Gemini CLI fork) | mandatory Qoder login (OAuth, PAT, device token, all verified server-side) before any model request; custom `providers[].baseUrl` is a supported setting but only loads after authentication, so headless capture needs a real credential |
 | Cody CLI | talks only to a Sourcegraph instance |
 | Plandex | custom providers need the self-hosted server |
