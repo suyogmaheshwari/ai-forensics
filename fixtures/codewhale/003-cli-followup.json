@@ -1,0 +1,138 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "content-type": "application/json",
+  "accept": "*/*",
+  "user-agent": "Mozilla/5.0 (compatible; codewhale/0.10.1; +https://github.com/codewhale-hq/CodeWhale)"
+ },
+ "body": {
+  "model": "probe-model",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 64000,
+  "tool_choice": "auto",
+  "tools": [
+   {
+    "name": "agent",
+    "type": "function",
+    "description_prefix": "Start with action=start and prompt; returns an agent_id immediately. Read-only roles need no extra fields. Healthy children continue after an ordinary parent response; detached=true also opts out of p"
+   },
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Execute a shell command in the workspace and return stdout and stderr. Output keeps the last 2000 lines or 50KB. An optional timeout is the seconds to wait in the foreground (default 120 seconds); a c"
+   },
+   {
+    "name": "create_goal",
+    "type": "function",
+    "description_prefix": "Create the session's one persistent goal: a completion objective Codewhale keeps working toward across turns until it is verified complete, blocked, or the user stops it. A goal is for a durable objec"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Edit one file with targeted text replacements. Every edits[].oldText must identify a unique, non-overlapping region of the original file. Merge nearby or overlapping changes into one edit."
+   },
+   {
+    "name": "get_goal",
+    "type": "function",
+    "description_prefix": "Inspect the current runtime goal state, including objective, status, token budget, elapsed time, evidence, and blocker."
+   },
+   {
+    "name": "load_skill",
+    "type": "function",
+    "description_prefix": "Load a named skill's SKILL.md body and companion file list into this turn. Use when the user names a skill, or when an entry in the system prompt's `## Skills` index matches the task -- load it before"
+   },
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read a file. A text file comes back whole in one call when it fits this call's output budget — 100000 bytes by default, raisable to 500000 with max_bytes. There is no line cap. Use offset and limit fo"
+   },
+   {
+    "name": "todo_write",
+    "type": "function",
+    "description_prefix": "Replace the To-do list the user watches. For any task with three or more steps or more than one file, write the list before you start, keep exactly one item in_progress, and mark items done as you fin"
+   },
+   {
+    "name": "update_goal",
+    "type": "function",
+    "description_prefix": "Update the runtime goal completion gate by calling this tool; a prose status in your answer does not change the goal or stop continuation. Critical verification may seal one immutable completion contr"
+   },
+   {
+    "name": "workflow",
+    "type": "function",
+    "description_prefix": "Run named steps through the existing sub-agents with a structured plan, ordered phases, shared budgets and result handoffs. Fleet configures those same sub-agents and roles. A workflow is for broad or"
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Write content to a file. Creates the file if it does not exist, overwrites it if it does, and creates parent directories automatically."
+   },
+   {
+    "name": "execute_tools",
+    "type": "function",
+    "description_prefix": "Run a JavaScript program that composes tool calls with `await tools.call(name, args)` and returns a bounded JSON result. Prefer it whenever you would make several dependent or repetitive calls, MCP an"
+   },
+   {
+    "name": "tool_search",
+    "type": "function",
+    "description_prefix": "Search deferred tool definitions and return matching tool references."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "## Codewhale\n\nYou are Codewhale, an agent working alongside the user to carry out their\nrequests — with real tools and a real workspace. You observe, you act, you\nverify.\n\nThe A is already yours. Your",
+      "text_len": 8219
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "followup",
+ "recorder_reply": "tool-call",
+ "agent": "codewhale",
+ "agent_version": "0.10.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

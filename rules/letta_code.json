@@ -1,0 +1,23 @@
+{
+  "product": "letta_code",
+  "display_name": "Letta Code (@letta-ai/letta-code, local backend)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_pi_ai", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "pi (", "weight": 20},
+    {"id": "stainless_js", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "js", "weight": 5},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a Letta Code agent"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Bash", "Monitor", "WatchPR", "Wake", "EnterWorktree", "ExitWorktree", "SetWorkingDirectory", "Edit", "TaskStop", "Read", "Skill", "Memory", "CodeMode", "Workflow", "Agent", "SendAgentMessage", "TaskCreate", "TaskGet", "TaskList", "TaskUpdate", "Write"], "weight": 30},
+    {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5},
+    {"id": "max_completion_tokens", "group": "habits", "op": "habit_present", "value": "max_completion_tokens", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "Anthropic/"]},
+    {"op": "identity_prefix", "value": ["You are an expert coding assistant operating inside pi"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.34.23 with --backend local (the default Letta Cloud backend makes the model calls server-side): the pi-ai library's user-agent 'pi (<os>; <arch>)', not a product name, so the identity ('You are a Letta Code agent — a new generation of agent built for experiential learning') and the 21-tool set (Memory, CodeMode, SendAgentMessage, WatchPR, Wake, EnterWorktree… alongside Claude Code-style Bash/Edit/Read/Write) carry the verdict; store false and max_completion_tokens 32000 on every request. Each user turn carries four <system-reminder> text parts (client version, agent and conversation ids, MCP servers, permission mode) before the prompt. Identical on the first turn, after the tool call and on the --conversation follow-up; GET /v1/models precedes each run."
+}

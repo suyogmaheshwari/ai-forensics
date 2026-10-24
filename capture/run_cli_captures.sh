@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes pool letta_code dsh mcode mimo grok_build"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes pool letta_code dsh mcode mimo grok_build codewhale kode"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -723,6 +723,7 @@ cap_letta_code() {  # Letta Code with the local backend: the agent loop runs in-
   npm_install @letta-ai/letta-code letta || return
   local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@letta-ai/letta-code/package.json" | semver)
   local h; h=$(fresh_home letta_code); start_recorder letta_code "$h/project"
+  run "$h" "$h/project" -- "$BIN/letta" backend local
   run "$h" "$h/project" -- "$BIN/letta" connect openai-compatible --base-url "$BASE/v1" --api-key dummy
   run "$h" "$h/project" -- "$BIN/letta" --backend local --new-agent --model openai-compatible/gpt-4o -p "$PROMPT1"
   run "$h" "$h/project" -- "$BIN/letta" --backend local -p --conversation local-conv-1 "$PROMPT2"
@@ -841,6 +842,67 @@ EOF
 # SWE-agent (github.com/SWE-agent/SWE-agent) is not run by this script: its local deployment hard-codes /root/tools,
 # /root/.swe-agent-env, /root/state.json and copies the repo to /<name>, so it needs a private /root (unshare -Urm with a
 # bind mount). Its fixtures were made from such a run; see AGENTS.md for the command.
+
+cap_codewhale() {  # Codewhale (ex DeepSeek-TUI); the custom-provider wire setting is ignored in 0.10.1, the anthropic route comes from the first-party provider
+  npm_install codewhale codewhale || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/codewhale/package.json" | semver)
+  local h; h=$(fresh_home codewhale); start_recorder codewhale "$h/project"
+  mkdir -p "$h/.codewhale"
+  cat > "$h/.codewhale/config.toml" <<EOF
+provider = "recorder"
+default_text_model = "probe-model"
+telemetry = false
+[providers.recorder]
+kind = "openai-compatible"
+base_url = "$BASE/v1"
+api_key_env = "RECORDER_KEY"
+model = "probe-model"
+EOF
+  local env=(RECORDER_KEY=dummy CODEWHALE_TELEMETRY=0)
+  local flags=(--auto --output-format stream-json)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/codewhale" exec "${flags[@]}" "$PROMPT1"
+  local sid; sid=$(grep -oE '"saved_session_id": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/codewhale" exec "${flags[@]}" --resume "$sid" "$PROMPT2"
+  stop_recorder; sanitize_all codewhale "$v"
+  h=$(fresh_home codewhale__anthropic); start_recorder codewhale__anthropic "$h/project"
+  mkdir -p "$h/.codewhale"
+  cat > "$h/.codewhale/config.toml" <<EOF
+provider = "anthropic"
+default_text_model = "claude-sonnet-4-5"
+telemetry = false
+[providers.anthropic]
+base_url = "$BASE"
+EOF
+  env=(ANTHROPIC_API_KEY=dummy ANTHROPIC_BASE_URL=$BASE CODEWHALE_TELEMETRY=0)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/codewhale" exec "${flags[@]}" "$PROMPT1"
+  sid=$(grep -oE '"saved_session_id": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/codewhale" exec "${flags[@]}" --resume "$sid" "$PROMPT2"
+  stop_recorder; sanitize_all codewhale "$v" cli-anthropic "$RAW/codewhale__anthropic"
+}
+
+cap_kode() {  # Kode (shareAI-lab): model profiles in ~/.kode.json; openai and anthropic providers
+  npm_install @shareai-lab/kode kode || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@shareai-lab/kode/package.json" | semver)
+  kode_pass cli openai "$BASE/v1" probe-model "$v"
+  kode_pass cli-anthropic anthropic "$BASE" claude-sonnet-4-5 "$v"
+}
+kode_pass() {  # kode_pass <entry> <provider> <base-url> <model> <version>
+  local entry=$1 provider=$2 url=$3 model=$4 v=$5
+  local raw=kode; [ "$entry" != cli ] && raw="kode__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  cat > "$h/.kode.json" <<EOF
+{"hasCompletedOnboarding": true, "hasAcknowledgedCostThreshold": true, "theme": "dark",
+ "modelProfiles": [{"name": "recorder", "provider": "$provider", "modelName": "$model", "baseURL": "$url", "apiKey": "dummy",
+                    "maxTokens": 4096, "contextLength": 128000, "isActive": true, "createdAt": 1760000000000}],
+ "modelPointers": {"main": "recorder", "task": "recorder", "compact": "recorder", "quick": "recorder"}}
+EOF
+  local flags=(--dangerously-skip-permissions -p --verbose --output-format stream-json)
+  run "$h" "$h/project" -- "$BIN/kode" "${flags[@]}" "$PROMPT1"
+  local sid; sid=$(grep -oE '"session_id": *"[^"]+"' "$WORK/last_run.log" | head -1 | sed 's/.*: *"//; s/"//')
+  [ -z "$sid" ] && sid=$(grep -oE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' "$WORK/last_run.log" | head -1)
+  run "$h" "$h/project" -- "$BIN/kode" "${flags[@]}" --resume "$sid" "$PROMPT2"
+  stop_recorder; sanitize_all kode "$v" "$entry" "$RAW/$raw"
+}
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture
   local agent=$1 raw entry

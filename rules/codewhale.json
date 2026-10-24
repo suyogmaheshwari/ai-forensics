@@ -1,0 +1,22 @@
+{
+  "product": "codewhale",
+  "display_name": "Codewhale (ex DeepSeek-TUI, codewhale)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_codewhale", "group": "header", "op": "header_contains", "name": "user-agent", "value": "codewhale/", "weight": 40},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["## Codewhale"], "weight": 20},
+    {"id": "identity_clause", "group": "identity", "op": "identity_contains", "value": ["You are Codewhale, an agent working alongside the user"], "weight": 10},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["agent", "bash", "create_goal", "edit", "get_goal", "load_skill", "read", "todo_write", "update_goal", "workflow", "write", "execute_tools", "tool_search"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "tool_choice_auto", "group": "habits", "op": "habit_present", "value": "tool_choice", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "OpenAI/", "Anthropic/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.10.1 (Rust binary fetched by the npm postinstall; no login): user-agent 'Mozilla/5.0 (compatible; codewhale/<version>; +https://github.com/codewhale-hq/CodeWhale)' on every route. The custom-provider 'wire' setting is ignored in this version (always chat completions); the Anthropic messages route comes from the first-party anthropic provider with a base_url override and sends no x-api-key over plain http, the Responses route from the first-party concentrate provider. The system prompt opens '## Codewhale' and splits into four system blocks at the <!-- cw:ctx:… --> markers on the messages route; 13 tools (execute_tools, tool_search, load_skill, create_goal…) identical on the first turn, after the tool call and on the --resume follow-up; every user message ends with a <turn_meta> block."
+}

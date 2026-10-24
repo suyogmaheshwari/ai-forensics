@@ -1,0 +1,139 @@
+{
+ "method": "POST",
+ "path": "/v1/messages",
+ "headers": {
+  "content-type": "application/json",
+  "accept": "text/event-stream",
+  "anthropic-version": "2023-06-01",
+  "user-agent": "Mozilla/5.0 (compatible; codewhale/0.10.1; +https://github.com/codewhale-hq/CodeWhale)"
+ },
+ "body": {
+  "model": "claude-sonnet-4-5",
+  "stream": true,
+  "max_tokens": 64000,
+  "tool_choice": {
+   "type": "auto"
+  },
+  "system": [
+   {
+    "type": "text",
+    "text_prefix": "## Codewhale\n\nYou are Codewhale, an agent working alongside the user to carry out their\nrequests — with real tools and a real workspace. You observe, you act, you\nverify.\n\nThe A is already yours. Your",
+    "text_len": 6513
+   },
+   {
+    "type": "text",
+    "text_prefix": "<!-- cw:ctx:workspace -->\n## Environment\n\n- lang: en\n- platform: linux\n- shell: /bin/sh",
+    "text_len": 87
+   },
+   {
+    "type": "text",
+    "text_prefix": "<!-- cw:ctx:permissions -->\n<instructions source=\"runtime:mcp-registry-first\">\n## MCP Registry\n\nThe Registry installs and connects a local MCP server when this session lacks a capability. It is a fall",
+    "text_len": 1541
+   },
+   {
+    "type": "text",
+    "text_prefix": "<!-- cw:ctx:route -->\nverbosity: concise\ntranslation: off",
+    "text_len": 57
+   }
+  ],
+  "tools": [
+   {
+    "name": "agent",
+    "type": null,
+    "description_prefix": "Start with action=start and prompt; returns an agent_id immediately. Read-only roles need no extra fields. Healthy children continue after an ordinary parent response; detached=true also opts out of p"
+   },
+   {
+    "name": "bash",
+    "type": null,
+    "description_prefix": "Execute a shell command in the workspace and return stdout and stderr. Output keeps the last 2000 lines or 50KB. An optional timeout is the seconds to wait in the foreground (default 120 seconds); a c"
+   },
+   {
+    "name": "create_goal",
+    "type": null,
+    "description_prefix": "Create the session's one persistent goal: a completion objective Codewhale keeps working toward across turns until it is verified complete, blocked, or the user stops it. A goal is for a durable objec"
+   },
+   {
+    "name": "edit",
+    "type": null,
+    "description_prefix": "Edit one file with targeted text replacements. Every edits[].oldText must identify a unique, non-overlapping region of the original file. Merge nearby or overlapping changes into one edit."
+   },
+   {
+    "name": "get_goal",
+    "type": null,
+    "description_prefix": "Inspect the current runtime goal state, including objective, status, token budget, elapsed time, evidence, and blocker."
+   },
+   {
+    "name": "load_skill",
+    "type": null,
+    "description_prefix": "Load a named skill's SKILL.md body and companion file list into this turn. Use when the user names a skill, or when an entry in the system prompt's `## Skills` index matches the task -- load it before"
+   },
+   {
+    "name": "read",
+    "type": null,
+    "description_prefix": "Read a file. A text file comes back whole in one call when it fits this call's output budget — 100000 bytes by default, raisable to 500000 with max_bytes. There is no line cap. Use offset and limit fo"
+   },
+   {
+    "name": "todo_write",
+    "type": null,
+    "description_prefix": "Replace the To-do list the user watches. For any task with three or more steps or more than one file, write the list before you start, keep exactly one item in_progress, and mark items done as you fin"
+   },
+   {
+    "name": "update_goal",
+    "type": null,
+    "description_prefix": "Update the runtime goal completion gate by calling this tool; a prose status in your answer does not change the goal or stop continuation. Critical verification may seal one immutable completion contr"
+   },
+   {
+    "name": "workflow",
+    "type": null,
+    "description_prefix": "Run named steps through the existing sub-agents with a structured plan, ordered phases, shared budgets and result handoffs. Fleet configures those same sub-agents and roles. A workflow is for broad or"
+   },
+   {
+    "name": "write",
+    "type": null,
+    "description_prefix": "Write content to a file. Creates the file if it does not exist, overwrites it if it does, and creates parent directories automatically."
+   },
+   {
+    "name": "execute_tools",
+    "type": null,
+    "description_prefix": "Run a JavaScript program that composes tool calls with `await tools.call(name, args)` and returns a bounded JSON result. Prefer it whenever you would make several dependent or repetitive calls, MCP an"
+   },
+   {
+    "name": "tool_search",
+    "type": null,
+    "description_prefix": "Search deferred tool definitions and return matching tool references."
+   }
+  ],
+  "messages": [
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text",
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_use"
+    ],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "tool_result"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "codewhale",
+ "agent_version": "0.10.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

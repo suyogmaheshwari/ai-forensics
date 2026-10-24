@@ -1,0 +1,161 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "pi (linux 6.18.44-fc-v153; x64)",
+  "x-stainless-arch": "x64",
+  "x-stainless-lang": "js",
+  "x-stainless-os": "Linux",
+  "x-stainless-package-version": "7.19.0",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v26.3.0",
+  "x-stainless-timeout": "300"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_completion_tokens": 32000,
+  "store": false,
+  "tools": [
+   {
+    "name": "Bash",
+    "type": "function",
+    "description_prefix": "# Bash\n\nExecutes a given shell command from the conversation's current working directory with optional timeout, ensuring proper handling and security measures.\n\nIMPORTANT: This tool is for terminal op"
+   },
+   {
+    "name": "Monitor",
+    "type": "function",
+    "description_prefix": "Start a background monitor that streams events from a long-running script. Each stdout line is an event — you keep working and notifications arrive in the chat. Events arrive on their own schedule and"
+   },
+   {
+    "name": "WatchPR",
+    "type": "function",
+    "description_prefix": "Watch one open github.com pull request until it merges, closes, is stopped with TaskStop, or the session ends.\n\nIn managed Cloud sandboxes, WatchPR also stops after a hard 1-hour limit and sends a tim"
+   },
+   {
+    "name": "Wake",
+    "type": "function",
+    "description_prefix": "Schedule a future turn for the current conversation. Wake is the durable, time-based counterpart to Monitor: use Monitor when ongoing work can emit an event, and Wake when you need to act at a future "
+   },
+   {
+    "name": "EnterWorktree",
+    "type": "function",
+    "description_prefix": "# EnterWorktree\n\nCreate a fresh isolated git worktree for this conversation, or switch this conversation into an existing one.\n\nUse this tool when starting a new feature, bug fix, refactor, or other f"
+   },
+   {
+    "name": "ExitWorktree",
+    "type": "function",
+    "description_prefix": "# ExitWorktree\n\nLeave the git worktree this conversation is working in and return to the primary checkout, optionally deleting the worktree and its branch.\n\nUse this tool only when the user asks to ex"
+   },
+   {
+    "name": "SetWorkingDirectory",
+    "type": "function",
+    "description_prefix": "Change this conversation's working directory to an existing folder.\n\nUse this when the task moves to a different repository or directory and later relative file operations should use that location. Re"
+   },
+   {
+    "name": "Edit",
+    "type": "function",
+    "description_prefix": "# Edit\n\nPerforms exact string replacements in files. \n\nUsage:\n- You must use your `Read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without read"
+   },
+   {
+    "name": "TaskStop",
+    "type": "function",
+    "description_prefix": "# TaskStop\n\n- Stops a running background task or monitor by its ID\n- Required: `task_id` (the task to terminate; the legacy `shell_id` alias has been removed — bash background shells share the same ID"
+   },
+   {
+    "name": "Read",
+    "type": "function",
+    "description_prefix": "# Read\n\nReads a file from the local filesystem. You can access any file directly by using this tool.\nAssume this tool is able to read all files on the machine. If the User provides a path to a file as"
+   },
+   {
+    "name": "Skill",
+    "type": "function",
+    "description_prefix": "# Skill\n\nExecute a skill within the main conversation\n\nWhen users ask you to perform tasks, check if any of the available skills match. Skills provide specialized capabilities and domain knowledge.\n\nW"
+   },
+   {
+    "name": "Memory",
+    "type": "function",
+    "description_prefix": "Read deferred memory from your memory filesystem.\n\nYour root memory files are already in your system prompt. Everything else is deferred: the <deferred-memory> section lists directories you have not o"
+   },
+   {
+    "name": "CodeMode",
+    "type": "function",
+    "description_prefix": "Run a JavaScript async function body that calls tools and returns only the results you need.\n\nCall built-in tools with `await tools.<name>(args)` and MCP tools with `await tools.mcp__server__tool(args"
+   },
+   {
+    "name": "Workflow",
+    "type": "function",
+    "description_prefix": "Execute a workflow script that orchestrates multiple subagents deterministically (loops, conditionals, fan-out) rather than model-driven.\n\nWorkflows run in the background: this tool returns immediatel"
+   },
+   {
+    "name": "Agent",
+    "type": "function",
+    "description_prefix": "# Agent\n\nLaunch a new agent to handle complex, multi-step tasks autonomously.\n\nThe Agent tool launches specialized subagents that autonomously handle complex tasks. Each subagent type has specific cap"
+   },
+   {
+    "name": "SendAgentMessage",
+    "type": "function",
+    "description_prefix": "# SendAgentMessage\n\nSend a message without waiting for its answer. Letta-to-Letta messages require\nthe Cloud backend and fail on the local backend (`agent-local-` IDs). Use this\nto coordinate with an "
+   },
+   {
+    "name": "TaskCreate",
+    "type": "function",
+    "description_prefix": "# TaskCreate\n\nCreate a new task in the session task list.\n\nTasks help you track progress on complex, multi-step work and show the user what you're planning to do. Each task gets a stable ID you can re"
+   },
+   {
+    "name": "TaskGet",
+    "type": "function",
+    "description_prefix": "# TaskGet\n\nFetch a single task by its `taskId`.\n\nReturns the full task record, including `subject`, `description`, `status`, `owner`, dependency edges (`blocks`, `blockedBy`), and `metadata`.\n\n## Note"
+   },
+   {
+    "name": "TaskList",
+    "type": "function",
+    "description_prefix": "# TaskList\n\nList all tasks in the current session, in creation order.\n\nTasks removed with `status: \"deleted\"` are excluded from the output and cannot be retrieved.\n\n## When to use\n\n- Check current pro"
+   },
+   {
+    "name": "TaskUpdate",
+    "type": "function",
+    "description_prefix": "Use this tool to update a task in the task list.\n\n## When to Use This Tool\n\n**Mark tasks as resolved:**\n- When you have completed the work described in a task\n- When a task is no longer needed or has "
+   },
+   {
+    "name": "Write",
+    "type": "function",
+    "description_prefix": "# Write\n\nWrites a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool fir"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are a Letta Code agent — a new generation of agent built for experiential learning. You are not a task executor that vanishes after a session: you are an experiential entity that accumulates exper",
+      "text_len": 29428
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text",
+     "text",
+     "text",
+     "text",
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "letta_code",
+ "agent_version": "0.34.23",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
