@@ -1,0 +1,24 @@
+{
+  "product": "pi",
+  "display_name": "Pi coding agent (@mariozechner/pi-coding-agent)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_stock_js_sdk", "group": "header", "op": "header_prefix", "name": "user-agent", "value": ["OpenAI/JS", "Anthropic/JS"], "weight": 10},
+    {"id": "stainless_js", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "js", "weight": 5},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are an expert coding assistant operating inside pi"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["read", "bash", "edit", "write"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "store_false", "group": "habits", "op": "habit_equals", "name": "store", "value": false, "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "Charm-Crush/", "kimi-code-cli/", "codex", "OpenAI/Python", "Anthropic/Python"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"},
+    {"op": "header_present", "name": "x-initiator"},
+    {"op": "header_present", "name": "traceparent"}
+  ],
+  "notes": "0.73.1: stock SDK user-agents only (OpenAI/JS on openai-completions, Anthropic/JS with 'anthropic-beta: interleaved-thinking-2025-05-14' on anthropic-messages), so the identity ('You are an expert coding assistant operating inside pi, a coding agent harness') and the four-tool set read/bash/edit/write carry the verdict; store false and max_completion_tokens on the openai body, cache_control blocks on the anthropic one. Identical across both APIs, the first turn, the tool turn and the -c follow-up. The default prompt and tools can be replaced per project (.pi/SYSTEM.md, --system-prompt, --tools), which would defeat the identity and tool features; openai-responses and google-generative-ai are configurable but were not captured."
+}

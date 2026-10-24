@@ -1,0 +1,88 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "user-agent": "OpenAI/JS 6.26.0",
+  "x-stainless-retry-count": "0",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "6.26.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "content-type": "application/json",
+  "accept-language": "*",
+  "sec-fetch-mode": "cors"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_completion_tokens": 16384,
+  "store": false,
+  "tools": [
+   {
+    "name": "read",
+    "type": "function",
+    "description_prefix": "Read the contents of a file. Supports text files and images (jpg, png, gif, webp). Images are sent as attachments. For text files, output is truncated to 2000 lines or 50KB (whichever is hit first). U"
+   },
+   {
+    "name": "bash",
+    "type": "function",
+    "description_prefix": "Execute a bash command in the current working directory. Returns stdout and stderr. Output is truncated to last 2000 lines or 50KB (whichever is hit first). If truncated, full output is saved to a tem"
+   },
+   {
+    "name": "edit",
+    "type": "function",
+    "description_prefix": "Edit a single file using exact text replacement. Every edits[].oldText must match a unique, non-overlapping region of the original file. If two changes affect the same block or nearby lines, merge the"
+   },
+   {
+    "name": "write",
+    "type": "function",
+    "description_prefix": "Write content to a file. Creates the file if it doesn't exist, overwrites if it does. Automatically creates parent directories."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are an expert coding assistant operating inside pi, a coding agent harness. You help users by reading files, executing commands, editing code, and writing new files.\n\nAvailable tools:\n- read: Read",
+      "text_len": 2424
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "pi",
+ "agent_version": "0.73.1",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

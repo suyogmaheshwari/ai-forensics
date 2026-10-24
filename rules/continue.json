@@ -1,0 +1,24 @@
+{
+  "product": "continue",
+  "display_name": "Continue CLI (@continuedev/cli, cn)",
+  "family": "any",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_minified_openai_js", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "ls/JS", "weight": 20},
+    {"id": "ua_node_fetch", "group": "header", "op": "header_equals", "name": "user-agent", "value": "node-fetch", "weight": 10},
+    {"id": "beta_prompt_caching_2024", "group": "header", "op": "header_contains", "name": "anthropic-beta", "value": "prompt-caching-2024-07-31", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are an agent in the Continue CLI"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["Read", "Write", "List", "Bash", "Fetch", "Checklist", "CheckBackgroundJob", "AskQuestion", "Search", "MultiEdit", "Exit", "Skills"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "OpenAI/", "Anthropic/", "Charm-Crush/", "kimi-code-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"},
+    {"op": "header_present", "name": "x-initiator"}
+  ],
+  "notes": "1.5.47 with a local config.yaml (Hub login removed): the openai provider goes through the bundled openai-node client whose minified class name yields the odd user-agent 'ls/JS <sdk>' (build-fragile, weighted low); the anthropic provider uses node-fetch with 'anthropic-beta: prompt-caching-2024-07-31' and posts to <apiBase>/messages. Identity 'You are an agent in the Continue CLI…' and the 12-tool set (Read, Write, List, Bash, Fetch, Checklist, CheckBackgroundJob, AskQuestion, Search, MultiEdit, Exit, Skills) are identical across both providers, the first turn, the tool turn and the --resume follow-up; headless and JSON modes only append paragraphs to the prompt."
+}

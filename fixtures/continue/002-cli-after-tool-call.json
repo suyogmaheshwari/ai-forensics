@@ -1,0 +1,126 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "ls/JS 5.23.2",
+  "x-stainless-arch": "x64",
+  "x-stainless-lang": "js",
+  "x-stainless-os": "Linux",
+  "x-stainless-package-version": "5.23.2",
+  "x-stainless-retry-count": "0",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "tools": [
+   {
+    "name": "Read",
+    "type": "function",
+    "description_prefix": "Read the contents of a file at the specified path"
+   },
+   {
+    "name": "Write",
+    "type": "function",
+    "description_prefix": "Write content to a file at the specified path"
+   },
+   {
+    "name": "List",
+    "type": "function",
+    "description_prefix": "List files in a directory"
+   },
+   {
+    "name": "Bash",
+    "type": "function",
+    "description_prefix": "Executes a terminal command and returns the output\n\nCommands are automatically executed from the current working directory (<path> so there's no need to change direc"
+   },
+   {
+    "name": "Fetch",
+    "type": "function",
+    "description_prefix": "Fetches content from a URL, converts to markdown, and handles long content with truncation"
+   },
+   {
+    "name": "Checklist",
+    "type": "function",
+    "description_prefix": "Create or update a task checklist. The old checklist can be seen in the chat history if it exists. Use this tool to write a new checklist or edit the existing one."
+   },
+   {
+    "name": "CheckBackgroundJob",
+    "type": "function",
+    "description_prefix": "Check the status and output of a background job.\nReturns the current status, exit code (if finished), and all available output.\nIf the job is still running, returns partial output with \"running\" statu"
+   },
+   {
+    "name": "AskQuestion",
+    "type": "function",
+    "description_prefix": "Ask the user a clarifying question to gather requirements, preferences, or implementation details before proceeding.\nGuidelines:\n- You should use this tool **whenever you want to clarify your assumpti"
+   },
+   {
+    "name": "Search",
+    "type": "function",
+    "description_prefix": "Search the codebase using ripgrep (rg) for a specific pattern"
+   },
+   {
+    "name": "MultiEdit",
+    "type": "function",
+    "description_prefix": "Use this tool to make multiple edits to a single file in one operation. It allows you to perform multiple find-and-replace operations efficiently. \nPrefer this tool over the Edit tool when you need to"
+   },
+   {
+    "name": "Exit",
+    "type": "function",
+    "description_prefix": "Exit the current process with status code 1, indicating a failure or error"
+   },
+   {
+    "name": "Skills",
+    "type": "function",
+    "description_prefix": "Use this tool to read the content of a skill by its name. Skills contain detailed instructions for specific tasks. The skill name should match one of the available skills listed below:\n"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are an agent in the Continue CLI. Given the user's prompt, you should use the tools available to you to answer the user's question.\n\nNotes:\n1. IMPORTANT: You should be concise, direct, and to the ",
+      "text_len": 1292
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ],
+    "tool_calls": [
+     "Bash"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "continue",
+ "agent_version": "1.5.47",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

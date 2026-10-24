@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -571,6 +571,55 @@ cap_gptme() {
   run "$h" "$h/project" "${env[@]}" -- "$WORK/gptme-venv/bin/gptme" -n -y --name probe -m local/gpt-4o "$PROMPT1"
   run "$h" "$h/project" "${env[@]}" -- "$WORK/gptme-venv/bin/gptme" -n -y --name probe -m local/gpt-4o -r "$PROMPT2"
   stop_recorder; sanitize_all gptme "$v"
+}
+
+cap_continue() {  # Continue CLI with a local config.yaml: no Hub login (removed in 1.5.x); openai and anthropic providers
+  npm_install @continuedev/cli cn || return
+  local v; v=$("$BIN/cn" --version | semver)
+  continue_pass cli openai gpt-4o "$v"
+  continue_pass cli-anthropic anthropic claude-sonnet-4-5 "$v"
+}
+continue_pass() {  # continue_pass <entry> <provider> <model> <version>
+  local entry=$1 provider=$2 model=$3 v=$4
+  local raw=continue; [ "$entry" != cli ] && raw="continue__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  cat > "$h/project/config.yaml" <<EOF
+name: recorder-assistant
+version: 0.0.1
+schema: v1
+models:
+  - name: recorder
+    provider: $provider
+    model: $model
+    apiBase: $BASE/v1
+    apiKey: dummy
+    roles: [chat, edit, apply]
+EOF
+  local env=(CONTINUE_GLOBAL_DIR=$h/.continue)
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/cn" --config ./config.yaml --auto -p "$PROMPT1"
+  run "$h" "$h/project" "${env[@]}" -- "$BIN/cn" --config ./config.yaml --auto -p --resume "$PROMPT2"
+  stop_recorder; sanitize_all continue "$v" "$entry" "$RAW/$raw"
+}
+
+cap_pi() {  # Pi coding agent: provider api selectable (openai-completions, openai-responses, anthropic-messages, google-generative-ai)
+  npm_install @mariozechner/pi-coding-agent pi || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@mariozechner/pi-coding-agent/package.json" | semver)
+  pi_pass cli openai-completions "$BASE/v1" gpt-4o "$v"
+  pi_pass cli-anthropic anthropic-messages "$BASE" claude-sonnet-4-5 "$v"
+}
+pi_pass() {  # pi_pass <entry> <api> <base-url> <model> <version>
+  local entry=$1 api=$2 url=$3 model=$4 v=$5
+  local raw=pi; [ "$entry" != cli ] && raw="pi__${entry#cli-}"
+  local h; h=$(fresh_home "$raw"); start_recorder "$raw" "$h/project"
+  mkdir -p "$h/.pi/agent"
+  cat > "$h/.pi/agent/models.json" <<EOF
+{"providers": {"recorder": {"baseUrl": "$url", "apiKey": "dummy", "api": "$api",
+  "models": [{"id": "$model", "name": "$model", "reasoning": false, "input": ["text"], "contextWindow": 128000, "maxTokens": 16384}]}}}
+EOF
+  printf '{"defaultProvider": "recorder", "defaultModel": "%s"}\n' "$model" > "$h/.pi/agent/settings.json"
+  run "$h" "$h/project" -- "$BIN/pi" --mode json -p "$PROMPT1"
+  run "$h" "$h/project" -- "$BIN/pi" --mode json -c -p "$PROMPT2"
+  stop_recorder; sanitize_all pi "$v" "$entry" "$RAW/$raw"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture
