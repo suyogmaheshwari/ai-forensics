@@ -45,6 +45,7 @@ def test_every_product_has_fixtures_for_each_session_shape():
         "aider": {"followup"},                         # no tools; its canned priming exchange makes every turn a follow-up
         "grok_cli": {"first-turn", "after-tool-call"},  # headless -p is one-shot, no resume
         "mini_swe_agent": {"first-turn", "after-tool-call"},  # no resume; its format-error rounds are tool turns
+        "vecli": {"followup", "after-tool-call"},  # pre-seeded context exchange makes the first request a follow-up; no headless resume
     }
     for rule in RULES:
         got = shapes.get(rule["product"], set())

@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -668,6 +668,39 @@ EOF
   run "$h" "$h/project" -- "$WORK/sgpt-venv/bin/sgpt" --no-cache --chat probe "$PROMPT2"
   run "$h" "$h/project" -- "$WORK/sgpt-venv/bin/sgpt" --no-cache -s --no-interaction "print ok"   # shell role, no tools
   stop_recorder; sanitize_all shell_gpt "$v"
+}
+
+cap_vecli() {  # Volcengine veCLI (Gemini CLI fork on chat completions); openai and ark auth types
+  npm_install @volcengine/vecli vecli || return
+  local v; v=$(grep -m1 '"version"' "$NPM_PREFIX/lib/node_modules/@volcengine/vecli/package.json" | semver)
+  local h; h=$(fresh_home vecli); start_recorder vecli "$h/project"
+  mkdir -p "$h/.ve"; echo '{"security": {"auth": {"selectedType": "openai"}}}' > "$h/.ve/settings.json"
+  # 0.1.31 has no headless resume: the follow-up shape only exists in the interactive TUI
+  run "$h" "$h/project" OPENAI_API_KEY=dummy OPENAI_BASE_URL=$BASE/v1 OPENAI_MODEL=probe-model -- "$BIN/vecli" --yolo -p "$PROMPT1"
+  stop_recorder; sanitize_all vecli "$v"
+  h=$(fresh_home vecli__ark); start_recorder vecli__ark "$h/project"
+  mkdir -p "$h/.ve"; echo '{"security": {"auth": {"selectedType": "ark-api-key"}}}' > "$h/.ve/settings.json"
+  run "$h" "$h/project" ARK_API_KEY=dummy ARK_BASE_URL=$BASE/v1 ARK_MODEL=probe-model -- "$BIN/vecli" --yolo -p "$PROMPT1"
+  stop_recorder; sanitize_all vecli "$v" cli-ark "$RAW/vecli__ark"
+}
+
+cap_hermes() {
+  py_venv "$WORK/hermes-venv" hermes-agent || return
+  local v; v=$("$WORK/hermes-venv/bin/pip" show hermes-agent | awk '/^Version/{print $2}')
+  local h; h=$(fresh_home hermes); start_recorder hermes "$h/project"
+  mkdir -p "$h/.hermes"
+  cat > "$h/.hermes/config.yaml" <<EOF
+model:
+  default: gpt-4o
+  provider: custom
+  base_url: $BASE/v1
+  api_key: dummy
+EOF
+  run "$h" "$h/project" -- "$WORK/hermes-venv/bin/hermes" chat -q "$PROMPT1" --yolo
+  local sid; sid=$(grep -oE '[0-9]{8}_[0-9]{6}_[0-9a-f]{6}' "$WORK/last_run.log" | head -1)
+  [ -z "$sid" ] && sid=$(ls -t "$h/.hermes/sessions" 2>/dev/null | head -1 | sed 's/\.[a-z]*$//')
+  run "$h" "$h/project" -- "$WORK/hermes-venv/bin/hermes" chat --resume "$sid" -q "$PROMPT2" --yolo
+  stop_recorder; sanitize_all hermes "$v"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture
