@@ -1,0 +1,23 @@
+{
+  "product": "pool",
+  "display_name": "Poolside pool CLI (standalone / BYOK mode)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "x_poolside_session", "group": "header", "op": "header_present", "name": "x-poolside-session", "weight": 30},
+    {"id": "ua_openai_go", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Go", "weight": 15},
+    {"id": "stainless_go", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "go", "weight": 5},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are a helpful, conversationally-fluent assistant working inside an agent harness"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["todo_action", "read", "edit", "write", "shell", "shell_list", "shell_tail", "shell_status", "shell_kill", "shell_send", "shell_wait", "skill", "subagent", "switch_mode", "list_secrets", "web_fetch"], "weight": 30},
+    {"id": "streaming", "group": "habits", "op": "habit_equals", "name": "stream", "value": true, "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["Charm-Crush/", "claude-cli/", "QwenCode/", "opencode/", "ai-sdk/", "OpenAI/Python", "OpenAI/JS"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "1.0.16 with POOLSIDE_STANDALONE_BASE_URL (no account, no key validation; GET /v1/models first, with a curl user-agent): openai-go client ('OpenAI/Go <v>', x-stainless-lang go — Crush is the other Go client, told apart by its own user-agent), an X-Poolside-Session header carrying the session id (redacted in fixtures, present) and a per-request X-Request-Id. The system message is a list with one text part carrying an Anthropic-style cache_control block inside a chat-completions body; identity 'You are a helpful, conversationally-fluent assistant working inside an agent harness…' names Poolside only further down. 16 tools (shell_* family, list_secrets, subagent, switch_mode) identical on the first turn, after the tool call and on the --continue follow-up; the user text is wrapped in <context>/<working_directories>/<user_query>."
+}

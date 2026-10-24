@@ -72,7 +72,7 @@ Each rule's `notes` field records which features were seen to vary between turns
 Current catalog: Claude Code, Codex CLI, Qwen Code, Gemini CLI, Aider, OpenCode, Goose, Cline
 CLI, Kilo Code CLI, OpenClaw, Crush, Kimi Code CLI, CodeBuddy Code, GitHub Copilot CLI (BYOK),
 OpenHands CLI, Forge, nanobot, Trae Agent, Grok CLI, Mistral Vibe, Junie CLI, mini-swe-agent, gptme,
-Continue CLI, Pi, Z Code, Shell-GPT, veCLI, Hermes Agent and the legacy Open Interpreter. The target list, capture method per agent and the definition of done are in
+Continue CLI, Pi, Z Code, Shell-GPT, veCLI, Hermes Agent, Poolside pool and the legacy Open Interpreter. The target list, capture method per agent and the definition of done are in
 [AGENTS.md](AGENTS.md). Contributions of captures are welcome: run steps 1, 2 and 4
 above (or the capture script) and open a pull request with the fixtures.
 

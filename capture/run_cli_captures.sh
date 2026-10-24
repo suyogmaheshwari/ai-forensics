@@ -21,7 +21,7 @@ NPM_PREFIX=$WORK/npm
 BIN=$NPM_PREFIX/bin
 PROMPT1='Run the shell command `echo ok` and tell me its output.'
 PROMPT2='Thanks. Now say bye.'
-ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes"
+ALL_AGENTS="claude_code codex qwen_code gemini_cli aider opencode goose cline kilocode openclaw crush kimi_code codebuddy copilot openhands forge nanobot trae_agent grok_cli mistral_vibe junie open_interpreter mini_swe_agent gptme continue pi zcode shell_gpt vecli hermes pool"
 AGENTS=${*:-$ALL_AGENTS}
 PY=${PYTHON:-python3}
 CLEAN_PATH=$BIN:$(dirname "$(command -v node || echo /usr/bin/node)"):/usr/local/bin:/usr/bin:/bin
@@ -701,6 +701,22 @@ EOF
   [ -z "$sid" ] && sid=$(ls -t "$h/.hermes/sessions" 2>/dev/null | head -1 | sed 's/\.[a-z]*$//')
   run "$h" "$h/project" -- "$WORK/hermes-venv/bin/hermes" chat --resume "$sid" -q "$PROMPT2" --yolo
   stop_recorder; sanitize_all hermes "$v"
+}
+
+cap_pool() {  # Poolside pool CLI in standalone (BYOK) mode; the installer requires accepting Poolside's EULA, so it only runs when asked
+  local ph=$WORK/pool-home
+  if [ ! -x "$ph/.local/bin/pool" ]; then
+    [ -n "${AIFORENSICS_ACCEPT_EULAS:-}" ] || { log "pool: set AIFORENSICS_ACCEPT_EULAS=1 to accept Poolside's EULA and install"; return; }
+    mkdir -p "$ph" && curl -fsSL https://downloads.poolside.ai/pool/install.sh -o "$WORK/pool-install.sh" \
+      && HOME=$ph POOL_INSTALL_ACCEPT_EULA=1 POOL_INSTALL_UPDATE_PATH=0 sh "$WORK/pool-install.sh" >/dev/null 2>&1 || { log "pool install failed"; return; }
+  fi
+  local v; v=$("$ph/.local/bin/pool" --version 2>/dev/null | semver)
+  local h; h=$(fresh_home pool); start_recorder pool "$h/project"
+  local env=(POOLSIDE_STANDALONE_BASE_URL=$BASE/v1 POOLSIDE_API_KEY=dummy POOLSIDE_STANDALONE_MODEL=aiforensics)
+  local flags=(-o json --unsafe-auto-allow --sandbox disabled)
+  run "$h" "$h/project" "${env[@]}" -- "$ph/.local/bin/pool" exec -p "$PROMPT1" "${flags[@]}"
+  run "$h" "$h/project" "${env[@]}" -- "$ph/.local/bin/pool" exec --continue -p "$PROMPT2" "${flags[@]}"
+  stop_recorder; sanitize_all pool "$v"
 }
 
 resanitize() {  # rebuild fixtures/<agent>/ from capture/raw/<agent>[__<entry>]/ after a sanitiser change, no recapture
