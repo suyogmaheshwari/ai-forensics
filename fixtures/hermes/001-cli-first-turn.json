@@ -1,0 +1,142 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "OpenAI/Python 2.24.0",
+  "x-stainless-lang": "python",
+  "x-stainless-package-version": "2.24.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "CPython",
+  "x-stainless-runtime-version": "3.12.3",
+  "x-stainless-async": "false",
+  "x-stainless-retry-count": "0",
+  "x-stainless-read-timeout": "1800.0"
+ },
+ "body": {
+  "model": "gpt-4o",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_completion_tokens": 65536,
+  "tools": [
+   {
+    "name": "clarify",
+    "type": "function",
+    "description_prefix": "Ask the user a question when you need clarification, feedback, or a decision before proceeding. Supports two modes:\n\n1. **Multiple choice** — provide up to 4 choices. The user picks one or types their"
+   },
+   {
+    "name": "cronjob",
+    "type": "function",
+    "description_prefix": "Manage scheduled cron jobs with a single compressed tool.\n\nUse action='create' to schedule a new job from a prompt or one or more skills.\nUse action='list' to inspect jobs.\nUse action='update', 'pause"
+   },
+   {
+    "name": "delegate_task",
+    "type": "function",
+    "description_prefix": "Spawn one or more subagents to work on tasks in isolated contexts. Each subagent gets its own conversation, terminal session, and toolset. Only the final summary is returned -- intermediate tool resul"
+   },
+   {
+    "name": "execute_code",
+    "type": "function",
+    "description_prefix": "Run a Python script that can call Hermes tools programmatically. Use this when you need 3+ tool calls with processing logic between them, need to filter/reduce large tool outputs before they enter you"
+   },
+   {
+    "name": "memory",
+    "type": "function",
+    "description_prefix": "Save durable facts to persistent memory that survive across sessions. Memory is injected into every future turn, so keep entries compact and high-signal.\n\nHOW: make ALL your changes in ONE call via an"
+   },
+   {
+    "name": "patch",
+    "type": "function",
+    "description_prefix": "Targeted find-and-replace edits in files. Use this instead of sed/awk in terminal. Uses fuzzy matching (9 strategies) so minor whitespace/indentation differences won't break it. Returns a unified diff"
+   },
+   {
+    "name": "process",
+    "type": "function",
+    "description_prefix": "Manage background processes started with terminal(background=true). Actions: 'list' (show all), 'poll' (check status + new output), 'log' (full output with pagination), 'wait' (block until done or tim"
+   },
+   {
+    "name": "read_file",
+    "type": "function",
+    "description_prefix": "Read a text file with line numbers and pagination. Use this instead of cat/head/tail in terminal. Output format: 'LINE_NUM|CONTENT'. Suggests similar filenames if not found. Use offset and limit for l"
+   },
+   {
+    "name": "search_files",
+    "type": "function",
+    "description_prefix": "Search file contents or find files by name. Use this instead of grep/rg/find/ls in terminal. Ripgrep-backed, faster than shell equivalents.\n\nContent search (target='content'): Regex search inside file"
+   },
+   {
+    "name": "session_search",
+    "type": "function",
+    "description_prefix": "Search past sessions stored in the local session DB, or scroll inside one. FTS5-backed retrieval over the SQLite message store. No LLM calls — every shape returns actual messages from the DB.\n\nSOURCE-"
+   },
+   {
+    "name": "skill_manage",
+    "type": "function",
+    "description_prefix": "Manage skills (create, update, delete). Skills are your procedural memory — reusable approaches for recurring task types. New skills go to ~/.hermes/skills/; existing skills can be modified wherever t"
+   },
+   {
+    "name": "skill_view",
+    "type": "function",
+    "description_prefix": "Skills allow for loading information about specific tasks and workflows, as well as scripts and templates. Load a skill's full content or access its linked files (references, templates, scripts). Firs"
+   },
+   {
+    "name": "skills_list",
+    "type": "function",
+    "description_prefix": "List available skills (name + description). Use skill_view(name) to load full content."
+   },
+   {
+    "name": "terminal",
+    "type": "function",
+    "description_prefix": "Execute shell commands on a Linux environment. Filesystem, current working directory, and exported environment variables persist between calls.\n\nDo NOT use cat/head/tail to read files — use read_file "
+   },
+   {
+    "name": "text_to_speech",
+    "type": "function",
+    "description_prefix": "Convert text to speech audio. Returns a MEDIA: path that the platform delivers as native audio. Compatible providers render as a voice bubble on Telegram; otherwise audio is sent as a regular attachme"
+   },
+   {
+    "name": "todo",
+    "type": "function",
+    "description_prefix": "Manage your task list for the current session. Use for complex tasks with 3+ steps or when the user provides multiple tasks. Call with no parameters to read the current list.\n\nWriting:\n- Provide 'todo"
+   },
+   {
+    "name": "vision_analyze",
+    "type": "function",
+    "description_prefix": "Load an image into the conversation so you can see it. Accepts a URL, local file path, or data URL. When your active model has native vision, the image is attached to your context directly and you rea"
+   },
+   {
+    "name": "write_file",
+    "type": "function",
+    "description_prefix": "Write content to a file, completely replacing existing content. Use this instead of echo/cat heredoc in terminal. Creates parent directories automatically. OVERWRITES the entire file — use 'patch' for"
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are Hermes Agent, an intelligent AI assistant created by Nous Research. You are helpful, knowledgeable, and direct. You assist users with a wide range of tasks including answering questions, writi",
+      "text_len": 10192
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "first-turn",
+ "recorder_reply": "tool-call",
+ "agent": "hermes",
+ "agent_version": "0.19.0",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}

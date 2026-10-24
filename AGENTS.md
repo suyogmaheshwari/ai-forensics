@@ -83,6 +83,7 @@ allow-listed by credential at a gateway, which is a policy decision rather than 
 | Warp Oz CLI | `WARP_API_KEY`, no BYO model |
 | Devin CLI | login; custom endpoints only in air-gapped builds |
 | Factory Droid CLI | `FACTORY_API_KEY` mandatory even with BYOK `customModels` |
+| Qoder CLI (`@qoder-ai/qodercli`, Gemini CLI fork) | mandatory Qoder login (OAuth, PAT, device token, all verified server-side) before any model request; custom `providers[].baseUrl` is a supported setting but only loads after authentication, so headless capture needs a real credential |
 | Cody CLI | talks only to a Sourcegraph instance |
 | Plandex | custom providers need the self-hosted server |
 | Zencoder, Tabnine, Sourcery, Blackbox, Gemini Code Assist, Firebender | IDE plugins without a base-URL override |

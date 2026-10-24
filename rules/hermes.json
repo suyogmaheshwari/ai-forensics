@@ -1,0 +1,24 @@
+{
+  "product": "hermes",
+  "display_name": "Hermes Agent (Nous Research, hermes-agent)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_openai_python", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "OpenAI/Python", "weight": 20},
+    {"id": "stainless_python", "group": "header", "op": "header_equals", "name": "x-stainless-lang", "value": "python", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are Hermes Agent", "Generate a short, descriptive title (3-7 words)"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["clarify", "cronjob", "delegate_task", "execute_code", "memory", "patch", "process", "read_file", "search_files", "session_search", "skill_manage", "skill_view", "skills_list", "terminal", "text_to_speech", "todo", "vision_analyze", "write_file"], "weight": 30},
+    {"id": "max_completion_tokens", "group": "habits", "op": "habit_present", "value": "max_completion_tokens", "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["QwenCode/", "OpenAI/JS", "opencode/", "ai-sdk/", "claude-cli/", "Charm-Crush/", "kimi-code-cli/", "AsyncOpenAI/"]},
+    {"op": "header_present", "name": "x-stainless-raw-response"},
+    {"op": "identity_prefix", "value": ["You are gptme", "You are ShellGPT"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.19.0 with provider custom: stock openai-python headers (no litellm), x-stainless-read-timeout 1800, and for a non-openai.com base URL the literal placeholder 'Authorization: Bearer no-key-required' (dropped by the sanitiser, visible at a gateway). Identity 'You are Hermes Agent, an intelligent AI assistant created by Nous Research' and the 18-tool set are identical on the first turn, after the tool call and on the --resume follow-up; a new non-quiet session also sends a title request (identity 'Generate a short, descriptive title (3-7 words)', temperature 0.3, no tools). Before each session it probes GET /v1/models, GET /api/v1/models and an Ollama-style POST /api/show."
+}

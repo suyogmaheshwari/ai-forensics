@@ -1,0 +1,22 @@
+{
+  "product": "vecli",
+  "display_name": "veCLI (ByteDance Volcengine, @volcengine/vecli)",
+  "family": "chat_completions",
+  "threshold": 60,
+  "min_groups": 2,
+  "group_caps": {"header": 50, "identity": 30, "tools": 30, "habits": 10},
+  "features": [
+    {"id": "ua_vecli", "group": "header", "op": "header_prefix", "name": "user-agent", "value": "VeCli/", "weight": 40},
+    {"id": "client_request_id", "group": "header", "op": "header_present", "name": "x-client-request-id", "weight": 10},
+    {"id": "identity", "group": "identity", "op": "identity_prefix", "value": ["You are an interactive CLI agent specializing in software engineering tasks"], "weight": 30},
+    {"id": "tool_set", "group": "tools", "op": "tool_set", "value": ["list_directory", "read_file", "search_file_content", "glob", "replace", "write_file", "web_fetch", "read_many_files", "run_shell_command", "save_memory", "get_memory", "write_todos_list", "web_search"], "weight": 30},
+    {"id": "thinking", "group": "habits", "op": "habit_present", "value": "thinking", "weight": 5},
+    {"id": "stream_usage", "group": "habits", "op": "habit_present", "value": "stream_options", "weight": 5}
+  ],
+  "deny": [
+    {"op": "header_prefix", "name": "user-agent", "value": ["GeminiCLI", "QwenCode/", "iFlow-Cli", "OpenAI/", "opencode/", "ai-sdk/", "claude-cli/"]},
+    {"op": "header_present", "name": "originator"},
+    {"op": "header_present", "name": "agent-session-id"}
+  ],
+  "notes": "0.1.31: Gemini CLI fork whose openai, ark-api-key and volcengine auth types all use the openai-node chat-completions client with user-agent 'VeCli/unknown (linux; x64)' (the version literal is 'unknown' in this build) and 'x-client-request-id: veCli_<version>' (redacted as an id in fixtures, but present). The system prompt is the old generic Gemini CLI text ('You are an interactive CLI agent specializing in software engineering tasks'), so the user-agent and the Ark-only 'thinking' body key are the discriminators against Gemini CLI, Qwen Code and iFlow; the tool set adds get_memory, write_todos_list, search_file_content and a DouBao web_search. Every session is pre-seeded with a user 'This is the VeCLI…' / assistant 'Got it' exchange, so the first request classifies as a follow-up. With enableContextCache and Ark auth it switches to a home-grown /v1/responses client (user-agent 'node', no system prompt, flattened input string) that carries no identifiable feature; not captured."
+}

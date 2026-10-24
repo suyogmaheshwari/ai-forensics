@@ -1,0 +1,151 @@
+{
+ "method": "POST",
+ "path": "/v1/chat/completions",
+ "headers": {
+  "accept": "application/json",
+  "content-type": "application/json",
+  "user-agent": "VeCli/unknown (linux; x64)",
+  "x-stainless-lang": "js",
+  "x-stainless-package-version": "4.104.0",
+  "x-stainless-os": "Linux",
+  "x-stainless-arch": "x64",
+  "x-stainless-runtime": "node",
+  "x-stainless-runtime-version": "v22.22.0",
+  "x-client-request-id": "<redacted-id>",
+  "x-stainless-retry-count": "0",
+  "x-stainless-timeout": "300"
+ },
+ "body": {
+  "model": "deepseek-v3-1-terminus",
+  "stream": true,
+  "stream_options": {
+   "include_usage": true
+  },
+  "max_tokens": 32768,
+  "temperature": 0,
+  "top_p": 1,
+  "thinking": {
+   "type": "enabled"
+  },
+  "tools": [
+   {
+    "name": "list_directory",
+    "type": "function",
+    "description_prefix": "Lists the names of files and subdirectories directly within a specified directory path. Can optionally ignore entries matching provided glob patterns."
+   },
+   {
+    "name": "read_file",
+    "type": "function",
+    "description_prefix": "Reads and returns the content of a specified file. If the file is large, the content will be truncated. The tool's response will clearly indicate if truncation has occurred and will provide details on"
+   },
+   {
+    "name": "search_file_content",
+    "type": "function",
+    "description_prefix": "Searches for a regular expression pattern within the content of files in a specified directory (or current working directory). Can filter files by a glob pattern. Returns the lines containing matches,"
+   },
+   {
+    "name": "glob",
+    "type": "function",
+    "description_prefix": "Efficiently finds files matching specific glob patterns (e.g., `src/**/*.ts`, `**/*.md`), returning absolute paths sorted by modification time (newest first). Ideal for quickly locating files based on"
+   },
+   {
+    "name": "replace",
+    "type": "function",
+    "description_prefix": "Replaces text within a file. Replaces a single occurrence. This tool requires providing significant context around the change to ensure precise targeting. Always use the read_file tool to examine the "
+   },
+   {
+    "name": "write_file",
+    "type": "function",
+    "description_prefix": "Writes content to a specified file in the local filesystem.\n\n      The user has the ability to modify `content`. If modified, this will be stated in the response."
+   },
+   {
+    "name": "web_fetch",
+    "type": "function",
+    "description_prefix": "Processes content from specific URL, including local and private network addresses (e.g., localhost), and process it with instructions (e.g., summarize, extract specific data) in the 'prompt' paramete"
+   },
+   {
+    "name": "read_many_files",
+    "type": "function",
+    "description_prefix": "Reads content from multiple files specified by paths or glob patterns within a configured target directory. For text files, it concatenates their content into a single string. It is primarily designed"
+   },
+   {
+    "name": "run_shell_command",
+    "type": "function",
+    "description_prefix": "This tool executes a given shell command as `bash -c <command>`. Command can start background processes using `&`. Command is executed as a subprocess that leads its own process group. Command process"
+   },
+   {
+    "name": "save_memory",
+    "type": "function",
+    "description_prefix": "\nSaves a specific piece of information or fact to your long-term memory.\n\nUse this tool:\n\n- When the user explicitly asks you to remember something (e.g., \"Remember that I like pineapple on pizza\", \"P"
+   },
+   {
+    "name": "get_memory",
+    "type": "function",
+    "description_prefix": "\nRetrieves the current user memory content.\n\nUse this tool:\n\n- When you need to access previously saved information or facts.\n- To check what information has been stored in memory.\n- To retrieve user "
+   },
+   {
+    "name": "write_todos_list",
+    "type": "function",
+    "description_prefix": "This tool can help you list out the current subtasks that are required to be completed for a given user request. The list of subtasks helps you keep track of the current task, organize complex queries"
+   },
+   {
+    "name": "web_search",
+    "type": "function",
+    "description_prefix": "Performs a web search using Web Search (via the DouBao API) and returns the results. This tool is useful for finding information on the internet based on a query."
+   }
+  ],
+  "messages": [
+   {
+    "role": "system",
+    "content": [
+     {
+      "type": "text",
+      "text_prefix": "You are an interactive CLI agent specializing in software engineering tasks. Your primary goal is to help users safely and efficiently, adhering strictly to the following instructions and utilizing yo",
+      "text_len": 18354
+     }
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "user",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   },
+   {
+    "role": "assistant",
+    "content": "<redacted>",
+    "content_types": [],
+    "tool_calls": [
+     "run_shell_command"
+    ]
+   },
+   {
+    "role": "tool",
+    "content": "<redacted>",
+    "content_types": [
+     "text"
+    ]
+   }
+  ]
+ },
+ "turn": "after-tool-call",
+ "recorder_reply": "text",
+ "agent": "vecli",
+ "agent_version": "0.1.31",
+ "captured_with": "aiforensics recorder, tool-call, dummy key"
+}
